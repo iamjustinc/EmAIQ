@@ -212,6 +212,14 @@ export function EmailDetailSheet({
                 <Button className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-xl font-bold" onClick={() => handleAction("Reply Sent")}>Send Message</Button>
               </div>
             )}
+            <div className="p-4 bg-black/20 border-t border-white/5">
+  <div className="flex items-center justify-center gap-2 opacity-40">
+    <div className="h-1.5 w-1.5 bg-green-500 rounded-full" />
+    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">
+      Secure OAuth 2.0 Connection • No Data Training
+    </span>
+  </div>
+</div>
           </div>
         )}
       </SheetContent>
