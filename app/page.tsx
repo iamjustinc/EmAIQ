@@ -32,10 +32,9 @@ export default function InboxPage() {
   } = useEmails();
   
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  // Correct placement for state
   const [isDrafting, setIsDrafting] = useState(false);
 
   const stats = useMemo(() => {
@@ -61,8 +60,8 @@ export default function InboxPage() {
 
   const handleSelectEmail = (email: Email) => {
     setSelectedEmail(email);
-    setSheetOpen(true);
-    Drafting(falsetIsse); // Reset drafting view when switching emails
+    setIsDetailsOpen(true);
+    setIsDrafting(false); // Reset drafting view when switching emails
     if (!email.isRead) {
       markAsRead(email.id);
     }
@@ -71,7 +70,7 @@ export default function InboxPage() {
   const handleArchiveEmail = (emailId: string) => {
     archiveEmail(emailId);
     if (selectedEmail?.id === emailId) {
-      setSheetOpen(false);
+      setIsDetailsOpen(false);
       setSelectedEmail(null);
     }
   };
@@ -193,14 +192,13 @@ export default function InboxPage() {
 
         {/* Sidebar Detail Sheet */}
         <EmailDetailSheet
-  email={selectedEmail}
-  open={isDetailsOpen}
-  onOpenChange={setIsDetailsOpen}
-  onArchive={archiveEmail}
-  isDrafting={isDrafting}
-  setIsDrafting={setIsDrafting}
-/>
-        />
+          email={selectedEmail}
+          open={isDetailsOpen}
+          onOpenChange={setIsDetailsOpen}
+          onArchive={handleArchiveEmail}
+          isDrafting={isDrafting}
+          setIsDrafting={setIsDrafting}
+        /> 
       </div>
     </AppShell>
   );
