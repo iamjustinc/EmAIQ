@@ -40,7 +40,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
         <div className="w-4 shrink-0" />
         <div className="w-40 shrink-0">Sender</div>
         <div className="flex-1 min-w-0">Message Detail</div>
-        <div className="w-32 shrink-0 text-center text-blue-400/80">AI SUGGESTION</div>
+        <div className="w-32 shrink-0 text-center text-blue-400">AI SUGGESTION</div>
         <div className="w-20 shrink-0 text-right">Received</div>
       </div>
 
@@ -52,7 +52,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
             const isReturned = email.snoozedUntil && email.snoozedUntil <= Date.now();
             const isHighPriority = email.urgency.label === 'High';
 
-            // Suggested Action Styling Logic
+            // Action Config
             const actionConfig = (() => {
               const action = email.suggestedAction;
               if (action === 'Respond') return { Icon: Reply, label: 'Reply', styles: "bg-purple-500/10 border-purple-500/20 text-purple-400" };
@@ -61,8 +61,6 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
             })();
 
             const { Icon, label, styles } = actionConfig;
-            
-            // Logic for internal vs client
             const isClient = email.sender.name.includes('Avery') || email.sender.name.includes('Priya');
 
             return (
@@ -71,15 +69,14 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                 onClick={() => onSelectEmail(email)} 
                 className={cn(
                   "w-full flex items-center gap-4 px-8 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1",
-                  isSelected ? "bg-blue-600/10 shadow-[inset_3px_0_0_#3b82f6]" : 
-                  isUnread ? "bg-[#161922]" : "hover:bg-white/[0.01]",
-                  isReturned && !isSelected && "bg-orange-500/[0.02]"
+                  isSelected ? "bg-blue-600/15 shadow-[inset_4px_0_0_#3b82f6]" : 
+                  isUnread ? "bg-[#141721]" : "hover:bg-white/[0.01]",
                 )}
               >
-                {/* 1. URGENCY MARKERS - ONLY HIGH PRIORITY !! */}
+                {/* 1. URGENCY - BOLDER WARNING COLOR */}
                 <div className="w-8 shrink-0 flex justify-center items-center">
                   {isHighPriority ? (
-                    <div className="flex gap-0.5 text-red-500 font-black text-lg tracking-tighter animate-pulse">
+                    <div className="flex gap-0.5 text-amber-500 font-black text-xl tracking-tighter drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]">
                       <span>!</span><span>!</span>
                     </div>
                   ) : (
@@ -92,39 +89,38 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                   {isUnread ? (
                     <div className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
                   ) : isReturned ? (
-                    <Clock className="h-3.5 w-3.5 text-orange-500 animate-pulse" />
+                    <Clock className="h-4 w-4 text-orange-500 animate-pulse" />
                   ) : null}
                 </div>
 
                 {/* 3. SENDER */}
                 <div className="w-40 shrink-0">
-                  <span className={cn("text-sm truncate block", isUnread || isReturned ? "text-white font-bold" : "text-gray-400 font-medium")}>
+                  <span className={cn("text-sm truncate block", isUnread ? "text-white font-bold" : "text-gray-400 font-medium")}>
                     {email.sender.name}
                   </span>
                 </div>
 
-                {/* 4. CONTENT */}
+                {/* 4. CONTENT & SOLID CATEGORY TAGS */}
                 <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
-                       <span className={cn("text-[13px] truncate", isUnread || isReturned ? "text-white font-medium" : "text-gray-300")}>{email.subject}</span>
-                       {isReturned && <span className="text-[8px] font-black bg-orange-500/10 text-orange-500 px-1.5 py-0.5 rounded uppercase tracking-tighter border border-orange-500/20">Returned</span>}
+                       <span className={cn("text-[13px] truncate", isUnread ? "text-white font-medium" : "text-gray-300")}>{email.subject}</span>
                     </div>
                     <span className="text-[11px] text-gray-500 truncate mt-0.5">{email.bodyPreview}</span>
                   </div>
 
-                  {/* CATEGORY TAGS - UPDATED COLORS FOR BETTER CONTRAST */}
+                  {/* HIGH CONTRAST TAGS */}
                   <span className={cn(
-                    "px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest border shrink-0", 
+                    "px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest shrink-0 transition-transform group-hover:scale-105", 
                     isClient 
-                      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
-                      : "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                      ? "bg-emerald-500 text-[#0F1117] shadow-[0_0_15px_rgba(16,185,129,0.2)]" 
+                      : "bg-white/10 text-gray-400 border border-white/5"
                   )}>
                     {isClient ? 'Client' : 'Internal'}
                   </span>
                 </div>
 
-                {/* 5. AI SUGGESTION BADGE */}
+                {/* 5. AI SUGGESTION */}
                 <div className="w-32 shrink-0 flex justify-center">
                   <div className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-[9px] font-bold uppercase",
@@ -137,8 +133,8 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
 
                 {/* 6. TIME */}
                 <div className="w-20 shrink-0 text-right">
-                  <span className={cn("text-[10px] font-bold uppercase", isUnread ? "text-blue-400/80" : "text-gray-600")}>
-                    {isReturned ? 'Just now' : email.receivedTime || '14h ago'}
+                  <span className={cn("text-[10px] font-bold uppercase", isUnread ? "text-blue-400" : "text-gray-600")}>
+                    {email.receivedTime || '14h ago'}
                   </span>
                 </div>
               </button>
@@ -146,7 +142,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
           })
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-gray-600">
-            <p className="text-[10px] font-bold uppercase tracking-widest">No messages in {activeTab}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest">No messages</p>
           </div>
         )}
       </div>
