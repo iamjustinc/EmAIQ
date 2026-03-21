@@ -17,8 +17,8 @@ interface EmailDetailSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onArchive: (id: string) => void;
-  isDrafting: boolean;
-  setIsDrafting: (is: boolean) => void;
+  isDrafting: boolean;       // Must be exactly this
+  setIsDrafting: (is: boolean) => void; // Must be exactly this
 }
 
 export function EmailDetailSheet({
