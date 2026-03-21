@@ -66,14 +66,6 @@ export default function InboxPage() {
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12]">
-        {/* Meet Alex Banner */}
-        <div className="flex items-center justify-center gap-2 border-b border-white/5 bg-blue-500/5 px-4 py-2">
-          <Zap className="h-3 w-3 text-blue-400 animate-pulse" />
-          <p className="text-[11px] font-bold uppercase tracking-widest text-blue-400/80">
-            Meet Alex <span className="mx-2 opacity-30">•</span> {stats.unread} Unread <span className="mx-2 opacity-30">•</span> {stats.urgent} Urgent
-          </p>
-        </div>
-
         <Header 
           title="Inbox" 
           onReply={() => { if(selectedEmailId) { setIsDetailsOpen(true); setIsDrafting(true); } }}
