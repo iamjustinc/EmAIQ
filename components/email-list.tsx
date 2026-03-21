@@ -21,20 +21,25 @@ export function EmailList({
   setActiveTab 
 }: EmailListProps) {
   
-  // Filtering Logic
+  // Filtering Logic linked to KPI Cards and Tabs
   const filteredEmails = useMemo(() => {
     const safeEmails = emails || [];
     const currentTab = activeTab.toLowerCase();
 
     if (currentTab === 'action') {
+      // Filters for High priority/urgency emails
       return safeEmails.filter(e => e.priority === 'High' || e.urgency.label === 'High');
     }
     if (currentTab === 'noise') {
-      // Assuming low priority or marketing-style senders are noise
-      return safeEmails.filter(e => e.priority === 'Low' || e.sender.name.toLowerCase().includes('news'));
+      // Filters for Low priority or marketing/newsletter keywords
+      return safeEmails.filter(e => 
+        e.priority === 'Low' || 
+        e.sender.name.toLowerCase().includes('news') ||
+        e.subject.toLowerCase().includes('promo')
+      );
     }
     if (currentTab === 'today') {
-      // Mock logic: showing emails from "h ago" (not "d ago")
+      // Filters for emails received within hours (not days)
       return safeEmails.filter(e => e.receivedTime?.includes('h'));
     }
     return safeEmails; // Default 'all'
@@ -43,7 +48,7 @@ export function EmailList({
   return (
     <div className="flex-1 overflow-y-auto scrollbar-hide bg-[#0F1117]">
       {/* Navigation Bar */}
-      <div className="flex items-center border-b border-white/5 px-6">
+      <div className="flex items-center border-b border-white/5 px-6 sticky top-0 bg-[#0F1117] z-10">
         {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
           <button
             key={tab}
@@ -61,7 +66,7 @@ export function EmailList({
       </div>
 
       {/* Table Headers */}
-      <div className="flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600">
+      <div className="flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
         <div className="w-4 shrink-0" />
         <div className="w-40 shrink-0">Sender</div>
         <div className="flex-1 min-w-0">Message Detail</div>
@@ -84,12 +89,14 @@ export function EmailList({
                   isSelected ? "bg-blue-600/5 shadow-[inset_4px_0_0_#3b82f6]" : "hover:bg-white/[0.01]"
                 )}
               >
+                {/* Unread Indicator */}
                 <div className="w-4 shrink-0 flex justify-center">
                   {!email.isRead && (
                     <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
                   )}
                 </div>
 
+                {/* Sender Column */}
                 <div className="w-40 shrink-0">
                   <span className={cn(
                     "text-sm truncate block",
@@ -99,6 +106,7 @@ export function EmailList({
                   </span>
                 </div>
 
+                {/* Message Detail */}
                 <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
                   <div className="flex flex-col min-w-0">
                     <span className={cn("text-[13px] truncate", !email.isRead ? "text-white" : "text-gray-300")}>
@@ -117,6 +125,7 @@ export function EmailList({
                   </span>
                 </div>
 
+                {/* Priority/Urgency Indicator */}
                 <div className="w-24 shrink-0 flex justify-end">
                   <div className={cn(
                     "h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-black border",
@@ -130,6 +139,7 @@ export function EmailList({
                   </div>
                 </div>
 
+                {/* Suggested Action Badge */}
                 <div className="w-32 shrink-0 flex justify-center">
                   <div className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-[9px] font-bold uppercase",
@@ -141,6 +151,7 @@ export function EmailList({
                   </div>
                 </div>
 
+                {/* Timestamp */}
                 <div className="w-20 shrink-0 text-right">
                   <span className="text-[10px] text-gray-600 font-bold uppercase">{email.receivedTime || '14h ago'}</span>
                 </div>
