@@ -71,28 +71,30 @@ export default function InboxPage() {
         <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8">
           {/* KPI Dashboard - Restored from original screenshot */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <KPICard 
-              title="Unread Messages" 
-              value={emails?.filter(e => !e.isRead).length || 0} 
-              icon={<Mail className="h-4 w-4 text-blue-400" />}
-              trend="+2 from last hour"
-              variant="blue"
-            />
-            <KPICard 
-              title="Urgent Actions" 
-              value={emails?.filter(e => e.priority === 'High').length || 0} 
-              icon={<AlertCircle className="h-4 w-4 text-red-400" />}
-              trend="Requires immediate attention"
-              variant="red"
-            />
-            <KPICard 
-              title="Focus Time Saved" 
-              value="4.2h" 
-              icon={<Zap className="h-4 w-4 text-orange-400" />}
-              trend="Based on 12 auto-archives"
-              variant="orange"
-            />
-          </div>
+            {/* Replace your current KPI Dashboard section with this: */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <KPICard 
+    title="Unread Messages" 
+    value={emails?.filter(e => !e.isRead).length || 0} 
+    icon={Mail} // Pass the reference, not the <Element />
+    subtitle="+2 from last hour"
+    variant="default" // Use your defined variant keys (default, danger, warning, etc)
+  />
+  <KPICard 
+    title="Urgent Actions" 
+    value={emails?.filter(e => e.priority === 'High').length || 0} 
+    icon={AlertCircle} 
+    subtitle="Requires immediate attention"
+    variant="danger" 
+  />
+  <KPICard 
+    title="Focus Time Saved" 
+    value="4.2h" 
+    icon={Zap} 
+    subtitle="Based on 12 auto-archives"
+    variant="warning" 
+  />
+</div>
 
           {/* Table Container */}
           <div className="flex-1 overflow-hidden bg-[#0F1117] border border-white/5 rounded-3xl flex flex-col shadow-2xl">
