@@ -21,6 +21,15 @@ import {
   Trash 
 } from 'lucide-react';
 
+// STABILIZATION: Define icon mapping outside the component to prevent 
+// ReferenceErrors during Vercel's static analysis/prerendering.
+const ICON_MAP = {
+  unread: Mail,
+  urgent: AlertTriangle,
+  noise: Sparkles,
+  focus: Clock,
+};
+
 type TabFilter = 'all' | 'action' | 'today' | 'week' | 'noise';
 
 export default function InboxPage() {
@@ -32,14 +41,23 @@ export default function InboxPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrafting, setIsDrafting] = useState(false);
 
+  // Filter Logic
   const filteredEmails = useMemo(() => {
-    let list = [...emails].sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime());
+    let list = [...emails].sort((a, b) => 
+      new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime()
+    );
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      list = list.filter(e => e.sender.name.toLowerCase().includes(q) || e.subject.toLowerCase().includes(q));
+      list = list.filter(e => 
+        e.sender.name.toLowerCase().includes(q) || 
+        e.subject.toLowerCase().includes(q)
+      );
     }
+
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
     switch (activeTab) {
       case 'action': return list.filter(e => e.suggestedAction === 'Respond' || e.priority === 'High');
       case 'today': return list.filter(e => new Date(e.receivedAt) >= todayStart);
@@ -73,7 +91,7 @@ export default function InboxPage() {
     }
   }, [filteredEmails, archiveEmail]);
 
-  // KEYBOARD SHORTCUTS ENGINE - Optimized with useCallback
+  // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -94,25 +112,27 @@ export default function InboxPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedEmailId, handleArchiveEmail]);
 
+  // Statistics
   const stats = useMemo(() => {
     const unread = emails.filter((e) => !e.isRead).length;
-    const urgent = emails.filter((e) => e.priority === 'High' || e.category === 'Urgent').length;
-    const noiseReduced = emails.filter((e) => e.suggestedAction === 'Archive').length;
+    const urgentCount = emails.filter((e) => e.priority === 'High' || e.category === 'Urgent').length;
+    const noiseCount = emails.filter((e) => e.suggestedAction === 'Archive').length;
     const needsAction = emails.filter((e) => e.suggestedAction === 'Respond' && !e.isRead).length;
-    const estimatedMinutes = (needsAction * 5) + ((unread - needsAction) * 2);
-    const noisePercent = emails.length ? Math.round((noiseReduced / emails.length) * 100) : 0;
+    const minutes = (needsAction * 5) + ((unread - needsAction) * 2);
+    const noisePercent = emails.length ? Math.round((noiseCount / emails.length) * 100) : 0;
     
     return { 
       unread, 
-      urgent, 
+      urgent: urgentCount, 
       noisePercent, 
-      estimatedTime: estimatedMinutes < 60 ? `${estimatedMinutes}m` : `${Math.floor(estimatedMinutes / 60)}h ${estimatedMinutes % 60}m` 
+      estimatedTime: minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h ${minutes % 60}m` 
     };
   }, [emails]);
 
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12]">
+        {/* Intelligence Banner */}
         <div className="flex items-center justify-center gap-2 border-b border-white/5 bg-blue-500/5 px-4 py-2">
           <Zap className="h-3 w-3 text-blue-400 animate-pulse" />
           <p className="text-[11px] font-bold uppercase tracking-widest text-blue-400/80">
@@ -123,35 +143,46 @@ export default function InboxPage() {
         <Header title="Inbox" />
         
         <div className="flex-1 overflow-hidden flex flex-col p-4 space-y-4">
+          {/* Toolbar */}
           <div className="flex items-center gap-3">
             <div className="relative flex-1 group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
               <Input
-                placeholder="Search (⌘K)..."
+                placeholder="Search command (⌘K)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 h-11 bg-white/5 border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500/50"
               />
             </div>
-            <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl border-white/10 bg-white/5 hover:bg-red-500/10 hover:text-red-500 text-gray-500" onClick={archiveAllNoise}>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-11 w-11 rounded-xl border-white/10 bg-white/5 hover:bg-red-500/10 hover:text-red-500 text-gray-500 transition-all" 
+              onClick={archiveAllNoise}
+            >
               <Trash className="w-4 h-4" />
             </Button>
           </div>
 
+          {/* KPI Dashboard */}
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {/* Using the icon components directly to ensure they are registered in the build */}
-            <KPICard title="Unread" value={stats.unread} icon={Mail} />
-            <KPICard title="Urgent" value={stats.urgent} icon={AlertTriangle} variant="danger" />
-            <KPICard title="Noise" value={`${stats.noisePercent}%`} icon={Sparkles} variant="success" />
-            <KPICard title="Focus Time" value={stats.estimatedTime} icon={Clock} variant="info" />
+            <KPICard title="Unread" value={stats.unread} icon={ICON_MAP.unread} />
+            <KPICard title="Urgent" value={stats.urgent} icon={ICON_MAP.urgent} variant="danger" />
+            <KPICard title="Noise" value={`${stats.noisePercent}%`} icon={ICON_MAP.noise} variant="success" />
+            <KPICard title="Focus Time" value={stats.estimatedTime} icon={ICON_MAP.focus} variant="info" />
           </div>
 
+          {/* Main List Container */}
           <div className="flex-1 overflow-hidden bg-white/[0.02] border border-white/5 rounded-3xl flex flex-col">
             <div className="px-6 border-b border-white/5">
               <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabFilter)}>
                 <TabsList className="h-14 w-full justify-start bg-transparent p-0 gap-8">
                   {['all', 'action', 'today', 'noise'].map((tab) => (
-                    <TabsTrigger key={tab} value={tab} className="h-14 rounded-none border-b-2 border-transparent bg-transparent px-0 text-[10px] font-bold uppercase tracking-widest data-[state=active]:border-blue-500 data-[state=active]:text-white text-gray-500 transition-all">
+                    <TabsTrigger 
+                      key={tab} 
+                      value={tab} 
+                      className="h-14 rounded-none border-b-2 border-transparent bg-transparent px-0 text-[10px] font-bold uppercase tracking-widest data-[state=active]:border-blue-500 data-[state=active]:text-white text-gray-500 transition-all"
+                    >
                       {tab}
                     </TabsTrigger>
                   ))}
@@ -167,6 +198,7 @@ export default function InboxPage() {
           </div>
         </div>
 
+        {/* Global Slide-out Panel */}
         <EmailDetailSheet
           email={currentSelectedEmail}
           open={isDetailsOpen}
