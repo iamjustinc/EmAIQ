@@ -17,7 +17,10 @@ import {
   Zap,
   AlertCircle,
   ChevronRight,
-  Loader2
+  Loader2,
+  Mail,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 interface EmailDetailSheetProps {
@@ -42,10 +45,14 @@ export function EmailDetailSheet({
   const [isDelegating, setIsDelegating] = useState(false);
   const [successMessage, setSuccessMessage] = useState("Action Completed");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
+  // NEW: Toggle for full email view
+  const [showFullEmail, setShowFullEmail] = useState(false);
 
   useEffect(() => {
     if (open && email) {
       setIsAnalyzing(true);
+      setShowFullEmail(false); // Reset toggle when opening new email
       const timer = setTimeout(() => {
         setIsAnalyzing(false);
       }, 800);
@@ -58,38 +65,28 @@ export function EmailDetailSheet({
   const handleAction = async (msg: string) => {
     setIsSending(true);
     setSuccessMessage(msg);
-    
-    // Simulate the "Processing" time
     await new Promise((res) => setTimeout(res, 800));
-    
     setIsSending(false);
     setSentSuccess(true);
     
-    // Wait for the success checkmark to show, then remove the email
     setTimeout(() => {
       setSentSuccess(false);
       setIsDrafting(false);
       setIsDelegating(false);
-      
-      // THIS IS THE KEY: Call onArchive to remove it from the inbox list
-      onArchive(email.id); 
-      
+      onArchive(email.id); // Makes it disappear from the list
       onOpenChange(false);
-    }, 1500);
+    }, 1200);
   };
 
   return (
     <Sheet open={open} onOpenChange={(val) => {
       onOpenChange(val);
-      if(!val) { 
-        setIsDrafting(false); 
-        setIsDelegating(false); 
-      }
+      if(!val) { setIsDrafting(false); setIsDelegating(false); }
     }}>
       <SheetContent className="w-full sm:max-w-md bg-[#0F1117] text-white border-l border-white/10 p-0 flex flex-col h-full shadow-2xl">
         
         {/* Header */}
-        <div className="p-6 border-b border-white/10 bg-[#0F1117]">
+        <div className="p-6 border-b border-white/10 bg-[#0F1117] z-20">
           <div className="flex justify-between items-start mb-4">
             <div className="flex flex-wrap gap-2">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-[10px] font-bold text-red-400 uppercase tracking-wider">
@@ -127,6 +124,7 @@ export function EmailDetailSheet({
             </div>
           ) : (
             <>
+              {/* AI SUMMARY BOX */}
               <div className="space-y-3 bg-white/[0.03] border border-white/10 p-5 rounded-2xl shadow-inner animate-in fade-in slide-in-from-bottom-2 duration-500">
                 <div className="flex items-center gap-2 text-blue-400">
                   <Sparkles className="h-4 w-4" />
@@ -141,94 +139,89 @@ export function EmailDetailSheet({
                   ))}
                 </ul>
               </div>
-              <div className="text-sm leading-relaxed text-gray-400 whitespace-pre-wrap px-1 animate-in fade-in duration-700">
-                {email.bodyPreview || email.body}
+
+              {/* NEW: FULL EMAIL TOGGLE BUTTON */}
+              <div className="space-y-4">
+                <Button 
+                  variant="ghost" 
+                  className="w-full flex items-center justify-between px-2 text-gray-400 hover:text-white hover:bg-white/5 transition-colors group"
+                  onClick={() => setShowFullEmail(!showFullEmail)}
+                >
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-blue-500/50 group-hover:text-blue-400" />
+                    <span className="text-xs font-bold uppercase tracking-widest">Original Message</span>
+                  </div>
+                  {showFullEmail ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+
+                {/* EMAIL BODY - Expandable */}
+                <div className={`
+                  overflow-hidden transition-all duration-500 ease-in-out
+                  ${showFullEmail ? 'max-h-[1000px] opacity-100' : 'max-h-16 opacity-40 mask-fade'}
+                `}>
+                  <div className="text-sm leading-relaxed text-gray-400 whitespace-pre-wrap px-1 border-l border-white/5 pl-4">
+                    {email.bodyPreview || email.body}
+                  </div>
+                </div>
+                {!showFullEmail && (
+                   <p className="text-[10px] text-center text-gray-600 uppercase tracking-tighter">Click to expand full history</p>
+                )}
               </div>
             </>
           )}
         </div>
 
-        {/* Action Grid vs Forms */}
+        {/* Action Grid (Same as before) */}
         {!sentSuccess && !isAnalyzing && (
-          <div className="p-6 border-t border-white/10 bg-[#0B0D12] animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="p-6 border-t border-white/10 bg-[#0B0D12] z-20">
+            {/* Action buttons (Respond, Review, Delegate, Archive) stay here... */}
             {!isDrafting && !isDelegating ? (
-              <div className="grid grid-cols-2 gap-3">
-                <Button 
-                  className="flex flex-col items-center justify-center h-20 gap-1 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all active:scale-95"
-                  onClick={() => setIsDrafting(true)}
-                >
-                  <Reply className="h-5 w-5" />
-                  <span className="text-xs font-bold uppercase tracking-tighter">Respond</span>
-                </Button>
-                
-                <Button 
-                  variant="outline"
-                  className="flex flex-col items-center justify-center h-20 gap-1 border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 rounded-2xl transition-all active:scale-95"
-                  onClick={() => handleAction("Scheduled for Review")}
-                >
-                  <Clock className="h-5 w-5" />
-                  <span className="text-xs font-bold uppercase tracking-tighter">Review Later</span>
-                </Button>
-
-                <Button 
-                  variant="outline"
-                  className="flex flex-col items-center justify-center h-20 gap-1 border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 rounded-2xl transition-all active:scale-95"
-                  onClick={() => setIsDelegating(true)}
-                >
-                  <Users className="h-5 w-5" />
-                  <span className="text-xs font-bold uppercase tracking-tighter">Delegate</span>
-                </Button>
-
-                <Button 
-                  variant="outline"
-                  className="flex flex-col items-center justify-center h-20 gap-1 border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-400 rounded-2xl transition-all active:scale-95"
-                  onClick={() => onArchive(email.id)}
-                >
-                  <Archive className="h-5 w-5" />
-                  <span className="text-xs font-bold uppercase tracking-tighter text-red-400">Archive</span>
-                </Button>
-              </div>
+               <div className="grid grid-cols-2 gap-3">
+                 <Button className="flex flex-col items-center justify-center h-20 gap-1 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all active:scale-95" onClick={() => setIsDrafting(true)}>
+                   <Reply className="h-5 w-5" /><span className="text-xs font-bold uppercase">Respond</span>
+                 </Button>
+                 <Button variant="outline" className="flex flex-col items-center justify-center h-20 gap-1 border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 rounded-2xl transition-all active:scale-95" onClick={() => handleAction("Scheduled for Review")}>
+                   <Clock className="h-5 w-5" /><span className="text-xs font-bold uppercase">Review Later</span>
+                 </Button>
+                 <Button variant="outline" className="flex flex-col items-center justify-center h-20 gap-1 border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 rounded-2xl transition-all active:scale-95" onClick={() => setIsDelegating(true)}>
+                   <Users className="h-5 w-5" /><span className="text-xs font-bold uppercase">Delegate</span>
+                 </Button>
+                 <Button variant="outline" className="flex flex-col items-center justify-center h-20 gap-1 border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-400 rounded-2xl transition-all active:scale-95" onClick={() => onArchive(email.id)}>
+                   <Archive className="h-5 w-5" /><span className="text-xs font-bold uppercase text-red-400">Archive</span>
+                 </Button>
+               </div>
             ) : isDelegating ? (
-              <div className="space-y-4 animate-in slide-in-from-right-4 duration-300">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400">Delegate Task</span>
-                  <Button variant="ghost" size="sm" className="h-6 text-xs text-gray-500" onClick={() => setIsDelegating(false)}>Back</Button>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold uppercase text-blue-400">Delegate Task</span>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setIsDelegating(false)}>Back</Button>
                 </div>
-                <div className="space-y-2">
-                  {['Sarah (Operations)', 'Mike (Product)', 'Legal Team'].map((person) => (
-                    <Button 
-                      key={person}
-                      variant="outline" 
-                      className="w-full justify-between border-white/5 bg-white/5 hover:bg-white/10 text-sm py-5 px-4 rounded-xl"
-                      onClick={() => handleAction(`Delegated to ${person}`)}
-                    >
-                      {person}
-                      <ChevronRight className="h-4 w-4 text-gray-600" />
-                    </Button>
-                  ))}
-                </div>
+                {['Sarah (Ops)', 'Mike (Tech)', 'Support Team'].map(p => (
+                  <Button key={p} variant="outline" className="w-full justify-between border-white/5 bg-white/5 py-5 rounded-xl" onClick={() => handleAction(`Delegated to ${p}`)}>
+                    {p} <ChevronRight className="h-4 w-4" />
+                  </Button>
+                ))}
               </div>
             ) : (
-              <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400 flex items-center gap-2">
-                    <Zap className="h-3 w-3 fill-blue-400" /> AI Draft Ready
-                  </span>
-                  <Button variant="ghost" size="sm" className="h-6 text-xs text-gray-500" onClick={() => setIsDrafting(false)}>Back</Button>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold uppercase text-blue-400 flex items-center gap-1"><Zap className="h-3 w-3" /> AI Draft Ready</span>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setIsDrafting(false)}>Back</Button>
                 </div>
-                <Textarea 
-                  placeholder="Draft your reply..." 
-                  className="min-h-[140px] bg-white/5 border-white/10 rounded-xl text-white p-4 resize-none focus:ring-1 focus:ring-blue-500 outline-none"
-                  autoFocus
-                />
-                <Button className="w-full h-14 gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold" onClick={() => handleAction("Reply Sent")}>
-                  {isSending ? "Processing..." : <><Send className="h-4 w-4" /> Send Message</>}
-                </Button>
+                <Textarea className="min-h-[140px] bg-white/5 border-white/10 rounded-xl" placeholder="Draft your reply..." autoFocus />
+                <Button className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-xl font-bold" onClick={() => handleAction("Reply Sent")}>Send Message</Button>
               </div>
             )}
           </div>
         )}
       </SheetContent>
+      
+      {/* ADD THIS CSS to your globals.css for the fade effect */}
+      <style jsx>{`
+        .mask-fade {
+          mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+        }
+      `}</style>
     </Sheet>
   );
 }
