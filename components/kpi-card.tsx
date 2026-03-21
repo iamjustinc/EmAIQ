@@ -2,78 +2,77 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+// Assuming Sparkles is the name of that green icon in lucide-react, 
+// if not, we can import it from the exact source.
+import { Sparkles, LucideIcon } from 'lucide-react';
 
 interface KPICardProps {
   title: string;
   value: string | number;
-  subtitle?: string;
-  icon: LucideIcon;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+  subtitle: string;
+  // Make icon optional, because the Noise card will use its specific hardcoded one
+  icon?: LucideIcon; 
+  variant?: 'default' | 'danger' | 'warning' | 'success';
   onClick?: () => void;
 }
-
-const variantStyles = {
-  default: 'text-blue-400 border-blue-500/20 bg-blue-500/5',
-  success: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5',
-  warning: 'text-orange-400 border-orange-500/20 bg-orange-500/5',
-  danger: 'text-red-400 border-red-500/20 bg-red-500/5',
-  info: 'text-purple-400 border-purple-500/20 bg-purple-500/5',
-};
 
 export function KPICard({ 
   title, 
   value, 
   subtitle, 
   icon: Icon, 
-  trend, 
-  variant = 'default',
-  onClick
+  variant = 'default', 
+  onClick 
 }: KPICardProps) {
-  // Safety check for production builds
-  if (!Icon) return null;
+  
+  // Is this the "Noise" card? If so, we override the icon and color.
+  const isNoiseCard = title === 'Noise';
 
   return (
-    <div 
+    <button
       onClick={onClick}
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-white/5 bg-[#0F1117] p-6 shadow-2xl transition-all",
-        onClick ? "cursor-pointer hover:border-white/20 active:scale-[0.98] hover:bg-white/[0.02]" : ""
+        "bg-[#0F1117] border border-white/5 p-6 rounded-3xl flex items-center gap-5 w-full text-left transition-all group",
+        onClick && "hover:border-blue-500/20 hover:bg-white/[0.01] cursor-pointer"
       )}
     >
-      <div className="flex flex-col gap-5">
-        <div className={cn(
-          'w-fit rounded-2xl border p-3 shadow-inner transition-transform group-hover:scale-110',
-          variantStyles[variant] || variantStyles.default
-        )}>
-          <Icon className="h-5 w-5" />
-        </div>
-
-        <div className="space-y-1">
-          <div className="flex items-baseline gap-2">
-            <h3 className="text-3xl font-bold tracking-tight text-white">
-              {value}
-            </h3>
-            {trend && (
-              <span className={cn(
-                'text-[10px] font-bold px-1.5 py-0.5 rounded-md border',
-                trend.isPositive 
-                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
-                  : 'bg-red-500/10 border-red-500/20 text-red-400'
-              )}>
-                {trend.isPositive ? '↑' : '↓'} {trend.value}%
-              </span>
-            )}
-          </div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 transition-colors group-hover:text-gray-300">
-            {title}
-          </p>
-        </div>
+      {/* Icon Container */}
+      <div className={cn(
+        "p-3 rounded-2xl border",
+        // Specific styles for the green "Noise" card
+        isNoiseCard 
+          ? "bg-green-500/10 border-green-500/20 text-green-400"
+          : variant === 'default'
+          ? "bg-blue-500/10 border-blue-500/20 text-blue-400 group-hover:text-blue-300 group-hover:bg-blue-500/20"
+          : variant === 'danger'
+          ? "bg-red-500/10 border-red-500/20 text-red-500 group-hover:text-red-400 group-hover:bg-red-500/20"
+          : variant === 'warning'
+          ? "bg-orange-500/10 border-orange-500/20 text-orange-500 group-hover:text-orange-400 group-hover:bg-orange-500/20"
+          : "bg-gray-500/10 border-gray-500/20 text-gray-500"
+      )}>
+        {/* USE THE GREEN STAR ICON for NOISE, otherwise use passed Icon */}
+        {isNoiseCard ? (
+          <Sparkles className="h-6 w-6" /> // This is the icon from image_2.png
+        ) : Icon ? (
+          <Icon className="h-6 w-6" />
+        ) : null}
       </div>
-    </div>
+
+      {/* Text Container */}
+      <div className="flex flex-col">
+        <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-gray-600 group-hover:text-gray-400">
+          {title}
+        </span>
+        <span className={cn(
+          "text-3xl font-bold tracking-tight",
+          isNoiseCard ? "text-green-400" : "text-white"
+        )}>
+          {value}
+        </span>
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-700 mt-1">
+          {subtitle}
+        </span>
+      </div>
+    </button>
   );
 }
