@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import rawEmails from "@/email.json" 
 import { Email } from "@/lib/types" 
 
-const STORAGE_KEY = "emailiq_emails_v3" 
+// Updated storage key to match EmAIQ
+const STORAGE_KEY = "emaiq_emails_v3" 
 
 export function useEmails() {
   const [emails, setEmails] = useState<Email[]>([])
@@ -52,16 +53,13 @@ export function useEmails() {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, snoozedUntil: until, isRead: true } : e))
   }
 
-  // Logic to determine what to show and how to sort
   const processedEmails = loading ? [] : emails
     .filter(e => {
       if (e.isActioned) return false;
-      // Hide if snoozed and time hasn't passed yet
       if (e.snoozedUntil && e.snoozedUntil > Date.now()) return false;
       return true;
     })
     .sort((a, b) => {
-      // If an email's snooze just expired, it goes to the very top
       const aExpired = a.snoozedUntil && a.snoozedUntil <= Date.now() ? 1 : 0;
       const bExpired = b.snoozedUntil && b.snoozedUntil <= Date.now() ? 1 : 0;
       return bExpired - aExpired;

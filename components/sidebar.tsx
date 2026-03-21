@@ -13,11 +13,17 @@ import {
   ChevronRight,
   Mail,
   Sparkles,
+  Send,
+  Star,
+  Archive,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
   { name: 'Inbox', href: '/', icon: Inbox },
+  { name: 'Sent', href: '/sent', icon: Send },
+  { name: 'Favorites', href: '/favorites', icon: Star },
+  { name: 'Archived', href: '/archived', icon: Archive },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Demo Mode', href: '/demo', icon: Play },
   { name: 'Settings', href: '/settings', icon: Settings },
@@ -38,21 +44,21 @@ export function Sidebar({ defaultCollapsed = false }: SidebarProps) {
         isCollapsed ? 'w-16' : 'w-60'
       )}
     >
-      {/* Logo */}
+      {/* Logo - Changed to EmAIQ */}
       <div className="flex h-16 items-center gap-3 border-b border-border px-4">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
           <Mail className="h-4 w-4 text-primary-foreground" />
         </div>
         {!isCollapsed && (
           <div className="flex items-center gap-1">
-            <span className="text-lg font-semibold text-foreground">EmailIQ</span>
+            <span className="text-lg font-semibold text-foreground tracking-tight">EmAIQ</span>
             <Sparkles className="h-4 w-4 text-primary" />
           </div>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 p-2">
+      <nav className="flex-1 space-y-1 p-2 overflow-y-auto scrollbar-hide">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
