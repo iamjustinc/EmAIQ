@@ -58,14 +58,22 @@ export function EmailDetailSheet({
   const handleAction = async (msg: string) => {
     setIsSending(true);
     setSuccessMessage(msg);
+    
+    // Simulate the "Processing" time
     await new Promise((res) => setTimeout(res, 800));
+    
     setIsSending(false);
     setSentSuccess(true);
     
+    // Wait for the success checkmark to show, then remove the email
     setTimeout(() => {
       setSentSuccess(false);
       setIsDrafting(false);
       setIsDelegating(false);
+      
+      // THIS IS THE KEY: Call onArchive to remove it from the inbox list
+      onArchive(email.id); 
+      
       onOpenChange(false);
     }, 1500);
   };
