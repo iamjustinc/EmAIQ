@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { Email } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Reply, UserPlus, Archive, Clock } from 'lucide-react';
+import { Reply, UserPlus, Archive, Clock, AlertCircle } from 'lucide-react';
 
 interface EmailListProps {
   emails: Email[];
@@ -35,9 +35,9 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
       </div>
 
       {/* Table Header */}
-      <div className="flex items-center gap-4 px-6 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
-        <div className="w-1 shrink-0" /> {/* Marker gutter space */}
-        <div className="w-4 shrink-0" /> {/* Unread dot space */}
+      <div className="flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
+        <div className="w-8 shrink-0 text-center">Pri</div>
+        <div className="w-4 shrink-0" />
         <div className="w-40 shrink-0">Sender</div>
         <div className="flex-1 min-w-0">Message Detail</div>
         <div className="w-32 shrink-0 text-center">Action</div>
@@ -50,24 +50,31 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
             const isSelected = selectedEmail?.id === email.id;
             const isReturned = email.snoozedUntil && email.snoozedUntil <= Date.now();
             
-            // Urgency Pill Colors
-            const urgencyStyles = 
-              email.urgency.label === 'High' ? "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]" : 
-              email.urgency.label === 'Medium' ? "bg-orange-500" : 
-              "bg-emerald-500/40"; // Low/Normal is more muted but still visible
+            // Urgency Icon Logic
+            const priorityLabel = email.urgency.label;
 
             return (
               <button 
                 key={email.id} 
                 onClick={() => onSelectEmail(email)} 
                 className={cn(
-                  "w-full flex items-center gap-4 px-6 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1 relative",
-                  isSelected ? "bg-white/[0.04]" : "hover:bg-white/[0.01]", 
+                  "w-full flex items-center gap-4 px-8 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1",
+                  isSelected ? "bg-white/[0.04] shadow-[inset_3px_0_0_#3b82f6]" : "hover:bg-white/[0.01]", 
                 )}
               >
-                {/* 1. DISCONNECTED STATUS MARKER (The "Pill") */}
-                <div className="w-1 self-stretch py-1 shrink-0">
-                    <div className={cn("w-full h-full rounded-full transition-all", urgencyStyles)} />
+                {/* 1. URGENCY MARKERS */}
+                <div className="w-8 shrink-0 flex justify-center items-center">
+                  {priorityLabel === 'High' ? (
+                    <div className="flex gap-0.5 text-red-500 font-black text-sm animate-pulse">
+                      <span>!</span><span>!</span>
+                    </div>
+                  ) : priorityLabel === 'Medium' ? (
+                    <div className="text-orange-500 font-black text-sm">
+                      !
+                    </div>
+                  ) : (
+                    <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
+                  )}
                 </div>
 
                 {/* 2. UNREAD DOT */}
