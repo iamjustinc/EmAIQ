@@ -11,7 +11,7 @@ import { Email } from '@/lib/types';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Trash2, Mail, Zap, Clock, AlertCircle } from 'lucide-react';
+import { Search, Trash2, Mail, Zap, AlertCircle } from 'lucide-react';
 
 type TabFilter = 'all' | 'action' | 'today' | 'noise';
 
@@ -69,32 +69,30 @@ export default function InboxPage() {
         />
         
         <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8">
-          {/* KPI Dashboard - Restored from original screenshot */}
+          {/* KPI Dashboard */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Replace your current KPI Dashboard section with this: */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <KPICard 
-    title="Unread Messages" 
-    value={emails?.filter(e => !e.isRead).length || 0} 
-    icon={Mail} // Pass the reference, not the <Element />
-    subtitle="+2 from last hour"
-    variant="default" // Use your defined variant keys (default, danger, warning, etc)
-  />
-  <KPICard 
-    title="Urgent Actions" 
-    value={emails?.filter(e => e.priority === 'High').length || 0} 
-    icon={AlertCircle} 
-    subtitle="Requires immediate attention"
-    variant="danger" 
-  />
-  <KPICard 
-    title="Focus Time Saved" 
-    value="4.2h" 
-    icon={Zap} 
-    subtitle="Based on 12 auto-archives"
-    variant="warning" 
-  />
-</div>
+            <KPICard 
+              title="Unread Messages" 
+              value={emails?.filter(e => !e.isRead).length || 0} 
+              icon={Mail} 
+              subtitle="+2 from last hour"
+              variant="default"
+            />
+            <KPICard 
+              title="Urgent Actions" 
+              value={emails?.filter(e => e.priority === 'High').length || 0} 
+              icon={AlertCircle} 
+              subtitle="Requires immediate attention"
+              variant="danger" 
+            />
+            <KPICard 
+              title="Focus Time Saved" 
+              value="4.2h" 
+              icon={Zap} 
+              subtitle="Based on 12 auto-archives"
+              variant="warning" 
+            />
+          </div>
 
           {/* Table Container */}
           <div className="flex-1 overflow-hidden bg-[#0F1117] border border-white/5 rounded-3xl flex flex-col shadow-2xl">
