@@ -63,12 +63,16 @@ export default function InboxPage() {
   }, [emails, selectedEmailId]);
 
   const handleSelectEmail = (email: Email) => {
+    // 1. Mark as read immediately in the local state/hook
+    markAsRead(email.id);
+    
+    // 2. Pass the FULL email object specifically to the selection state
+    // This bypasses any delay in the 'emails' array re-rendering
     setSelectedEmailId(email.id);
+    
+    // 3. Open the UI
     setIsDetailsOpen(true);
     setIsDrafting(false); 
-    if (!email.isRead) {
-      markAsRead(email.id);
-    }
   };
 
   const handleArchiveEmail = (emailId: string) => {
