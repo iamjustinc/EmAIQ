@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+
+// CRITICAL: You must import your custom hook here
 import { useEmails } from '@/hooks/useEmails'; 
+
+// Ensure all UI components are imported
 import { AppShell } from '@/components/app-shell';
 import { Header } from '@/components/header';
 import { KPICard } from '@/components/kpi-card';
@@ -12,7 +16,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-// Explicitly import each icon to avoid tree-shaking issues during Vercel builds
+// Clean Lucide imports (no duplicate path imports)
 import { 
   Mail, 
   AlertTriangle, 
@@ -26,6 +30,7 @@ import {
 type TabFilter = 'all' | 'action' | 'today' | 'week' | 'noise';
 
 export default function InboxPage() {
+  // If useEmails is not exported correctly from '@/hooks/useEmails', this will crash
   const { emails, archiveEmail, markAsRead, archiveAllNoise } = useEmails();
   
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
@@ -34,7 +39,6 @@ export default function InboxPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrafting, setIsDrafting] = useState(false);
 
-  // Memoized Filter Logic
   const filteredEmails = useMemo(() => {
     if (!emails) return [];
     let list = [...emails].sort((a, b) => 
@@ -85,7 +89,6 @@ export default function InboxPage() {
     }
   }, [filteredEmails, archiveEmail]);
 
-  // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -106,7 +109,6 @@ export default function InboxPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedEmailId, handleArchiveEmail]);
 
-  // Statistics Calculation
   const stats = useMemo(() => {
     const safeEmails = emails || [];
     const unread = safeEmails.filter((e) => !e.isRead).length;
@@ -141,16 +143,16 @@ export default function InboxPage() {
             <div className="relative flex-1 group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
               <Input
-                placeholder="Search command (⌘K)..."
+                placeholder="Search emails..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-11 bg-white/5 border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500/50"
+                className="pl-10 h-11 bg-white/5 border-white/10 rounded-xl"
               />
             </div>
             <Button 
               variant="outline" 
               size="icon" 
-              className="h-11 w-11 rounded-xl border-white/10 bg-white/5 hover:bg-red-500/10 hover:text-red-500 text-gray-500" 
+              className="h-11 w-11 rounded-xl border-white/10 bg-white/5" 
               onClick={archiveAllNoise}
             >
               <Trash className="w-4 h-4" />
@@ -158,7 +160,6 @@ export default function InboxPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {/* Directly passing imported icons */}
             <KPICard title="Unread" value={stats.unread} icon={Mail} />
             <KPICard title="Urgent" value={stats.urgent} icon={AlertTriangle} variant="danger" />
             <KPICard title="Noise" value={`${stats.noisePercent}%`} icon={Sparkles} variant="success" />
@@ -173,7 +174,7 @@ export default function InboxPage() {
                     <TabsTrigger 
                       key={tab} 
                       value={tab} 
-                      className="h-14 rounded-none border-b-2 border-transparent bg-transparent px-0 text-[10px] font-bold uppercase tracking-widest data-[state=active]:border-blue-500 data-[state=active]:text-white text-gray-500 transition-all"
+                      className="h-14 rounded-none border-b-2 border-transparent bg-transparent px-0 text-[10px] font-bold uppercase tracking-widest data-[state=active]:border-blue-500 data-[state=active]:text-white text-gray-500"
                     >
                       {tab}
                     </TabsTrigger>

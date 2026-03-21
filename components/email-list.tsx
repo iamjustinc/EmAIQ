@@ -2,6 +2,7 @@
 
 import { Email } from '@/lib/types';
 import { EmailRow } from '@/components/email-row';
+import { Mail } from 'lucide-react';
 
 interface EmailListProps {
   emails: Email[];
@@ -10,14 +11,8 @@ interface EmailListProps {
 }
 
 export function EmailList({ emails, selectedEmail, onSelectEmail }: EmailListProps) {
-  if (emails.length === 0) {
-    return (
-      <div className="flex flex-col h-64 items-center justify-center space-y-3 opacity-20">
-        <Mail className="h-10 w-10" />
-        <p className="text-sm font-medium tracking-widest uppercase">Inbox Zero Achieved</p>
-      </div>
-    );
-  }
+  // ... rest of code
+}
 
   return (
     <div className="flex-1 overflow-auto scrollbar-hide">
