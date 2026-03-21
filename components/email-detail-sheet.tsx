@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet'; // Assuming this maps to close button presence
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Email } from '@/lib/types';
-import { Archive, Reply, Clock, Users, X, CheckCircle2, Zap, AlertCircle, Loader2, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { Archive, Reply, Clock, Users, CheckCircle2, Zap, AlertCircle, Loader2, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 
 interface EmailDetailSheetProps {
   email: Email | null;
@@ -19,7 +19,7 @@ interface EmailDetailSheetProps {
 export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDrafting, setIsDrafting }: EmailDetailSheetProps) {
   const [sentSuccess, setSentSuccess] = useState(false);
   const [isDelegating, setIsDelegating] = useState(false);
-  const [isGeneratingDraft, setIsGeneratingDraft] = useState(false); // New Loading State
+  const [isGeneratingDraft, setIsGeneratingDraft] = useState(false); 
   const [successMessage, setSuccessMessage] = useState("Action Completed");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showFullEmail, setShowFullEmail] = useState(false);
@@ -68,10 +68,13 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDraft
 
   return (
     <Sheet open={open} onOpenChange={(val) => { onOpenChange(val); if(!val) { setIsDrafting(false); setIsDelegating(false); } }}>
+      {/* The SheetContent component usually handles adding the default, functional 
+        close button in the top right. We will let it handle this.
+      */}
       <SheetContent className="w-full sm:max-w-md bg-[#0F1117] text-white border-l border-white/10 p-0 flex flex-col h-full shadow-2xl overflow-hidden">
         
-        {/* Header */}
-        <div className="p-8 pb-6 border-b border-white/5">
+        {/* Header - DUPLICATE CANCEL BUTTON REMOVED */}
+        <div className="p-8 pb-6 border-b border-white/5 relative">
           <div className="flex justify-between items-start mb-6">
             <div className="flex gap-2">
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-[9px] font-black text-red-500 uppercase tracking-widest">
@@ -81,11 +84,9 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDraft
                 AI Scanned
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="text-gray-600 hover:text-white hover:bg-white/5 rounded-full transition-colors">
-              <X className="h-5 w-5" />
-            </Button>
+            {/* Manual closing button removed. SheetContent handles the close icon automatically. */}
           </div>
-          <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-100">{email.subject}</h2>
+          <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-100 pr-10">{email.subject}</h2>
           <p className="text-xs text-gray-500 mt-3 font-bold uppercase tracking-widest">From: <span className="text-blue-400 ml-1">{email.sender.name}</span></p>
         </div>
 
