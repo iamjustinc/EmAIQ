@@ -16,6 +16,18 @@ export default function InboxPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   const [isDrafting, setIsDrafting] = useState(false);
+  
+  // Refined Loading Logic
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2200); // Slightly longer for consistent Vercel visibility
+    return () => clearTimeout(timer);
+  }, []);
 
   const currentSelectedEmail = useMemo(() => 
     emails?.find(e => e.id === selectedEmailId) || null, 
@@ -62,10 +74,40 @@ export default function InboxPage() {
     return { unread, urgent };
   }, [emails]);
 
+  // Loading Screen
+  if (isLoading || !isMounted) {
+    return (
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0B0D12]">
+        <div className="relative mb-8 animate-in fade-in zoom-in duration-700">
+          <Mail className="h-12 w-12 text-blue-500" />
+          <div className="absolute inset-0 h-12 w-12 blur-2xl bg-blue-500/30 animate-pulse" />
+        </div>
+        
+        <div className="w-48 h-[1px] bg-white/10 rounded-full overflow-hidden">
+          <div className="h-full bg-blue-500 animate-outlook-load origin-left" />
+        </div>
+        
+        <p className="mt-6 text-[10px] font-black uppercase tracking-[0.4em] text-gray-400/80">
+          Syncing Inbox
+        </p>
+
+        <style jsx>{`
+          @keyframes outlook-load {
+            0% { transform: scaleX(0); opacity: 1; }
+            70% { transform: scaleX(0.8); opacity: 1; }
+            100% { transform: scaleX(1); opacity: 0; }
+          }
+          .animate-outlook-load {
+            animation: outlook-load 2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   return (
     <AppShell>
-      <div className="flex h-full flex-col bg-[#0B0D12]">
-        {/* Pass the title prop here */}
+      <div className="flex h-full flex-col bg-[#0B0D12] animate-in fade-in duration-1000">
         <Header title="Inbox" />
         
         <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8 w-full">
