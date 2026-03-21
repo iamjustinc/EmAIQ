@@ -193,12 +193,13 @@ export default function InboxPage() {
 
         {/* Sidebar Detail Sheet */}
         <EmailDetailSheet
-          email={currentSelectedEmail}
-          open={sheetOpen}
-          onOpenChange={setSheetOpen}
-          onArchive={handleArchiveEmail}
-          isDrafting={isDrafting}
-          onClick={archiveAllNoise}
+  email={selectedEmail}
+  open={isDetailsOpen}
+  onOpenChange={setIsDetailsOpen}
+  onArchive={archiveEmail}
+  isDrafting={isDrafting}
+  setIsDrafting={setIsDrafting}
+/>
         />
       </div>
     </AppShell>
