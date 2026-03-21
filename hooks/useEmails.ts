@@ -4,14 +4,13 @@ import { useEffect, useState } from "react"
 import rawEmails from "@/email.json" 
 import { Email } from "@/lib/types" 
 
-const STORAGE_KEY = "emailiq_emails_v2" 
+const STORAGE_KEY = "emailiq_emails_v3" 
 
 export function useEmails() {
   const [emails, setEmails] = useState<Email[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // 1. Browser Check: Prevent 'localStorage is not defined' error during Vercel build
     if (typeof window === "undefined") return;
 
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -25,7 +24,8 @@ export function useEmails() {
       const initialData = (rawEmails as any[]).map(e => ({
         ...e,
         isActioned: e.isActioned || false,
-        isRead: e.isRead || false
+        isRead: e.isRead || false,
+        snoozedUntil: null
       }))
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData))
       setEmails(initialData)
@@ -34,7 +34,6 @@ export function useEmails() {
   }, [])
 
   useEffect(() => {
-    // 2. Persistence: Only save if we aren't loading and are in the browser
     if (!loading && typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(emails))
     }
@@ -45,21 +44,35 @@ export function useEmails() {
   }
 
   const archiveEmail = (id: string) => {
-    setEmails(prev => prev.map(e => e.id === id ? { ...e, isActioned: true } : e))
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e))
   }
 
-  const archiveAllNoise = () => {
-    setEmails(prev => prev.map(e => 
-      e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e
-    ))
+  const snoozeEmail = (id: string, hours: number) => {
+    const until = Date.now() + hours * 60 * 60 * 1000;
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, snoozedUntil: until, isRead: true } : e))
   }
+
+  // Logic to determine what to show and how to sort
+  const processedEmails = loading ? [] : emails
+    .filter(e => {
+      if (e.isActioned) return false;
+      // Hide if snoozed and time hasn't passed yet
+      if (e.snoozedUntil && e.snoozedUntil > Date.now()) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      // If an email's snooze just expired, it goes to the very top
+      const aExpired = a.snoozedUntil && a.snoozedUntil <= Date.now() ? 1 : 0;
+      const bExpired = b.snoozedUntil && b.snoozedUntil <= Date.now() ? 1 : 0;
+      return bExpired - aExpired;
+    });
 
   return {
-    // Return empty list if loading to prevent layout shift during hydration
-    emails: loading ? [] : emails.filter(e => !e.isActioned),
+    emails: processedEmails,
     loading,
     markAsRead,
     archiveEmail,
-    archiveAllNoise
+    snoozeEmail,
+    archiveAllNoise: () => setEmails(prev => prev.map(e => e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e))
   }
 }

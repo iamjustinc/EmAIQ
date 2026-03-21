@@ -159,13 +159,14 @@ export default function InboxPage() {
         </main>
 
         <EmailDetailSheet
-          email={currentSelectedEmail}
-          open={isDetailsOpen}
-          onOpenChange={setIsDetailsOpen}
-          onArchive={handleArchiveEmail}
-          isDrafting={isDrafting}
-          setIsDrafting={setIsDrafting}
-        /> 
+  email={currentSelectedEmail}
+  open={isDetailsOpen}
+  onOpenChange={setIsDetailsOpen}
+  onArchive={handleArchiveEmail}
+  onSnooze={snoozeEmail} // ADD THIS LINE
+  isDrafting={isDrafting}
+  setIsDrafting={setIsDrafting}
+/>
       </div>
     </AppShell>
   );
