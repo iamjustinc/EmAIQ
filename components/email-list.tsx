@@ -11,9 +11,17 @@ interface EmailListProps {
 }
 
 export function EmailList({ emails, selectedEmail, onSelectEmail }: EmailListProps) {
-  // ... rest of code
-}
+  // 1. Handle the Empty State
+  if (emails.length === 0) {
+    return (
+      <div className="flex flex-col h-64 items-center justify-center space-y-3 opacity-20">
+        <Mail className="h-10 w-10" />
+        <p className="text-sm font-medium tracking-widest uppercase">Inbox Zero Achieved</p>
+      </div>
+    );
+  }
 
+  // 2. Handle the List State
   return (
     <div className="flex-1 overflow-auto scrollbar-hide">
       <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-white/5 bg-[#0F1117]/80 backdrop-blur-md px-6 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">
