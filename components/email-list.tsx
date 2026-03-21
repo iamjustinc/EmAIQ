@@ -48,8 +48,23 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
             const isSelected = selectedEmail?.id === email.id;
             const isReturned = email.snoozedUntil && email.snoozedUntil <= Date.now();
             
+            // Urgency Strip Logic
+            const urgencyColor = 
+              email.urgency.label === 'High' ? "border-l-red-500" : 
+              email.urgency.label === 'Medium' ? "border-l-orange-500" : 
+              "border-l-transparent";
+
             return (
-              <button key={email.id} onClick={() => onSelectEmail(email)} className={cn("w-full flex items-center gap-4 px-8 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1", isSelected ? "bg-blue-600/5 shadow-[inset_4px_0_0_#3b82f6]" : "hover:bg-white/[0.01]", isReturned && !isSelected && "bg-orange-500/[0.02]")}>
+              <button 
+                key={email.id} 
+                onClick={() => onSelectEmail(email)} 
+                className={cn(
+                  "w-full flex items-center gap-4 px-8 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1 border-l-[3px]",
+                  urgencyColor,
+                  isSelected ? "bg-white/[0.04]" : "hover:bg-white/[0.01]", 
+                  isReturned && !isSelected && "bg-orange-500/[0.02]"
+                )}
+              >
                 <div className="w-4 shrink-0 flex justify-center">
                   {!email.isRead ? (
                     <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
@@ -84,7 +99,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                 </div>
 
                 <div className="w-32 shrink-0 flex justify-center">
-                  <div className={cn("flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-[9px] font-bold uppercase", isSelected ? "bg-blue-600 border-blue-400 text-white" : "bg-white/5 border-white/10 text-gray-400")}>
+                  <div className={cn("flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-[9px] font-bold uppercase", isSelected ? "bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/20" : "bg-white/5 border-white/10 text-gray-400")}>
                     {email.suggestedAction === 'Respond' ? <Reply className="h-3 w-3" /> : email.suggestedAction === 'Archive' ? <Archive className="h-3 w-3" /> : <UserPlus className="h-3 w-3" />}
                     {email.suggestedAction === 'Respond' ? 'Reply' : email.suggestedAction === 'Archive' ? 'Clear' : 'Delegate'}
                   </div>
