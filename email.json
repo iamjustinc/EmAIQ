@@ -1,0 +1,562 @@
+[
+  {
+    "id": "eml_001",
+    "sender": {
+      "name": "Maya Patel",
+      "email": "maya.patel@northstarclient.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Maya"
+    },
+    "subject": "Need final deck before 2 PM client review",
+    "bodyPreview": "Can you send the revised deck with the updated pricing slide before 2 PM today?",
+    "receivedAt": "2026-03-20T08:12:00-04:00",
+    "category": "Client",
+    "urgency": {
+      "label": "High",
+      "score": 95
+    },
+    "analysis": {
+      "summary": [
+        "Client moved the review earlier and needs the final deck before 2 PM.",
+        "Leadership wants the updated pricing slide included.",
+        "Alex should verify the Q2 figures on slide 8 before sending."
+      ],
+      "sentiment": "Urgent",
+      "detectedDeadline": "Today, 2:00 PM"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_002",
+    "sender": {
+      "name": "Jordan Lee",
+      "email": "jordan.lee@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan"
+    },
+    "subject": "Tomorrow's standup agenda",
+    "bodyPreview": "Please add blockers and ownership updates before EOD.",
+    "receivedAt": "2026-03-20T09:05:00-04:00",
+    "category": "Internal",
+    "urgency": {
+      "label": "Medium",
+      "score": 45
+    },
+    "analysis": {
+      "summary": [
+        "Team is collecting blockers and ownership updates for tomorrow's standup.",
+        "A short bullet list is enough.",
+        "Needs to be done by end of day."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Today, 5:00 PM"
+    },
+    "suggestedAction": "Review Later",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_003",
+    "sender": {
+      "name": "Talent Team",
+      "email": "careers@brightpath.io",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Talent"
+    },
+    "subject": "Interview confirmation for Monday",
+    "bodyPreview": "Please confirm your availability and bring a copy of your resume.",
+    "receivedAt": "2026-03-20T07:48:00-04:00",
+    "category": "Recruiting",
+    "urgency": {
+      "label": "High",
+      "score": 85
+    },
+    "analysis": {
+      "summary": [
+        "Interview is scheduled for Monday at 10 AM.",
+        "Alex needs to confirm availability.",
+        "Panel includes product and solutions engineering leads."
+      ],
+      "sentiment": "Casual",
+      "detectedDeadline": "Monday, 10:00 AM"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_004",
+    "sender": {
+      "name": "Finance Ops",
+      "email": "expenses@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Finance"
+    },
+    "subject": "Expense report missing receipt",
+    "bodyPreview": "Your March reimbursement is on hold until the hotel receipt is uploaded.",
+    "receivedAt": "2026-03-20T10:14:00-04:00",
+    "category": "Finance",
+    "urgency": {
+      "label": "Medium",
+      "score": 50
+    },
+    "analysis": {
+      "summary": [
+        "Reimbursement is paused due to a missing hotel receipt.",
+        "Receipt must be uploaded by Friday.",
+        "Uploading the receipt should unblock this cycle's payment."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Friday"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_005",
+    "sender": {
+      "name": "Priya Nair",
+      "email": "priya.nair@northstarclient.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya"
+    },
+    "subject": "Quick clarification on implementation timeline",
+    "bodyPreview": "Are we still targeting a 6-week rollout for phase one?",
+    "receivedAt": "2026-03-20T10:32:00-04:00",
+    "category": "Client",
+    "urgency": {
+      "label": "High",
+      "score": 80
+    },
+    "analysis": {
+      "summary": [
+        "Client wants confirmation on whether phase one is still a 6-week rollout.",
+        "They need alignment before sending a stakeholder update.",
+        "Alex should confirm the latest timeline from yesterday's review."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Today"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_006",
+    "sender": {
+      "name": "Company News",
+      "email": "newsletter@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=News"
+    },
+    "subject": "March internal newsletter",
+    "bodyPreview": "Highlights from the all-hands, new hires, and community events.",
+    "receivedAt": "2026-03-20T06:30:00-04:00",
+    "category": "Newsletter",
+    "urgency": {
+      "label": "Low",
+      "score": 10
+    },
+    "analysis": {
+      "summary": [
+        "Internal newsletter with company updates and community events.",
+        "No direct action is required.",
+        "Can be archived or reviewed later."
+      ],
+      "sentiment": "Casual",
+      "detectedDeadline": null
+    },
+    "suggestedAction": "Archive",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_007",
+    "sender": {
+      "name": "Sonia Ramirez",
+      "email": "sonia.ramirez@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Sonia"
+    },
+    "subject": "Can you cover the client onboarding call?",
+    "bodyPreview": "I have a conflict at 3 PM and need someone to step in.",
+    "receivedAt": "2026-03-20T11:02:00-04:00",
+    "category": "Internal",
+    "urgency": {
+      "label": "High",
+      "score": 85
+    },
+    "analysis": {
+      "summary": [
+        "Teammate needs coverage for a 3 PM client onboarding call.",
+        "Briefing and notes are available.",
+        "Alex should accept or decline quickly."
+      ],
+      "sentiment": "Urgent",
+      "detectedDeadline": "Today, 3:00 PM"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_008",
+    "sender": {
+      "name": "IT Support",
+      "email": "helpdesk@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=IT"
+    },
+    "subject": "VPN maintenance window tonight",
+    "bodyPreview": "VPN access may be intermittent from 11 PM to 1 AM.",
+    "receivedAt": "2026-03-20T05:58:00-04:00",
+    "category": "Logistics",
+    "urgency": {
+      "label": "Low",
+      "score": 15
+    },
+    "analysis": {
+      "summary": [
+        "VPN maintenance is scheduled for tonight from 11 PM to 1 AM.",
+        "No action is required for most users.",
+        "Relevant only if Alex plans to work late."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Tonight, 11:00 PM"
+    },
+    "suggestedAction": "Review Later",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_009",
+    "sender": {
+      "name": "Derek Wong",
+      "email": "derek.wong@bigclient.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Derek"
+    },
+    "subject": "Escalation: dashboard numbers do not match",
+    "bodyPreview": "The numbers in yesterday's dashboard export appear inconsistent with the live environment.",
+    "receivedAt": "2026-03-20T11:24:00-04:00",
+    "category": "Client",
+    "urgency": {
+      "label": "High",
+      "score": 100
+    },
+    "analysis": {
+      "summary": [
+        "Client reports inconsistent dashboard numbers between export and live environment.",
+        "Issue needs investigation before the 1 PM check-in.",
+        "This could impact the quarterly business review narrative."
+      ],
+      "sentiment": "Frustrated",
+      "detectedDeadline": "Today, 1:00 PM"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_010",
+    "sender": {
+      "name": "Benefits Team",
+      "email": "benefits@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=HR"
+    },
+    "subject": "Open enrollment closes next week",
+    "bodyPreview": "Reminder to review your health and dental selections.",
+    "receivedAt": "2026-03-20T08:56:00-04:00",
+    "category": "Internal",
+    "urgency": {
+      "label": "Medium",
+      "score": 40
+    },
+    "analysis": {
+      "summary": [
+        "Open enrollment closes next Thursday.",
+        "Alex should review health and dental selections.",
+        "This is important but not immediately urgent."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Next Thursday"
+    },
+    "suggestedAction": "Review Later",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_011",
+    "sender": {
+      "name": "Calendly",
+      "email": "notifications@calendly.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Calendar"
+    },
+    "subject": "New event scheduled: Vendor sync",
+    "bodyPreview": "A new event has been added to your calendar for Friday at 11 AM.",
+    "receivedAt": "2026-03-20T07:15:00-04:00",
+    "category": "Logistics",
+    "urgency": {
+      "label": "Low",
+      "score": 10
+    },
+    "analysis": {
+      "summary": [
+        "Calendar tool sent a new event notification.",
+        "Event is already on Alex's calendar.",
+        "No email response is required."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Friday, 11:00 AM"
+    },
+    "suggestedAction": "Archive",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_012",
+    "sender": {
+      "name": "Nina Brooks",
+      "email": "nina.brooks@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Nina"
+    },
+    "subject": "Draft QBR narrative for review",
+    "bodyPreview": "Could you review sections 2 and 3 before lunch?",
+    "receivedAt": "2026-03-20T09:41:00-04:00",
+    "category": "Internal",
+    "urgency": {
+      "label": "High",
+      "score": 85
+    },
+    "analysis": {
+      "summary": [
+        "Teammate needs review of sections 2 and 3 of the QBR narrative before lunch.",
+        "Focus areas are adoption and implementation callouts.",
+        "Alex should review and send comments this morning."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Today, 12:00 PM"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_013",
+    "sender": {
+      "name": "LinkedIn Jobs",
+      "email": "jobs-noreply@linkedin.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=LinkedIn"
+    },
+    "subject": "Jobs you may be interested in",
+    "bodyPreview": "New product and solutions roles matching your profile.",
+    "receivedAt": "2026-03-20T06:10:00-04:00",
+    "category": "Newsletter",
+    "urgency": {
+      "label": "Low",
+      "score": 5
+    },
+    "analysis": {
+      "summary": [
+        "Automated jobs digest from LinkedIn.",
+        "No direct action is required.",
+        "Can be archived and reviewed later if relevant."
+      ],
+      "sentiment": "Casual",
+      "detectedDeadline": null
+    },
+    "suggestedAction": "Archive",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_014",
+    "sender": {
+      "name": "Marcus Chen",
+      "email": "marcus.chen@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus"
+    },
+    "subject": "Can you delegate this bug triage to support?",
+    "bodyPreview": "Customer support owns first response here, not implementation.",
+    "receivedAt": "2026-03-20T10:48:00-04:00",
+    "category": "Internal",
+    "urgency": {
+      "label": "Medium",
+      "score": 55
+    },
+    "analysis": {
+      "summary": [
+        "A misrouted client issue should be reassigned to customer support.",
+        "Alex should redirect the ticket and tag Priyanka.",
+        "This is a delegation workflow, not deep analysis."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Today"
+    },
+    "suggestedAction": "Delegate",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_015",
+    "sender": {
+      "name": "Travel Desk",
+      "email": "travel@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Travel"
+    },
+    "subject": "Flight options for Chicago onsite",
+    "bodyPreview": "Please choose one of the three approved flight options.",
+    "receivedAt": "2026-03-20T08:21:00-04:00",
+    "category": "Logistics",
+    "urgency": {
+      "label": "Medium",
+      "score": 45
+    },
+    "analysis": {
+      "summary": [
+        "Travel desk needs Alex to choose a flight for a Chicago onsite.",
+        "Selection is due tomorrow.",
+        "This can be reviewed later today."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Tomorrow"
+    },
+    "suggestedAction": "Review Later",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_016",
+    "sender": {
+      "name": "Customer Alerts",
+      "email": "alerts@status.yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Alert"
+    },
+    "subject": "High-priority usage drop detected for Acme Corp",
+    "bodyPreview": "Usage is down 38% week over week for a strategic account.",
+    "receivedAt": "2026-03-20T07:02:00-04:00",
+    "category": "Client",
+    "urgency": {
+      "label": "High",
+      "score": 90
+    },
+    "analysis": {
+      "summary": [
+        "Automated alert reports a 38% usage drop for Acme Corp.",
+        "This is a strategic account and may need account-team coordination.",
+        "Alex should investigate before tomorrow's sync."
+      ],
+      "sentiment": "Urgent",
+      "detectedDeadline": "Tomorrow"
+    },
+    "suggestedAction": "Review Later",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_017",
+    "sender": {
+      "name": "Raj Singh",
+      "email": "raj.singh@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Raj"
+    },
+    "subject": "Optional lunch and learn invite",
+    "bodyPreview": "Join us for a session on storytelling with dashboards.",
+    "receivedAt": "2026-03-20T09:58:00-04:00",
+    "category": "Internal",
+    "urgency": {
+      "label": "Low",
+      "score": 10
+    },
+    "analysis": {
+      "summary": [
+        "Optional lunch and learn invitation about dashboard storytelling.",
+        "No required action.",
+        "Can be archived or revisited later."
+      ],
+      "sentiment": "Casual",
+      "detectedDeadline": "Next Wednesday"
+    },
+    "suggestedAction": "Archive",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_018",
+    "sender": {
+      "name": "Dropbox",
+      "email": "no-reply@dropbox.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Files"
+    },
+    "subject": "A file was shared with you",
+    "bodyPreview": "Q1_Implementation_Notes.pdf has been shared.",
+    "receivedAt": "2026-03-20T10:07:00-04:00",
+    "category": "Logistics",
+    "urgency": {
+      "label": "Low",
+      "score": 20
+    },
+    "analysis": {
+      "summary": [
+        "A file share notification from Dropbox.",
+        "No direct response is required.",
+        "Useful only if Alex needs the document."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": null
+    },
+    "suggestedAction": "Review Later",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_019",
+    "sender": {
+      "name": "Avery Cole",
+      "email": "avery.cole@northstarclient.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Avery"
+    },
+    "subject": "Please confirm attendee list for workshop",
+    "bodyPreview": "We need the final attendee count by 4 PM.",
+    "receivedAt": "2026-03-20T11:11:00-04:00",
+    "category": "Client",
+    "urgency": {
+      "label": "High",
+      "score": 85
+    },
+    "analysis": {
+      "summary": [
+        "Client needs final attendee count for next week's workshop by 4 PM.",
+        "Ops is finalizing catering and room setup.",
+        "Alex should confirm the list this afternoon."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "Today, 4:00 PM"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  },
+  {
+    "id": "eml_020",
+    "sender": {
+      "name": "Security Team",
+      "email": "security@yourcompany.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Shield"
+    },
+    "subject": "Action required: reset your password",
+    "bodyPreview": "Your password expires in 2 days.",
+    "receivedAt": "2026-03-20T07:35:00-04:00",
+    "category": "Internal",
+    "urgency": {
+      "label": "Medium",
+      "score": 60
+    },
+    "analysis": {
+      "summary": [
+        "Corporate password expires in 2 days.",
+        "Alex should reset it soon to avoid access issues.",
+        "This is important but not the top urgency item right now."
+      ],
+      "sentiment": "Formal",
+      "detectedDeadline": "In 2 days"
+    },
+    "suggestedAction": "Respond",
+    "isRead": false,
+    "isActioned": false
+  }
+]
