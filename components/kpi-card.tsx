@@ -14,6 +14,7 @@ interface KPICardProps {
     isPositive: boolean;
   };
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+  onClick?: () => void;
 }
 
 const variantStyles = {
@@ -30,16 +31,23 @@ export function KPICard({
   subtitle, 
   icon: Icon, 
   trend, 
-  variant = 'default' 
+  variant = 'default',
+  onClick
 }: KPICardProps) {
   // Safety check for production builds
   if (!Icon) return null;
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-white/5 bg-[#0F1117] p-6 shadow-2xl transition-all hover:border-white/10">
+    <div 
+      onClick={onClick}
+      className={cn(
+        "group relative overflow-hidden rounded-3xl border border-white/5 bg-[#0F1117] p-6 shadow-2xl transition-all",
+        onClick ? "cursor-pointer hover:border-white/20 active:scale-[0.98] hover:bg-white/[0.02]" : ""
+      )}
+    >
       <div className="flex flex-col gap-5">
         <div className={cn(
-          'w-fit rounded-2xl border p-3 shadow-inner',
+          'w-fit rounded-2xl border p-3 shadow-inner transition-transform group-hover:scale-110',
           variantStyles[variant] || variantStyles.default
         )}>
           <Icon className="h-5 w-5" />
@@ -61,7 +69,7 @@ export function KPICard({
               </span>
             )}
           </div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 transition-colors group-hover:text-gray-300">
             {title}
           </p>
         </div>

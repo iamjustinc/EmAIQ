@@ -83,10 +83,38 @@ export default function InboxPage() {
         <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8 w-full">
           {/* KPI Dashboard */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" />
-            <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" />
-            <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" />
-            <KPICard title="Focus Time" value="4.2h" icon={Zap} subtitle="Saved" variant="default" />
+            <KPICard 
+              title="Unread" 
+              value={stats.unread} 
+              icon={Mail} 
+              subtitle="Messages" 
+              variant="default" 
+              onClick={() => setActiveTab('all')}
+            />
+            <KPICard 
+              title="Urgent" 
+              value={stats.urgent} 
+              icon={AlertCircle} 
+              subtitle="Actions" 
+              variant="danger" 
+              onClick={() => setActiveTab('action')}
+            />
+            <KPICard 
+              title="Noise" 
+              value="21%" 
+              icon={Trash2} 
+              subtitle="Auto-filtered" 
+              variant="warning" 
+              onClick={() => setActiveTab('noise')}
+            />
+            <KPICard 
+              title="Focus Time" 
+              value="4.2h" 
+              icon={Zap} 
+              subtitle="Saved" 
+              variant="default" 
+              onClick={() => setActiveTab('all')}
+            />
           </div>
 
           {/* Main Table Container - Full Width */}
