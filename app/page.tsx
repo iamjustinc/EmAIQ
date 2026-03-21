@@ -62,7 +62,7 @@ export default function InboxPage() {
   const handleSelectEmail = (email: Email) => {
     setSelectedEmail(email);
     setSheetOpen(true);
-    setIsDrafting(false); // Reset drafting view when switching emails
+    Drafting(falsetIsse); // Reset drafting view when switching emails
     if (!email.isRead) {
       markAsRead(email.id);
     }
@@ -198,7 +198,7 @@ export default function InboxPage() {
           onOpenChange={setSheetOpen}
           onArchive={handleArchiveEmail}
           isDrafting={isDrafting}
-          setIsDrafting={setIsDrafting}
+          onClick={archiveAllNoise}
         />
       </div>
     </AppShell>
