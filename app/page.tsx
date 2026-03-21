@@ -58,9 +58,9 @@ export default function InboxPage() {
   }, [markAsRead]);
 
   const handleArchiveEmail = useCallback((emailId: string) => {
-    setEmails(prev => prev.map(e => 
-      e.id === emailId ? { ...e, isActioned: true, suggestedAction: 'Archive' as const } : e
-    ));
+    // Archive means remove from the inbox list.
+    setEmails((prev) => prev.filter((e) => e.id !== emailId));
+    setSelectedEmail((prev) => (prev?.id === emailId ? null : prev));
   }, []);
 
   const sortedEmails = useMemo(() => {

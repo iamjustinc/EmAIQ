@@ -10,11 +10,15 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'EmailIQ - AI-Powered Email Intelligence',
+  title: 'EmailIQ Dashboard',
   description: 'Transform your inbox with AI-powered email prioritization, insights, and smart actions',
   generator: 'v0.app',
   icons: {
     icon: [
+      {
+        url: '/mail-favicon.svg',
+        type: 'image/svg+xml',
+      },
       {
         url: '/icon-light-32x32.png',
         media: '(prefers-color-scheme: light)',
