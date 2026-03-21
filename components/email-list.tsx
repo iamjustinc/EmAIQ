@@ -52,20 +52,20 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
             const isReturned = email.snoozedUntil && email.snoozedUntil <= Date.now();
             const isHighPriority = email.urgency.label === 'High';
 
-            // 1. AI SUGGESTION COLORS (Blue, Grey, Dark Red)
+            // Action Config - Differentiated Spectrums
             const actionConfig = (() => {
               const action = email.suggestedAction;
-              // Blue spectrum for Reply
-              if (action === 'Respond') return { Icon: Reply, label: 'Reply', styles: "bg-blue-600/10 border-blue-500/30 text-blue-400" };
-              // Grey spectrum for Delegate
-              if (action === 'Delegate') return { Icon: UserPlus, label: 'Delegate', styles: "bg-zinc-800 border-zinc-700 text-zinc-400" };
+              // Blue for Reply
+              if (action === 'Respond') return { Icon: Reply, label: 'Reply', styles: "bg-blue-500/10 border-blue-500/20 text-blue-400" };
+              // Grey for Delegate
+              if (action === 'Delegate') return { Icon: UserPlus, label: 'Delegate', styles: "bg-zinc-500/10 border-zinc-500/20 text-zinc-400" };
+              // Dark Amber/Brown for Review Later (Snooze)
+              if (action === 'Snooze') return { Icon: Clock, label: 'Review Later', styles: "bg-amber-900/10 border-amber-900/20 text-amber-800" };
               // Dark not shiny Red for Clear/Archive
-              return { Icon: Archive, label: action === 'Archive' ? 'Clear' : action, styles: "bg-red-950/40 border-red-900/40 text-red-800" };
+              return { Icon: Archive, label: action === 'Archive' ? 'Clear' : action, styles: "bg-red-950/20 border-red-900/30 text-red-900" };
             })();
 
             const { Icon, label, styles } = actionConfig;
-            
-            // 2. CATEGORY COLORS (Emerald Green, Purple)
             const isClient = email.sender.name.includes('Avery') || email.sender.name.includes('Priya');
 
             return (
@@ -78,7 +78,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                   isUnread ? "bg-[#141721]" : "hover:bg-white/[0.01]",
                 )}
               >
-                {/* URGENCY */}
+                {/* 1. URGENCY */}
                 <div className="w-8 shrink-0 flex justify-center items-center">
                   {isHighPriority ? (
                     <div className="flex gap-0.5 text-amber-500 font-black text-xl tracking-tighter drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]">
@@ -89,7 +89,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                   )}
                 </div>
 
-                {/* UNREAD DOT */}
+                {/* 2. UNREAD DOT */}
                 <div className="w-4 shrink-0 flex justify-center">
                   {isUnread ? (
                     <div className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
@@ -98,14 +98,14 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                   ) : null}
                 </div>
 
-                {/* SENDER */}
+                {/* 3. SENDER */}
                 <div className="w-40 shrink-0">
                   <span className={cn("text-sm truncate block", isUnread ? "text-white font-bold" : "text-gray-400 font-medium")}>
                     {email.sender.name}
                   </span>
                 </div>
 
-                {/* CONTENT & CATEGORY TAGS */}
+                {/* 4. CONTENT & UNIFIED SEMI-TRANSPARENT TAGS */}
                 <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
@@ -114,29 +114,29 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                     <span className="text-[11px] text-gray-500 truncate mt-0.5">{email.bodyPreview}</span>
                   </div>
 
-                  {/* CLIENT vs INTERNAL TAGS */}
+                  {/* CUSTOMER & INTERNAL - SEMI-TRANSPARENT STYLE */}
                   <span className={cn(
-                    "px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest shrink-0", 
+                    "px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest shrink-0 border transition-all", 
                     isClient 
-                      ? "bg-emerald-500 text-[#0F1117] shadow-[0_0_12px_rgba(16,185,129,0.2)]" 
-                      : "bg-purple-700 text-white"
+                      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
+                      : "bg-purple-500/10 border-purple-500/20 text-purple-400"
                   )}>
                     {isClient ? 'Client' : 'Internal'}
                   </span>
                 </div>
 
-                {/* AI SUGGESTION */}
+                {/* 5. AI SUGGESTION */}
                 <div className="w-32 shrink-0 flex justify-center">
                   <div className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-[9px] font-bold uppercase",
-                    isSelected ? "bg-blue-600 border-blue-400 text-white shadow-lg" : styles
+                    "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all text-[9px] font-bold uppercase",
+                    isSelected ? "bg-blue-600/20 border-blue-400 text-white shadow-lg" : styles
                   )}>
                     <Icon className="h-3 w-3" />
                     {label}
                   </div>
                 </div>
 
-                {/* RECEIVED TIME */}
+                {/* 6. TIME */}
                 <div className="w-20 shrink-0 text-right">
                   <span className={cn("text-[10px] font-bold uppercase", isUnread ? "text-blue-400" : "text-gray-600")}>
                     {email.receivedTime || '14h ago'}
