@@ -34,14 +34,13 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
         ))}
       </div>
 
-      {/* Table Header - MODIFIED */}
+      {/* Table Header */}
       <div className="flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
         <div className="w-8 shrink-0 text-center">Pri</div>
         <div className="w-4 shrink-0" />
         <div className="w-40 shrink-0">Sender</div>
         <div className="flex-1 min-w-0">Message Detail</div>
-        {/* Changed from ACTION to AI SUGGESTION */}
-        <div className="w-32 shrink-0 text-center text-blue-400">AI SUGGESTION</div>
+        <div className="w-32 shrink-0 text-center text-blue-400/80">AI SUGGESTION</div>
         <div className="w-20 shrink-0 text-right">Received</div>
       </div>
 
@@ -49,35 +48,17 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
         {filteredEmails.length > 0 ? (
           filteredEmails.map((email) => {
             const isSelected = selectedEmail?.id === email.id;
+            const isUnread = !email.isRead;
             const isReturned = email.snoozedUntil && email.snoozedUntil <= Date.now();
-            const priorityLabel = email.urgency.label;
+            const isHighPriority = email.urgency.label === 'High';
 
             // Suggested Action Styling Logic
-            const action = email.suggestedAction;
-            
-            // Generate the correct icon/label/style tuple
-            const actionConfig = useMemo(() => {
-              if (action === 'Respond') {
-                return {
-                  Icon: Reply,
-                  label: 'Reply',
-                  styles: "bg-purple-500/10 border-purple-500/20 text-purple-400"
-                };
-              }
-              if (action === 'Delegate') {
-                return {
-                  Icon: UserPlus,
-                  label: 'Delegate',
-                  styles: "bg-orange-500/10 border-orange-500/20 text-orange-400"
-                };
-              }
-              // Archive or other cleanup actions
-              return {
-                Icon: Archive,
-                label: action === 'Archive' ? 'Clear' : action, // Keep existing 'Clear' label
-                styles: "bg-white/5 border-white/10 text-gray-400"
-              };
-            }, [action]);
+            const actionConfig = (() => {
+              const action = email.suggestedAction;
+              if (action === 'Respond') return { Icon: Reply, label: 'Reply', styles: "bg-purple-500/10 border-purple-500/20 text-purple-400" };
+              if (action === 'Delegate') return { Icon: UserPlus, label: 'Delegate', styles: "bg-orange-500/10 border-orange-500/20 text-orange-400" };
+              return { Icon: Archive, label: action === 'Archive' ? 'Clear' : action, styles: "bg-white/5 border-white/10 text-gray-400" };
+            })();
 
             const { Icon, label, styles } = actionConfig;
 
@@ -87,36 +68,36 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                 onClick={() => onSelectEmail(email)} 
                 className={cn(
                   "w-full flex items-center gap-4 px-8 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1",
-                  isSelected ? "bg-white/[0.04] shadow-[inset_3px_0_0_#3b82f6]" : "hover:bg-white/[0.01]", 
+                  // Read/Unread background distinction
+                  isSelected ? "bg-blue-600/10 shadow-[inset_3px_0_0_#3b82f6]" : 
+                  isUnread ? "bg-[#161922]" : "hover:bg-white/[0.01]",
+                  isReturned && !isSelected && "bg-orange-500/[0.02]"
                 )}
               >
-                {/* 1. URGENCY MARKERS */}
+                {/* 1. URGENCY MARKERS - ONLY HIGH PRIORITY !! */}
                 <div className="w-8 shrink-0 flex justify-center items-center">
-                  {priorityLabel === 'High' ? (
-                    <div className="flex gap-0.5 text-red-500 font-black text-sm animate-pulse">
+                  {isHighPriority ? (
+                    <div className="flex gap-0.5 text-red-500 font-black text-lg tracking-tighter animate-pulse">
                       <span>!</span><span>!</span>
                     </div>
-                  ) : priorityLabel === 'Medium' ? (
-                    <div className="text-orange-500 font-black text-sm">
-                      !
-                    </div>
                   ) : (
-                    <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
+                    // Muted dot for others to keep the "Pri" column layout consistent
+                    <div className="h-1 w-1 rounded-full bg-white/5" />
                   )}
                 </div>
 
                 {/* 2. UNREAD DOT */}
                 <div className="w-4 shrink-0 flex justify-center">
-                  {!email.isRead ? (
-                    <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                  {isUnread ? (
+                    <div className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
                   ) : isReturned ? (
-                    <Clock className="h-3 w-3 text-orange-500 animate-pulse" />
+                    <Clock className="h-3.5 w-3.5 text-orange-500 animate-pulse" />
                   ) : null}
                 </div>
 
                 {/* 3. SENDER */}
                 <div className="w-40 shrink-0">
-                  <span className={cn("text-sm truncate block", !email.isRead || isReturned ? "text-white font-semibold" : "text-gray-400")}>
+                  <span className={cn("text-sm truncate block", isUnread || isReturned ? "text-white font-bold" : "text-gray-400 font-medium")}>
                     {email.sender.name}
                   </span>
                 </div>
@@ -125,21 +106,20 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                 <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
-                       <span className={cn("text-[13px] truncate", !email.isRead || isReturned ? "text-white" : "text-gray-300")}>{email.subject}</span>
+                       <span className={cn("text-[13px] truncate", isUnread || isReturned ? "text-white font-medium" : "text-gray-300")}>{email.subject}</span>
                        {isReturned && <span className="text-[8px] font-black bg-orange-500/10 text-orange-500 px-1.5 py-0.5 rounded uppercase tracking-tighter border border-orange-500/20">Returned</span>}
                     </div>
-                    <span className="text-[11px] text-gray-500 truncate">{email.bodyPreview}</span>
+                    <span className="text-[11px] text-gray-500 truncate mt-0.5">{email.bodyPreview}</span>
                   </div>
                   <span className={cn("px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest border shrink-0", email.sender.name.includes('Avery') || email.sender.name.includes('Priya') ? "bg-blue-500/10 border-blue-500/20 text-blue-400" : "bg-purple-500/10 border-purple-500/20 text-purple-400")}>
                     {email.sender.name.includes('Avery') || email.sender.name.includes('Priya') ? 'Client' : 'Internal'}
                   </span>
                 </div>
 
-                {/* 5. DYNAMIC AI SUGGESTION BADGE - MODIFIED */}
+                {/* 5. AI SUGGESTION BADGE */}
                 <div className="w-32 shrink-0 flex justify-center">
                   <div className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-[9px] font-bold uppercase",
-                    // If selected, we override to the strong blue look
                     isSelected ? "bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/20" : styles
                   )}>
                     <Icon className="h-3 w-3" />
@@ -149,7 +129,9 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
 
                 {/* 6. TIME */}
                 <div className="w-20 shrink-0 text-right">
-                  <span className="text-[10px] text-gray-600 font-bold uppercase">{isReturned ? 'Just now' : email.receivedTime || '14h ago'}</span>
+                  <span className={cn("text-[10px] font-bold uppercase", isUnread ? "text-blue-400/80" : "text-gray-600")}>
+                    {isReturned ? 'Just now' : email.receivedTime || '14h ago'}
+                  </span>
                 </div>
               </button>
             );
