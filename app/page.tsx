@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+// 1. Ensure snoozeEmail is being destuctured from your hook
 import { useEmails } from '@/hooks/useEmails'; 
 import { AppShell } from '@/components/app-shell';
 import { Header } from '@/components/header';
@@ -11,7 +12,9 @@ import { Email } from '@/lib/types';
 import { Mail, Zap, AlertCircle, Trash2 } from 'lucide-react';
 
 export default function InboxPage() {
-  const { emails, archiveEmail, markAsRead } = useEmails();
+  // ADD snoozeEmail HERE
+  const { emails, archiveEmail, markAsRead, snoozeEmail } = useEmails();
+  
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
@@ -46,6 +49,13 @@ export default function InboxPage() {
     setSelectedEmailId(null);
   }, [archiveEmail]);
 
+  // 2. CREATE A WRAPPER FOR SNOOZE (Optional but keeps UI clean)
+  const handleSnoozeEmail = useCallback((emailId: string, hours: number) => {
+    snoozeEmail(emailId, hours);
+    setIsDetailsOpen(false);
+    setSelectedEmailId(null);
+  }, [snoozeEmail]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -66,14 +76,11 @@ export default function InboxPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedEmailId, handleArchiveEmail]);
 
-  // Updated Dynamic Stats Calculation
   const stats = useMemo(() => {
     const safeEmails = emails || [];
     const unread = safeEmails.filter((e) => !e.isRead).length;
     const urgentEmails = safeEmails.filter((e) => e.priority === 'High' || e.urgency.label === 'High');
     const urgentCount = urgentEmails.length;
-    
-    // Calculate Focus Time: 15 mins (0.25h) per urgent email
     const focusHours = (urgentCount * 0.25).toFixed(1);
     
     return { unread, urgent: urgentCount, focusTime: `${focusHours}h` };
@@ -113,38 +120,10 @@ export default function InboxPage() {
         
         <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8 w-full">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <KPICard 
-              title="Unread" 
-              value={stats.unread} 
-              icon={Mail} 
-              subtitle="Messages" 
-              variant="default" 
-              onClick={() => setActiveTab('all')}
-            />
-            <KPICard 
-              title="Urgent" 
-              value={stats.urgent} 
-              icon={AlertCircle} 
-              subtitle="Actions" 
-              variant="danger" 
-              onClick={() => setActiveTab('action')}
-            />
-            <KPICard 
-              title="Noise" 
-              value="21%" 
-              icon={Trash2} 
-              subtitle="Auto-filtered" 
-              variant="warning" 
-              onClick={() => setActiveTab('noise')}
-            />
-            <KPICard 
-              title="Focus Time" 
-              value={stats.focusTime} 
-              icon={Zap} 
-              subtitle="Remaining" 
-              variant="default" 
-              onClick={() => setActiveTab('action')}
-            />
+            <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
+            <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
+            <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" onClick={() => setActiveTab('noise')} />
+            <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" variant="default" onClick={() => setActiveTab('action')} />
           </div>
 
           <div className="flex-1 overflow-hidden bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl">
@@ -159,14 +138,14 @@ export default function InboxPage() {
         </main>
 
         <EmailDetailSheet
-  email={currentSelectedEmail}
-  open={isDetailsOpen}
-  onOpenChange={setIsDetailsOpen}
-  onArchive={handleArchiveEmail}
-  onSnooze={snoozeEmail} // ADD THIS LINE
-  isDrafting={isDrafting}
-  setIsDrafting={setIsDrafting}
-/>
+          email={currentSelectedEmail}
+          open={isDetailsOpen}
+          onOpenChange={setIsDetailsOpen}
+          onArchive={handleArchiveEmail}
+          onSnooze={handleSnoozeEmail} // UPDATED TO USE THE WRAPPER
+          isDrafting={isDrafting}
+          setIsDrafting={setIsDrafting}
+        />
       </div>
     </AppShell>
   );
