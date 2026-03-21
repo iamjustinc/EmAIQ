@@ -61,6 +61,9 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
             })();
 
             const { Icon, label, styles } = actionConfig;
+            
+            // Logic for internal vs client
+            const isClient = email.sender.name.includes('Avery') || email.sender.name.includes('Priya');
 
             return (
               <button 
@@ -68,7 +71,6 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                 onClick={() => onSelectEmail(email)} 
                 className={cn(
                   "w-full flex items-center gap-4 px-8 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1",
-                  // Read/Unread background distinction
                   isSelected ? "bg-blue-600/10 shadow-[inset_3px_0_0_#3b82f6]" : 
                   isUnread ? "bg-[#161922]" : "hover:bg-white/[0.01]",
                   isReturned && !isSelected && "bg-orange-500/[0.02]"
@@ -81,7 +83,6 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                       <span>!</span><span>!</span>
                     </div>
                   ) : (
-                    // Muted dot for others to keep the "Pri" column layout consistent
                     <div className="h-1 w-1 rounded-full bg-white/5" />
                   )}
                 </div>
@@ -111,8 +112,15 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                     </div>
                     <span className="text-[11px] text-gray-500 truncate mt-0.5">{email.bodyPreview}</span>
                   </div>
-                  <span className={cn("px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest border shrink-0", email.sender.name.includes('Avery') || email.sender.name.includes('Priya') ? "bg-blue-500/10 border-blue-500/20 text-blue-400" : "bg-purple-500/10 border-purple-500/20 text-purple-400")}>
-                    {email.sender.name.includes('Avery') || email.sender.name.includes('Priya') ? 'Client' : 'Internal'}
+
+                  {/* CATEGORY TAGS - UPDATED COLORS FOR BETTER CONTRAST */}
+                  <span className={cn(
+                    "px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest border shrink-0", 
+                    isClient 
+                      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
+                      : "bg-indigo-500/10 border-indigo-500/20 text-indigo-400"
+                  )}>
+                    {isClient ? 'Client' : 'Internal'}
                   </span>
                 </div>
 
