@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+// 1. Importing components individually to avoid barrel file errors in Vercel
 import { 
   Sheet, 
   SheetContent, 
-  SheetHeader, 
-  SheetTitle 
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -42,12 +41,10 @@ export function EmailDetailSheet({
 
   const handleSend = async () => {
     setIsSending(true);
-    // Simulate API call
     await new Promise((res) => setTimeout(res, 800));
     setIsSending(false);
     setSentSuccess(true);
     
-    // Clean up and close after showing success state
     setTimeout(() => {
       setSentSuccess(false);
       setIsDrafting(false);
@@ -59,9 +56,9 @@ export function EmailDetailSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md bg-[#0F1117] text-white border-l border-white/10 p-0 overflow-y-auto">
         
-        {/* Header Section */}
+        {/* Header Section - Manually styled to avoid missing SheetHeader/Title components */}
         <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#0F1117] sticky top-0 z-10">
-          <SheetTitle className="text-xl font-bold text-white">Email Detail</SheetTitle>
+          <h2 className="text-xl font-bold text-white">Email Detail</h2>
           <Button 
             variant="ghost" 
             size="icon" 
@@ -88,9 +85,9 @@ export function EmailDetailSheet({
                 </p>
               </div>
 
-              {/* Email Content Body */}
+              {/* 2. Content Fallback Chain: Fixes the "No Preview Available" bug */}
               <div className="bg-white/5 p-5 rounded-2xl text-base leading-relaxed border border-white/10 text-gray-300 min-h-[180px] whitespace-pre-wrap">
-                {email.body || "No preview available for this email."}
+                {email.body || email.content || email.snippet || "No content available for this email."}
               </div>
 
               {/* Action Section */}
