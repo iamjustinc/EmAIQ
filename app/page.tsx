@@ -66,8 +66,8 @@ export default function InboxPage() {
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12]">
-        {/* Header is now minimal with only search */}
-        <Header />
+        {/* Header updated with title prop */}
+        <Header title="Inbox" />
         
         <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8 w-full">
           {/* KPI Dashboard */}
