@@ -17,7 +17,6 @@ export default function InboxPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [isDrafting, setIsDrafting] = useState(false);
   
-  // Refined Loading Logic
   const [isLoading, setIsLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -25,7 +24,7 @@ export default function InboxPage() {
     setIsMounted(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2200); // Slightly longer for consistent Vercel visibility
+    }, 2200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -67,14 +66,19 @@ export default function InboxPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedEmailId, handleArchiveEmail]);
 
+  // Updated Dynamic Stats Calculation
   const stats = useMemo(() => {
     const safeEmails = emails || [];
     const unread = safeEmails.filter((e) => !e.isRead).length;
-    const urgent = safeEmails.filter((e) => e.priority === 'High').length;
-    return { unread, urgent };
+    const urgentEmails = safeEmails.filter((e) => e.priority === 'High' || e.urgency.label === 'High');
+    const urgentCount = urgentEmails.length;
+    
+    // Calculate Focus Time: 15 mins (0.25h) per urgent email
+    const focusHours = (urgentCount * 0.25).toFixed(1);
+    
+    return { unread, urgent: urgentCount, focusTime: `${focusHours}h` };
   }, [emails]);
 
-  // Loading Screen
   if (isLoading || !isMounted) {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0B0D12]">
@@ -82,15 +86,12 @@ export default function InboxPage() {
           <Mail className="h-12 w-12 text-blue-500" />
           <div className="absolute inset-0 h-12 w-12 blur-2xl bg-blue-500/30 animate-pulse" />
         </div>
-        
         <div className="w-48 h-[1px] bg-white/10 rounded-full overflow-hidden">
           <div className="h-full bg-blue-500 animate-outlook-load origin-left" />
         </div>
-        
         <p className="mt-6 text-[10px] font-black uppercase tracking-[0.4em] text-gray-400/80">
           Syncing Inbox
         </p>
-
         <style jsx>{`
           @keyframes outlook-load {
             0% { transform: scaleX(0); opacity: 1; }
@@ -138,11 +139,11 @@ export default function InboxPage() {
             />
             <KPICard 
               title="Focus Time" 
-              value="4.2h" 
+              value={stats.focusTime} 
               icon={Zap} 
-              subtitle="Saved" 
+              subtitle="Remaining" 
               variant="default" 
-              onClick={() => setActiveTab('all')}
+              onClick={() => setActiveTab('action')}
             />
           </div>
 
