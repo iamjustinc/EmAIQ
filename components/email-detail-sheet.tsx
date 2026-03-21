@@ -45,14 +45,12 @@ export function EmailDetailSheet({
   const [isDelegating, setIsDelegating] = useState(false);
   const [successMessage, setSuccessMessage] = useState("Action Completed");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  
-  // NEW: Toggle for full email view
   const [showFullEmail, setShowFullEmail] = useState(false);
 
   useEffect(() => {
     if (open && email) {
       setIsAnalyzing(true);
-      setShowFullEmail(false); // Reset toggle when opening new email
+      setShowFullEmail(false); 
       const timer = setTimeout(() => {
         setIsAnalyzing(false);
       }, 800);
@@ -73,7 +71,7 @@ export function EmailDetailSheet({
       setSentSuccess(false);
       setIsDrafting(false);
       setIsDelegating(false);
-      onArchive(email.id); // Makes it disappear from the list
+      onArchive(email.id); 
       onOpenChange(false);
     }, 1200);
   };
@@ -97,7 +95,7 @@ export function EmailDetailSheet({
                 {email.analysis?.sentiment || 'Formal'} Tone
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="text-gray-400 -mt-2 hover:bg-white/5 rounded-full">
+            <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="text-gray-400 -mt-2 hover:bg-white/5 rounded-full transition-colors">
               <X className="h-5 w-5" />
             </Button>
           </div>
@@ -106,7 +104,7 @@ export function EmailDetailSheet({
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
           {sentSuccess ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-4 animate-in fade-in zoom-in">
               <CheckCircle2 className="h-16 w-16 text-green-500" />
@@ -118,7 +116,7 @@ export function EmailDetailSheet({
                 <Sparkles className="h-8 w-8 text-blue-400 animate-pulse" />
                 <Loader2 className="h-12 w-12 text-blue-500/20 animate-spin absolute -top-2 -left-2" />
               </div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-400/60 animate-pulse">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-400/60 animate-pulse text-center">
                 Analyzing with Alex...
               </p>
             </div>
@@ -140,11 +138,11 @@ export function EmailDetailSheet({
                 </ul>
               </div>
 
-              {/* NEW: FULL EMAIL TOGGLE BUTTON */}
+              {/* EXPANDABLE ORIGINAL MESSAGE */}
               <div className="space-y-4">
                 <Button 
                   variant="ghost" 
-                  className="w-full flex items-center justify-between px-2 text-gray-400 hover:text-white hover:bg-white/5 transition-colors group"
+                  className="w-full flex items-center justify-between px-2 text-gray-400 hover:text-white hover:bg-white/5 transition-colors group rounded-xl"
                   onClick={() => setShowFullEmail(!showFullEmail)}
                 >
                   <div className="flex items-center gap-2">
@@ -154,77 +152,77 @@ export function EmailDetailSheet({
                   {showFullEmail ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </Button>
 
-                {/* EMAIL BODY - Expandable */}
                 <div className={`
                   overflow-hidden transition-all duration-500 ease-in-out
-                  ${showFullEmail ? 'max-h-[1000px] opacity-100' : 'max-h-16 opacity-40 mask-fade'}
+                  ${showFullEmail ? 'max-h-[2000px] opacity-100' : 'max-h-20 opacity-40 mask-fade'}
                 `}>
-                  <div className="text-sm leading-relaxed text-gray-400 whitespace-pre-wrap px-1 border-l border-white/5 pl-4">
-                    {email.bodyPreview || email.body}
+                  <div className="text-sm leading-relaxed text-gray-400 whitespace-pre-wrap px-1 border-l border-white/10 pl-4 py-2">
+                    {/* FIXED: Priority given to the full body text */}
+                    {email.body || email.bodyPreview}
                   </div>
                 </div>
-                {!showFullEmail && (
-                   <p className="text-[10px] text-center text-gray-600 uppercase tracking-tighter">Click to expand full history</p>
-                )}
               </div>
             </>
           )}
         </div>
 
-        {/* Action Grid (Same as before) */}
+        {/* Action Grid & Footer */}
         {!sentSuccess && !isAnalyzing && (
-          <div className="p-6 border-t border-white/10 bg-[#0B0D12] z-20">
-            {/* Action buttons (Respond, Review, Delegate, Archive) stay here... */}
+          <div className="p-6 border-t border-white/10 bg-[#0B0D12]/50 backdrop-blur-md z-20">
             {!isDrafting && !isDelegating ? (
-               <div className="grid grid-cols-2 gap-3">
+               <div className="grid grid-cols-2 gap-3 mb-4">
                  <Button className="flex flex-col items-center justify-center h-20 gap-1 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all active:scale-95" onClick={() => setIsDrafting(true)}>
-                   <Reply className="h-5 w-5" /><span className="text-xs font-bold uppercase">Respond</span>
+                   <Reply className="h-5 w-5" /><span className="text-[10px] font-bold uppercase">Respond</span>
                  </Button>
                  <Button variant="outline" className="flex flex-col items-center justify-center h-20 gap-1 border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 rounded-2xl transition-all active:scale-95" onClick={() => handleAction("Scheduled for Review")}>
-                   <Clock className="h-5 w-5" /><span className="text-xs font-bold uppercase">Review Later</span>
+                   <Clock className="h-5 w-5" /><span className="text-[10px] font-bold uppercase">Review Later</span>
                  </Button>
                  <Button variant="outline" className="flex flex-col items-center justify-center h-20 gap-1 border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 rounded-2xl transition-all active:scale-95" onClick={() => setIsDelegating(true)}>
-                   <Users className="h-5 w-5" /><span className="text-xs font-bold uppercase">Delegate</span>
+                   <Users className="h-5 w-5" /><span className="text-[10px] font-bold uppercase">Delegate</span>
                  </Button>
                  <Button variant="outline" className="flex flex-col items-center justify-center h-20 gap-1 border-red-500/20 bg-red-500/5 hover:bg-red-500/10 text-red-400 rounded-2xl transition-all active:scale-95" onClick={() => onArchive(email.id)}>
-                   <Archive className="h-5 w-5" /><span className="text-xs font-bold uppercase text-red-400">Archive</span>
+                   <Archive className="h-5 w-5" /><span className="text-[10px] font-bold uppercase text-red-400">Archive</span>
                  </Button>
                </div>
             ) : isDelegating ? (
-              <div className="space-y-4">
+              <div className="space-y-4 mb-4 animate-in slide-in-from-right-4">
                 <div className="flex justify-between items-center">
                   <span className="text-[10px] font-bold uppercase text-blue-400">Delegate Task</span>
-                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setIsDelegating(false)}>Back</Button>
+                  <Button variant="ghost" size="sm" className="h-6 text-[10px] uppercase text-gray-500" onClick={() => setIsDelegating(false)}>Back</Button>
                 </div>
                 {['Sarah (Ops)', 'Mike (Tech)', 'Support Team'].map(p => (
-                  <Button key={p} variant="outline" className="w-full justify-between border-white/5 bg-white/5 py-5 rounded-xl" onClick={() => handleAction(`Delegated to ${p}`)}>
-                    {p} <ChevronRight className="h-4 w-4" />
+                  <Button key={p} variant="outline" className="w-full justify-between border-white/5 bg-white/5 py-6 px-4 rounded-xl hover:bg-white/10 transition-colors" onClick={() => handleAction(`Delegated to ${p}`)}>
+                    <span className="text-sm font-medium text-gray-200">{p}</span>
+                    <ChevronRight className="h-4 w-4 text-gray-600" />
                   </Button>
                 ))}
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 mb-4 animate-in slide-in-from-bottom-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold uppercase text-blue-400 flex items-center gap-1"><Zap className="h-3 w-3" /> AI Draft Ready</span>
-                  <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setIsDrafting(false)}>Back</Button>
+                  <span className="text-[10px] font-bold uppercase text-blue-400 flex items-center gap-1"><Zap className="h-3 w-3 fill-blue-400" /> AI Draft Ready</span>
+                  <Button variant="ghost" size="sm" className="h-6 text-[10px] uppercase text-gray-500" onClick={() => setIsDrafting(false)}>Back</Button>
                 </div>
-                <Textarea className="min-h-[140px] bg-white/5 border-white/10 rounded-xl" placeholder="Draft your reply..." autoFocus />
-                <Button className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-xl font-bold" onClick={() => handleAction("Reply Sent")}>Send Message</Button>
+                <Textarea className="min-h-[140px] bg-white/5 border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500/50" placeholder="Draft your reply..." autoFocus />
+                <Button className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-xl font-bold shadow-lg shadow-blue-500/10 transition-all active:scale-[0.98]" onClick={() => handleAction("Reply Sent")}>
+                  {isSending ? "Sending..." : "Send Message"}
+                </Button>
               </div>
             )}
-            <div className="p-4 bg-black/20 border-t border-white/5">
-  <div className="flex items-center justify-center gap-2 opacity-40">
-    <div className="h-1.5 w-1.5 bg-green-500 rounded-full" />
-    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">
-      Secure OAuth 2.0 Connection • No Data Training
-    </span>
-  </div>
-</div>
+            
+            {/* PRIVACY FOOTER */}
+            <div className="pt-4 border-t border-white/5">
+              <div className="flex items-center justify-center gap-2 opacity-30">
+                <div className="h-1 w-1 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                  Secure OAuth 2.0 Connection • Zero Data Retention
+                </span>
+              </div>
+            </div>
           </div>
         )}
       </SheetContent>
       
-      {/* ADD THIS CSS to your globals.css for the fade effect */}
       <style jsx>{`
         .mask-fade {
           mask-image: linear-gradient(to bottom, black 0%, transparent 100%);

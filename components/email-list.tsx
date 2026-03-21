@@ -12,38 +12,31 @@ interface EmailListProps {
 export function EmailList({ emails, selectedEmail, onSelectEmail }: EmailListProps) {
   if (emails.length === 0) {
     return (
-      <div className="flex h-48 items-center justify-center text-muted-foreground">
-        <p className="text-sm">No emails match your filter</p>
+      <div className="flex flex-col h-64 items-center justify-center space-y-3 opacity-20">
+        <Mail className="h-10 w-10" />
+        <p className="text-sm font-medium tracking-widest uppercase">Inbox Zero Achieved</p>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 overflow-auto">
-      {/* Header Row */}
-      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-border/50 bg-background/95 backdrop-blur-sm px-4 py-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+    <div className="flex-1 overflow-auto scrollbar-hide">
+      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-white/5 bg-[#0F1117]/80 backdrop-blur-md px-6 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500">
         <div className="w-2 shrink-0" />
-        <div className="w-36 shrink-0">From</div>
-        <div className="min-w-0 flex-1">Subject</div>
-        <div className="w-20 shrink-0 hidden md:block">Category</div>
-        <div className="w-16 shrink-0 hidden lg:block">Priority</div>
-        <div className="w-24 shrink-0 hidden xl:block">Action</div>
-        <div className="w-16 shrink-0 text-right">Time</div>
+        <div className="w-36 shrink-0">Sender</div>
+        <div className="min-w-0 flex-1">Message Detail</div>
+        <div className="w-20 shrink-0 hidden md:block">Priority</div>
+        <div className="w-16 shrink-0 text-right">Received</div>
       </div>
 
-      {/* Email Rows */}
-      <div>
-        {emails.map((email, index) => (
-          <div key={email.id}>
-            <EmailRow
-              email={email}
-              onClick={onSelectEmail}
-              isSelected={selectedEmail?.id === email.id}
-            />
-            {index < emails.length - 1 && (
-              <div className="mx-4 border-b border-border/30" />
-            )}
-          </div>
+      <div className="divide-y divide-white/5">
+        {emails.map((email) => (
+          <EmailRow
+            key={email.id}
+            email={email}
+            onClick={() => onSelectEmail(email)}
+            isSelected={selectedEmail?.id === email.id}
+          />
         ))}
       </div>
     </div>
