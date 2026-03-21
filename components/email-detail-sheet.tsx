@@ -1,251 +1,124 @@
 'use client';
 
-import { Email } from '@/lib/types';
-import { formatDateTime } from '@/lib/date-utils';
-import { CategoryBadge } from '@/components/category-badge';
-import { UrgencyBadge } from '@/components/urgency-badge';
-import { ActionBadge } from '@/components/action-badge';
+import React, { useState } from 'react';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle 
+} from '@/components/ui/tabs'; // Adjust if your Sheet is in /ui/sheet
 import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet';
-import {
-  Reply,
-  Clock,
-  Archive,
-  ListTodo,
-  Sparkles,
-  AlertCircle,
-  MessageSquare,
-  Calendar,
-  Zap,
-  Target,
-  Send,
-  CheckCircle2,
-} from 'lucide-react';
-import { toast } from 'sonner';
+import { Email } from '@/lib/types';
+import { Archive, ArrowLeft, Send, X, CheckCircle2 } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 interface EmailDetailSheetProps {
   email: Email | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onArchive?: (emailId: string) => void;
+  onArchive: (id: string) => void;
+  isDrafting: boolean;
+  setIsDrafting: (is: boolean) => void;
 }
 
-const sentimentConfig: Record<Email['analysis']['sentiment'], { icon: typeof AlertCircle; style: string; bg: string }> = {
-  Urgent: { icon: AlertCircle, style: 'text-danger', bg: 'bg-danger/10' },
-  Formal: { icon: MessageSquare, style: 'text-info', bg: 'bg-info/10' },
-  Casual: { icon: MessageSquare, style: 'text-success', bg: 'bg-success/10' },
-  Frustrated: { icon: AlertCircle, style: 'text-warning', bg: 'bg-warning/10' },
-};
+export function EmailDetailSheet({
+  email,
+  open,
+  onOpenChange,
+  onArchive,
+  isDrafting,
+  setIsDrafting
+}: EmailDetailSheetProps) {
+  const [isSending, setIsSending] = useState(false);
+  const [sentSuccess, setSentSuccess] = useState(false);
 
-const quickReplies = [
-  "Got it, will send shortly.",
-  "Thanks for the heads up. I'm on it.",
-  "Let me check and get back to you.",
-  "Can we sync on this briefly?",
-];
-
-export function EmailDetailSheet({ email, open, onOpenChange, onArchive }: EmailDetailSheetProps) {
   if (!email) return null;
 
-  const sentimentStyle = sentimentConfig[email.analysis.sentiment];
-  const SentimentIcon = sentimentStyle.icon;
-
-  // Extract key request from first summary bullet
-  const keyRequest = email.analysis.summary[0] || 'Review this email';
-
-  const handleDraftReply = () => {
-    toast.success('Draft reply started', {
-      description: `Composing response to ${email.sender.name}`,
-      icon: <Reply className="h-4 w-4" />,
-    });
-  };
-
-  const handleSnooze = () => {
-    toast('Email snoozed', {
-      description: 'Will remind you in 2 hours',
-      icon: <Clock className="h-4 w-4" />,
-    });
-  };
-
-  const handleArchive = () => {
-    onArchive?.(email.id);
-    toast.success('Email archived', {
-      description: `"${email.subject}" moved to archive`,
-      icon: <Archive className="h-4 w-4" />,
-    });
-    onOpenChange(false);
-  };
-
-  const handleAddToTasks = () => {
-    toast.success('Added to tasks', {
-      description: `Created task from "${email.subject}"`,
-      icon: <ListTodo className="h-4 w-4" />,
-    });
-  };
-
-  const handleQuickReply = (reply: string) => {
-    toast.success('Quick reply sent', {
-      description: reply,
-      icon: <Send className="h-4 w-4" />,
-    });
-    onOpenChange(false);
+  const handleSend = async () => {
+    setIsSending(true);
+    // Simulate a network delay (Information Systems style!)
+    await new Promise((res) => setTimeout(res, 800));
+    setIsSending(false);
+    setSentSuccess(true);
+    
+    // Auto-close after 1.5 seconds of showing success
+    setTimeout(() => {
+      setSentSuccess(false);
+      setIsDrafting(false);
+      onOpenChange(false);
+    }, 1500);
   };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-md bg-background border-border p-0 flex flex-col">
-        <SheetHeader className="border-b border-border p-4 pb-3">
-          <div className="flex items-start gap-3">
-            <div className="flex-1 min-w-0">
-              <SheetTitle className="text-base font-semibold text-foreground leading-snug pr-6">
-                {email.subject}
-              </SheetTitle>
-              <SheetDescription className="sr-only">
-                Email details and AI analysis for {email.subject}
-              </SheetDescription>
-              <div className="mt-2 flex items-center gap-2 text-sm">
-                <span className="font-medium text-foreground">{email.sender.name}</span>
-                <span className="text-muted-foreground text-xs">{email.sender.email}</span>
-              </div>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {formatDateTime(email.receivedAt)}
-              </p>
-            </div>
-          </div>
+      <SheetContent className="w-full sm:max-w-md overflow-y-auto bg-[#0F1117] text-white border-l border-white/10">
+        <SheetHeader className="flex flex-row items-center justify-between border-b border-white/10 pb-4">
+          <SheetTitle className="text-lg font-bold text-white">Email Detail</SheetTitle>
+          <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="text-gray-400">
+            <X className="h-4 w-4" />
+          </Button>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 space-y-4">
-            {/* Key Request */}
-            <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <Target className="h-3.5 w-3.5 text-primary" />
-                <span className="text-xs font-semibold text-primary uppercase tracking-wide">Key Request</span>
+        <div className="py-6 space-y-4">
+          {sentSuccess ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4 animate-in fade-in zoom-in duration-300">
+              <CheckCircle2 className="h-16 w-16 text-green-500" />
+              <h3 className="text-xl font-medium">Reply Sent!</h3>
+              <p className="text-sm text-gray-400 text-center">Your response to {email.sender.name} has been delivered.</p>
+            </div>
+          ) : (
+            <>
+              <div>
+                <h2 className="text-xl font-semibold">{email.subject}</h2>
+                <p className="text-sm text-gray-400">From: {email.sender.name}</p>
               </div>
-              <p className="text-sm text-foreground leading-relaxed">{keyRequest}</p>
-            </div>
 
-            {/* AI Summary */}
-            <div className="rounded-lg border border-border bg-card/50 p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">AI Summary</span>
+              <div className="bg-white/5 p-4 rounded-xl text-sm leading-relaxed border border-white/10 text-gray-300">
+                {email.body || "No preview available for this email."}
               </div>
-              <ul className="space-y-1.5">
-                {email.analysis.summary.map((point, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm text-foreground/80">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary/60" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
 
-            {/* Detected Deadline */}
-            {email.analysis.detectedDeadline && (
-              <div className="flex items-center gap-3 rounded-lg border border-warning/30 bg-warning/5 p-3">
-                <Calendar className="h-4 w-4 text-warning shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-warning uppercase tracking-wide">Deadline</p>
-                  <p className="text-sm text-foreground font-medium">{email.analysis.detectedDeadline}</p>
-                </div>
+              <div className="flex gap-2 pt-4">
+                {!isDrafting ? (
+                  <>
+                    <Button 
+                      className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl" 
+                      onClick={() => setIsDrafting(true)}
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      Respond
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="flex-1 gap-2 border-white/10 text-red-400 hover:bg-red-500/10 rounded-xl"
+                      onClick={() => onArchive(email.id)}
+                    >
+                      <Archive className="h-4 w-4" />
+                      Archive
+                    </Button>
+                  </>
+                ) : (
+                  <div className="w-full space-y-3 animate-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center justify-between">
+                       <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400">AI-Drafting Enabled</span>
+                       <Button variant="ghost" size="sm" className="h-7 text-xs text-gray-400" onClick={() => setIsDrafting(false)}>Cancel</Button>
+                    </div>
+                    <Textarea 
+                      placeholder="Type your response..." 
+                      className="min-h-[120px] bg-white/5 border-white/10 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-white"
+                      autoFocus
+                    />
+                    <Button 
+                      className="w-full gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-6"
+                      onClick={handleSend}
+                      disabled={isSending}
+                    >
+                      {isSending ? "Sending..." : <><Send className="h-4 w-4" /> Send Reply</>}
+                    </Button>
+                  </div>
+                )}
               </div>
-            )}
-
-            {/* Next Best Action */}
-            <div className="flex items-center gap-3 rounded-lg border border-success/30 bg-success/5 p-3">
-              <Zap className="h-4 w-4 text-success shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-success uppercase tracking-wide">Next Best Action</p>
-                <p className="text-sm text-foreground font-medium">{email.suggestedAction}</p>
-              </div>
-            </div>
-
-            {/* Tags */}
-            <div className="flex flex-wrap gap-1.5">
-              <CategoryBadge category={email.category} />
-              <UrgencyBadge label={email.urgency.label} score={email.urgency.score} showScore />
-              <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ${sentimentStyle.bg} ${sentimentStyle.style}`}>
-                <SentimentIcon className="h-3 w-3" />
-                {email.analysis.sentiment}
-              </span>
-              <ActionBadge action={email.suggestedAction} />
-            </div>
-
-            {/* Quick Replies */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">One-Click Replies</p>
-              <div className="grid grid-cols-1 gap-1.5">
-                {quickReplies.map((reply, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleQuickReply(reply)}
-                    className="flex items-center gap-2 rounded-lg border border-border bg-card/50 px-3 py-2 text-left text-sm text-foreground/80 hover:bg-sidebar-accent hover:text-foreground hover:border-primary/30 transition-all duration-150"
-                  >
-                    <Send className="h-3 w-3 text-muted-foreground shrink-0" />
-                    <span className="truncate">{reply}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Email Preview */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Preview</p>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {email.bodyPreview}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="border-t border-border p-3 space-y-2 bg-card/30">
-          <div className="grid grid-cols-2 gap-2">
-            <Button 
-              size="sm" 
-              className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
-              onClick={handleDraftReply}
-            >
-              <Reply className="h-3.5 w-3.5" />
-              Draft Reply
-            </Button>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="gap-1.5 border-border bg-card text-foreground hover:bg-sidebar-accent"
-              onClick={handleSnooze}
-            >
-              <Clock className="h-3.5 w-3.5" />
-              Snooze
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="gap-1.5 border-border bg-card text-foreground hover:bg-sidebar-accent"
-              onClick={handleArchive}
-            >
-              <Archive className="h-3.5 w-3.5" />
-              Archive
-            </Button>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="gap-1.5 border-border bg-card text-foreground hover:bg-sidebar-accent"
-              onClick={handleAddToTasks}
-            >
-              <ListTodo className="h-3.5 w-3.5" />
-              Add to Tasks
-            </Button>
-          </div>
+            </>
+          )}
         </div>
       </SheetContent>
     </Sheet>

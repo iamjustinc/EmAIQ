@@ -1,22 +1,17 @@
 "use client"
 
-// 1. Fixed the React imports to clear lines 3, 25, and 26
-import React, { useState, useEffect } from "react"
-import rawEmails from "@/email.json"
+import React, { useEffect, useState } from "react"
+import rawEmails from "@/email.json" // Updated to match your 'email.json' filename
 
-// 2. We define the Email structure clearly
 export interface Email {
   id: string
   subject: string
-  sender: {
-    name: string
-    email: string
-    avatar?: string
-  }
+  sender: { name: string; email: string; avatar?: string }
   isRead: boolean
   isActioned: boolean
   category: string
   priority: string
+  suggestedAction?: string
 }
 
 const STORAGE_KEY = "emailiq_emails"
@@ -30,10 +25,9 @@ export function useEmails() {
     if (stored) {
       setEmails(JSON.parse(stored))
     } else {
-      // We ensure the data from your JSON fits the interface
       const initialData = (rawEmails as any[]).map(e => ({
         ...e,
-        isActioned: e.isActioned || false,
+        isActioned: false,
         isRead: e.isRead || false
       }))
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData))
@@ -49,25 +43,23 @@ export function useEmails() {
   }, [emails, loading])
 
   const markAsRead = (id: string) => {
-    setEmails((prev) =>
-      prev.map((email) =>
-        email.id === id ? { ...email, isRead: true } : email
-      )
-    )
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, isRead: true } : e))
   }
 
   const archiveEmail = (id: string) => {
-    setEmails((prev) =>
-      prev.map((email) =>
-        email.id === id ? { ...email, isActioned: true } : email
-      )
-    )
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, isActioned: true } : e))
+  }
+
+  // 🧨 The Bonus: Archive All Noise logic
+  const archiveAllNoise = () => {
+    setEmails(prev => prev.map(e => e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e))
   }
 
   return {
-    emails: emails.filter(e => !e.isActioned),
+    emails: emails.filter(e => !e.isActioned), // Only show active emails
     loading,
     markAsRead,
     archiveEmail,
+    archiveAllNoise
   }
 }
