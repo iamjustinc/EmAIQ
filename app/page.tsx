@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useEmails } from '@/hooks/useEmails'; 
 import { AppShell } from '@/components/app-shell';
 import { Header } from '@/components/header';
@@ -32,7 +32,6 @@ export default function InboxPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrafting, setIsDrafting] = useState(false);
 
-  // Filter Logic
   const filteredEmails = useMemo(() => {
     let list = [...emails].sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime());
     if (searchQuery.trim()) {
@@ -53,15 +52,14 @@ export default function InboxPage() {
     return emails.find(e => e.id === selectedEmailId) || null;
   }, [emails, selectedEmailId]);
 
-  const handleSelectEmail = (email: Email) => {
+  const handleSelectEmail = useCallback((email: Email) => {
     markAsRead(email.id);
     setSelectedEmailId(email.id);
     setIsDetailsOpen(true);
     setIsDrafting(false); 
-  };
+  }, [markAsRead]);
 
-  const handleArchiveEmail = (emailId: string) => {
-    // SUPERHUMAN LOGIC: Find the next email before deleting the current one
+  const handleArchiveEmail = useCallback((emailId: string) => {
     const currentIndex = filteredEmails.findIndex(e => e.id === emailId);
     const nextEmail = filteredEmails[currentIndex + 1] || filteredEmails[currentIndex - 1];
 
@@ -73,47 +71,43 @@ export default function InboxPage() {
       setIsDetailsOpen(false);
       setSelectedEmailId(null);
     }
-  };
+  }, [filteredEmails, archiveEmail]);
 
-  // KEYBOARD SHORTCUTS ENGINE
+  // KEYBOARD SHORTCUTS ENGINE - Optimized with useCallback
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in a search box or reply area
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-
       if (!selectedEmailId) return;
 
-      switch (e.key.toLowerCase()) {
-        case 'r': // Reply
-          setIsDetailsOpen(true);
-          setIsDrafting(true);
-          break;
-        case 'e': // Archive
-          handleArchiveEmail(selectedEmailId);
-          break;
-        case 's': // Snooze / Review Later
-          // Simulate Snooze
-          handleArchiveEmail(selectedEmailId);
-          break;
-        case 'escape':
-          setIsDetailsOpen(false);
-          break;
+      const key = e.key.toLowerCase();
+      if (key === 'r') {
+        setIsDetailsOpen(true);
+        setIsDrafting(true);
+      } else if (key === 'e' || key === 's') {
+        handleArchiveEmail(selectedEmailId);
+      } else if (key === 'escape') {
+        setIsDetailsOpen(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedEmailId, filteredEmails]);
+  }, [selectedEmailId, handleArchiveEmail]);
 
-  // Stats calculation
   const stats = useMemo(() => {
     const unread = emails.filter((e) => !e.isRead).length;
     const urgent = emails.filter((e) => e.priority === 'High' || e.category === 'Urgent').length;
     const noiseReduced = emails.filter((e) => e.suggestedAction === 'Archive').length;
     const needsAction = emails.filter((e) => e.suggestedAction === 'Respond' && !e.isRead).length;
-    const estimatedMinutes = needsAction * 5 + (unread - needsAction) * 2;
+    const estimatedMinutes = (needsAction * 5) + ((unread - needsAction) * 2);
     const noisePercent = emails.length ? Math.round((noiseReduced / emails.length) * 100) : 0;
-    return { unread, urgent, noiseReduced, noisePercent, estimatedTime: estimatedMinutes < 60 ? `${estimatedMinutes}m` : `${Math.floor(estimatedMinutes / 60)}h ${estimatedMinutes % 60}m` };
+    
+    return { 
+      unread, 
+      urgent, 
+      noisePercent, 
+      estimatedTime: estimatedMinutes < 60 ? `${estimatedMinutes}m` : `${Math.floor(estimatedMinutes / 60)}h ${estimatedMinutes % 60}m` 
+    };
   }, [emails]);
 
   return (
@@ -133,7 +127,7 @@ export default function InboxPage() {
             <div className="relative flex-1 group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
               <Input
-                placeholder="Search command (⌘K)..."
+                placeholder="Search (⌘K)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 h-11 bg-white/5 border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500/50"
@@ -145,6 +139,7 @@ export default function InboxPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {/* Using the icon components directly to ensure they are registered in the build */}
             <KPICard title="Unread" value={stats.unread} icon={Mail} />
             <KPICard title="Urgent" value={stats.urgent} icon={AlertTriangle} variant="danger" />
             <KPICard title="Noise" value={`${stats.noisePercent}%`} icon={Sparkles} variant="success" />
