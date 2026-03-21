@@ -1,20 +1,10 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import rawEmails from "@/email.json" // Updated to match your 'email.json' filename
+import rawEmails from "@/email.json" 
+import { Email } from "@/lib/types" // Import the full interface here!
 
-export interface Email {
-  id: string
-  subject: string
-  sender: { name: string; email: string; avatar?: string }
-  isRead: boolean
-  isActioned: boolean
-  category: string
-  priority: string
-  suggestedAction?: string
-}
-
-const STORAGE_KEY = "emailiq_emails"
+const STORAGE_KEY = "emailiq_emails_v2" // Changed key to force a refresh of data
 
 export function useEmails() {
   const [emails, setEmails] = useState<Email[]>([])
@@ -25,9 +15,10 @@ export function useEmails() {
     if (stored) {
       setEmails(JSON.parse(stored))
     } else {
+      // Map the JSON to ensure isActioned and isRead are set
       const initialData = (rawEmails as any[]).map(e => ({
         ...e,
-        isActioned: false,
+        isActioned: e.isActioned || false,
         isRead: e.isRead || false
       }))
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData))
@@ -50,13 +41,14 @@ export function useEmails() {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isActioned: true } : e))
   }
 
-  // 🧨 The Bonus: Archive All Noise logic
   const archiveAllNoise = () => {
-    setEmails(prev => prev.map(e => e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e))
+    setEmails(prev => prev.map(e => 
+      e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e
+    ))
   }
 
   return {
-    emails: emails.filter(e => !e.isActioned), // Only show active emails
+    emails: emails.filter(e => !e.isActioned),
     loading,
     markAsRead,
     archiveEmail,

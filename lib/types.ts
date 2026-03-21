@@ -6,15 +6,16 @@ export interface Email {
     avatarUrl?: string;
   };
   subject: string;
-  bodyPreview: string;
-  receivedAt: string; // ISO format
+  bodyPreview: string; // This is what's in your JSON
+  body?: string;       // Added as optional fallback
+  receivedAt: string; 
   category: 'Client' | 'Internal' | 'Recruiting' | 'Finance' | 'Logistics' | 'Newsletter';
   urgency: {
     label: 'High' | 'Medium' | 'Low';
-    score: number; // 0 to 100
+    score: number;
   };
   analysis: {
-    summary: string[]; // 3 bullet points
+    summary: string[];
     sentiment: 'Urgent' | 'Formal' | 'Casual' | 'Frustrated';
     detectedDeadline?: string | null;
   };
