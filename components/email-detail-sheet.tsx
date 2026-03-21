@@ -6,7 +6,7 @@ import {
   SheetContent, 
   SheetHeader, 
   SheetTitle 
-} from '@/components/ui/tabs'; // Adjust if your Sheet is in /ui/sheet
+} from '@/components/ui/sheet'; // Changed from /tabs to /sheet // Adjust if your Sheet is in /ui/sheet
 import { Button } from '@/components/ui/button';
 import { Email } from '@/lib/types';
 import { Archive, ArrowLeft, Send, X, CheckCircle2 } from 'lucide-react';
