@@ -25,6 +25,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
 
   return (
     <div className="flex-1 overflow-y-auto scrollbar-hide bg-[#0F1117]">
+      {/* Tabs */}
       <div className="flex items-center border-b border-white/5 px-6 sticky top-0 bg-[#0F1117] z-10">
         {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
           <button key={tab} onClick={() => setActiveTab(tab.toLowerCase())} className={cn("px-8 py-4 text-[10px] font-bold tracking-[0.2em] transition-all border-b-2", activeTab.toUpperCase() === tab ? "text-white border-white" : "text-gray-500 border-transparent hover:text-gray-300")}>
@@ -33,11 +34,12 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
         ))}
       </div>
 
-      <div className="flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
-        <div className="w-4 shrink-0" />
+      {/* Table Header */}
+      <div className="flex items-center gap-4 px-6 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
+        <div className="w-1 shrink-0" /> {/* Marker gutter space */}
+        <div className="w-4 shrink-0" /> {/* Unread dot space */}
         <div className="w-40 shrink-0">Sender</div>
         <div className="flex-1 min-w-0">Message Detail</div>
-        <div className="w-24 shrink-0 text-right">Priority</div>
         <div className="w-32 shrink-0 text-center">Action</div>
         <div className="w-20 shrink-0 text-right">Received</div>
       </div>
@@ -48,23 +50,27 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
             const isSelected = selectedEmail?.id === email.id;
             const isReturned = email.snoozedUntil && email.snoozedUntil <= Date.now();
             
-            // Urgency Strip Logic
-            const urgencyColor = 
-              email.urgency.label === 'High' ? "border-l-red-500" : 
-              email.urgency.label === 'Medium' ? "border-l-orange-500" : 
-              "border-l-transparent";
+            // Urgency Pill Colors
+            const urgencyStyles = 
+              email.urgency.label === 'High' ? "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]" : 
+              email.urgency.label === 'Medium' ? "bg-orange-500" : 
+              "bg-emerald-500/40"; // Low/Normal is more muted but still visible
 
             return (
               <button 
                 key={email.id} 
                 onClick={() => onSelectEmail(email)} 
                 className={cn(
-                  "w-full flex items-center gap-4 px-8 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1 border-l-[3px]",
-                  urgencyColor,
+                  "w-full flex items-center gap-4 px-6 py-5 transition-all text-left group animate-in fade-in slide-in-from-top-1 relative",
                   isSelected ? "bg-white/[0.04]" : "hover:bg-white/[0.01]", 
-                  isReturned && !isSelected && "bg-orange-500/[0.02]"
                 )}
               >
+                {/* 1. DISCONNECTED STATUS MARKER (The "Pill") */}
+                <div className="w-1 self-stretch py-1 shrink-0">
+                    <div className={cn("w-full h-full rounded-full transition-all", urgencyStyles)} />
+                </div>
+
+                {/* 2. UNREAD DOT */}
                 <div className="w-4 shrink-0 flex justify-center">
                   {!email.isRead ? (
                     <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
@@ -73,12 +79,14 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                   ) : null}
                 </div>
 
+                {/* 3. SENDER */}
                 <div className="w-40 shrink-0">
                   <span className={cn("text-sm truncate block", !email.isRead || isReturned ? "text-white font-semibold" : "text-gray-400")}>
                     {email.sender.name}
                   </span>
                 </div>
 
+                {/* 4. CONTENT */}
                 <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
@@ -92,12 +100,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                   </span>
                 </div>
 
-                <div className="w-24 shrink-0 flex justify-end">
-                  <div className={cn("h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-black border", email.urgency.label === 'High' ? "bg-red-500/10 border-red-500/30 text-red-500" : email.urgency.label === 'Medium' ? "bg-orange-500/10 border-orange-500/30 text-orange-500" : "bg-emerald-500/10 border-emerald-500/30 text-emerald-500")}>
-                    {email.urgency.label[0]}
-                  </div>
-                </div>
-
+                {/* 5. SUGGESTED ACTION */}
                 <div className="w-32 shrink-0 flex justify-center">
                   <div className={cn("flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-[9px] font-bold uppercase", isSelected ? "bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/20" : "bg-white/5 border-white/10 text-gray-400")}>
                     {email.suggestedAction === 'Respond' ? <Reply className="h-3 w-3" /> : email.suggestedAction === 'Archive' ? <Archive className="h-3 w-3" /> : <UserPlus className="h-3 w-3" />}
@@ -105,6 +108,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, activeTab, set
                   </div>
                 </div>
 
+                {/* 6. TIME */}
                 <div className="w-20 shrink-0 text-right">
                   <span className="text-[10px] text-gray-600 font-bold uppercase">{isReturned ? 'Just now' : email.receivedTime || '14h ago'}</span>
                 </div>
