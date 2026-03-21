@@ -35,7 +35,6 @@ export default function InboxPage() {
     setSelectedEmailId(null);
   }, [archiveEmail]);
 
-  // Keyboard Shortcuts (Still work even though header icons are gone)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -66,11 +65,10 @@ export default function InboxPage() {
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12]">
-        {/* Header updated with title prop */}
+        {/* Pass the title prop here */}
         <Header title="Inbox" />
         
         <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8 w-full">
-          {/* KPI Dashboard */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <KPICard 
               title="Unread" 
@@ -106,7 +104,6 @@ export default function InboxPage() {
             />
           </div>
 
-          {/* Main Table Container */}
           <div className="flex-1 overflow-hidden bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl">
             <EmailList 
               emails={emails || []} 
