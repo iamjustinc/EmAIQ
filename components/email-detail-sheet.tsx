@@ -5,7 +5,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Email } from '@/lib/types';
-import { Archive, Reply, Clock, Users, X, CheckCircle2, Zap, AlertCircle, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Archive, Reply, Clock, Users, X, CheckCircle2, Zap, AlertCircle, Loader2, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 
 interface EmailDetailSheetProps {
   email: Email | null;
@@ -19,6 +19,7 @@ interface EmailDetailSheetProps {
 export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDrafting, setIsDrafting }: EmailDetailSheetProps) {
   const [sentSuccess, setSentSuccess] = useState(false);
   const [isDelegating, setIsDelegating] = useState(false);
+  const [isGeneratingDraft, setIsGeneratingDraft] = useState(false); // New Loading State
   const [successMessage, setSuccessMessage] = useState("Action Completed");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showFullEmail, setShowFullEmail] = useState(false);
@@ -36,12 +37,19 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDraft
 
   if (!email) return null;
 
-  // RE-ADDED: Logic for the "Use Draft" button
-  const handleUseDraft = () => {
+  const handleUseDraft = async () => {
+    setIsGeneratingDraft(true);
+    setIsDrafting(false);
+    
+    // Artificial delay for "AI Thinking" feel
+    await new Promise(res => setTimeout(res, 1200));
+
     const draft = email.analysis?.summary?.[0] 
       ? `Hi ${email.sender.name.split(' ')[0]},\n\nRegarding the ${email.subject.toLowerCase()}, ${email.analysis.summary[0]}. I'll handle this immediately.`
       : `Hi ${email.sender.name.split(' ')[0]},\n\nThanks for reaching out. I've received your email regarding "${email.subject}" and will get back to you shortly.`;
+    
     setReplyText(draft);
+    setIsGeneratingDraft(false);
     setIsDrafting(true);
   };
 
@@ -93,9 +101,17 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDraft
               <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
               <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-blue-500">Parsing Context...</p>
             </div>
+          ) : isGeneratingDraft ? (
+            <div className="flex flex-col items-center justify-center py-20 space-y-6 animate-pulse">
+                <div className="relative">
+                    <Zap className="h-12 w-12 text-blue-400 fill-blue-400/20 animate-bounce" />
+                    <Sparkles className="h-6 w-6 text-blue-300 absolute -top-2 -right-2 animate-spin-slow" />
+                </div>
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-400">Synthesizing Draft...</p>
+            </div>
           ) : (
             <>
-              {/* Intelligence Report RESTORED */}
+              {/* Intelligence Report */}
               <div className="bg-white/[0.02] border border-white/5 p-6 rounded-3xl space-y-5 relative">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -138,7 +154,7 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDraft
         </div>
 
         {/* Footer Actions */}
-        {!sentSuccess && !isAnalyzing && (
+        {!sentSuccess && !isAnalyzing && !isGeneratingDraft && (
           <div className="p-8 border-t border-white/5 bg-[#0F1117] mt-auto">
             {!isDrafting && !isDelegating ? (
               <div className="grid grid-cols-2 gap-4">
@@ -159,7 +175,7 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDraft
                   <span className="text-[9px] font-bold uppercase tracking-widest">Archive</span>
                 </Button>
               </div>
-            ) : (
+            ) : isDrafting ? (
               <div className="space-y-4 animate-in slide-in-from-bottom-4">
                 <Textarea 
                   className="min-h-[180px] bg-white/5 border-white/10 rounded-2xl p-4 text-sm focus:ring-1 focus:ring-blue-500 outline-none text-white" 
@@ -172,6 +188,25 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, isDraft
                   <Button className="flex-[2] bg-blue-600" onClick={() => handleAction("Response Sent")}>Send Message</Button>
                 </div>
               </div>
+            ) : (
+                /* RESTORED DELEGATE VIEW */
+                <div className="space-y-4 animate-in slide-in-from-bottom-4">
+                   <div className="grid grid-cols-2 gap-3">
+                        {['Sarah (Ops)', 'Mike (Sales)', 'Legal Team', 'Support'].map((team) => (
+                            <Button 
+                                key={team}
+                                variant="outline" 
+                                className="h-12 border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-widest hover:bg-blue-500/10 hover:border-blue-500/50"
+                                onClick={() => handleAction(`Delegated to ${team}`)}
+                            >
+                                {team}
+                            </Button>
+                        ))}
+                   </div>
+                   <Button variant="ghost" className="w-full text-gray-500 text-[9px] font-bold uppercase tracking-widest" onClick={() => setIsDelegating(false)}>
+                       Back to Actions
+                   </Button>
+                </div>
             )}
           </div>
         )}
