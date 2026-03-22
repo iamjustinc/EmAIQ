@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Sheet, SheetContent, SheetOverlay } from '@/components/ui/sheet'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -112,8 +112,6 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
         }
       }}
     >
-      <SheetOverlay className="bg-black/20 backdrop-blur-[1px]" />
-
       <SheetContent
         side="right"
         className="z-[80] flex h-full w-[460px] max-w-[95vw] flex-col overflow-hidden border-l border-border bg-card p-0 text-card-foreground shadow-2xl"
