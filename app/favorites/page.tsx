@@ -10,6 +10,7 @@ export default function FavoritesPage() {
   const { allEmails, toggleFavorite, markAsRead } = useEmails();
   const [activeTab, setActiveTab] = useState('all');
 
+  // Logic: Show everything that is starred, regardless of archive status
   const favoriteEmails = (allEmails || []).filter(e => e.isFavorite);
 
   return (
@@ -25,7 +26,7 @@ export default function FavoritesPage() {
               onToggleFavorite={toggleFavorite}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-              hideTabs
+              hideTabs // Cleaner look for specific pages
             />
           </div>
         </main>

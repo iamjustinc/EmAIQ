@@ -10,6 +10,7 @@ export default function ArchivedPage() {
   const { allEmails, toggleFavorite, markAsRead } = useEmails();
   const [activeTab, setActiveTab] = useState('all');
 
+  // Logic: Only show emails that have been actioned/archived
   const archivedEmails = (allEmails || []).filter(e => e.isActioned);
 
   return (

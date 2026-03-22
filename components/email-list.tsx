@@ -9,13 +9,22 @@ interface EmailListProps {
   emails: Email[];
   selectedEmail: Email | null;
   onSelectEmail: (email: Email) => void;
-  onToggleFavorite: (id: string) => void; // Added this
+  onToggleFavorite: (id: string) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  hideTabs?: boolean; // Useful for Favorites/Archived pages
+  hideTabs?: boolean;
 }
 
-export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavorite, activeTab, setActiveTab, hideTabs = false }: EmailListProps) {
+export function EmailList({ 
+  emails, 
+  selectedEmail, 
+  onSelectEmail, 
+  onToggleFavorite, 
+  activeTab, 
+  setActiveTab,
+  hideTabs = false 
+}: EmailListProps) {
+  
   const filteredEmails = useMemo(() => {
     const safeEmails = emails || [];
     const currentTab = activeTab.toLowerCase();
@@ -30,7 +39,14 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
       {!hideTabs && (
         <div className="flex items-center border-b border-white/5 px-6 sticky top-0 bg-[#0F1117] z-10">
           {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab.toLowerCase())} className={cn("px-8 py-4 text-[10px] font-bold tracking-[0.2em] transition-all border-b-2", activeTab.toUpperCase() === tab ? "text-white border-white" : "text-gray-500 border-transparent hover:text-gray-300")}>
+            <button 
+              key={tab} 
+              onClick={() => setActiveTab(tab.toLowerCase())} 
+              className={cn(
+                "px-8 py-4 text-[10px] font-bold tracking-[0.2em] transition-all border-b-2", 
+                activeTab.toUpperCase() === tab ? "text-white border-white" : "text-gray-500 border-transparent hover:text-gray-300"
+              )}
+            >
               {tab}
             </button>
           ))}
@@ -39,7 +55,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
 
       {/* Table Header */}
       <div className="flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
-        <div className="w-12 shrink-0 text-center">PRI</div>
+        <div className="w-16 shrink-0 text-center">PRI</div>
         <div className="w-4 shrink-0" />
         <div className="w-40 shrink-0">Sender</div>
         <div className="flex-1 min-w-0">Message Detail</div>
@@ -72,8 +88,18 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
               )}
               onClick={() => onSelectEmail(email)}
             >
-              {/* 1. URGENCY / STAR BUTTON */}
-              <div className="w-12 shrink-0 flex justify-center items-center">
+              {/* 1. URGENCY & STAR BUTTON (Revised Layout) */}
+              <div className="w-16 shrink-0 flex justify-center items-center gap-2">
+                <div className="w-4 flex justify-center">
+                  {isHighPriority ? (
+                    <div className="flex gap-0.5 text-amber-500 font-black text-sm tracking-tighter drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]">
+                      <span>!</span><span>!</span>
+                    </div>
+                  ) : (
+                    <div className="h-1 w-1 rounded-full bg-white/5" />
+                  )}
+                </div>
+
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -84,8 +110,8 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
                   <Star className={cn(
                     "h-4 w-4 transition-all duration-300 transform active:scale-150",
                     email.isFavorite 
-                      ? "fill-yellow-400 text-yellow-400 scale-110" 
-                      : isHighPriority ? "text-amber-500 opacity-100" : "text-gray-700 opacity-40 group-hover/star:opacity-100"
+                      ? "fill-[#FACC15] text-[#FACC15] scale-100" 
+                      : "text-gray-700 opacity-40 group-hover/star:opacity-100"
                   )} />
                 </button>
               </div>
@@ -104,8 +130,12 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
 
               {/* 4. CONTENT */}
               <div className="flex-1 min-w-0 flex flex-col">
-                <span className={cn("text-[13px] truncate", isUnread ? "text-white font-medium" : "text-gray-300")}>{email.subject}</span>
-                <span className="text-[11px] text-gray-500 truncate mt-0.5">{email.bodyPreview}</span>
+                <span className={cn("text-[13px] truncate", isUnread ? "text-white font-medium" : "text-gray-300")}>
+                  {email.subject}
+                </span>
+                <span className="text-[11px] text-gray-500 truncate mt-0.5">
+                  {email.bodyPreview}
+                </span>
               </div>
 
               {/* 5. AI SUGGESTION */}
