@@ -6,49 +6,33 @@ import { Email } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 interface EmailListProps {
-  emails: Email[]
-  selectedEmail: Email | null
-  onSelectEmail: (email: Email) => void
-  onToggleFavorite: (id: string) => void
-  activeTab: string
-  setActiveTab: (tab: string) => void
-  hideTabs?: boolean
+  emails: Email[]; selectedEmail: Email | null; onSelectEmail: (email: Email) => void;
+  onToggleFavorite: (id: string) => void; activeTab: string; setActiveTab: (tab: string) => void;
 }
 
-export function EmailList({
-  emails,
-  selectedEmail,
-  onSelectEmail,
-  onToggleFavorite,
-  activeTab,
-  setActiveTab,
-  hideTabs = false,
-}: EmailListProps) {
+export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavorite, activeTab, setActiveTab }: EmailListProps) {
+  
   const filteredEmails = useMemo(() => {
     const safe = emails ?? []
     const tab = activeTab.toLowerCase()
     if (tab === 'action' || tab === 'urgent') return safe.filter((e) => e.urgency.label === 'High')
     if (tab === 'unread') return safe.filter((e) => !e.isRead)
-    if (tab === 'noise') return safe.filter((e) => e.urgency.label === 'Low' || e.sender.name.toLowerCase().includes('news'))
+    if (tab === 'noise') return safe.filter((e) => e.urgency.label === 'Low')
     return safe
   }, [emails, activeTab])
 
-  const stats = {
-    unread: (emails ?? []).filter(e => !e.isRead).length,
-    urgent: (emails ?? []).filter(e => e.urgency.label === 'High').length,
-    noise: '21%',
-    focus: '1.3h'
-  }
-
   return (
     <div className="relative flex-1 overflow-y-auto bg-card scrollbar-hide">
-      {/* Point 2: Functional Top Buttons (No Duplicates) */}
+      {/* 
+         NOTE: If you see DUPLICATE buttons, delete the block below 
+         and move it to your parent page.tsx instead.
+      */}
       <div className="grid grid-cols-4 gap-4 px-6 pt-8 pb-4">
         {[
-          { label: 'Unread', val: stats.unread, icon: Mail, tab: 'unread' },
-          { label: 'Urgent', val: stats.urgent, icon: AlertCircle, tab: 'action' },
-          { label: 'Noise', val: stats.noise, icon: Sparkles, tab: 'noise' },
-          { label: 'Focus Time', val: stats.focus, icon: Zap, tab: 'all' }
+          { label: 'Unread', val: (emails ?? []).filter(e => !e.isRead).length, icon: Mail, tab: 'unread' },
+          { label: 'Urgent', val: (emails ?? []).filter(e => e.urgency.label === 'High').length, icon: AlertCircle, tab: 'action' },
+          { label: 'Noise', val: '21%', icon: Sparkles, tab: 'noise' },
+          { label: 'Focus Time', val: '1.3h', icon: Zap, tab: 'all' }
         ].map((s) => (
           <button 
             key={s.label}
@@ -63,92 +47,56 @@ export function EmailList({
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{s.label}</span>
             </div>
             <div className="text-3xl font-black tracking-tighter text-foreground">{s.val}</div>
-            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">
-              {s.label === 'Unread' ? 'Messages' : s.label === 'Urgent' ? 'Actions' : s.label === 'Noise' ? 'Auto-Filtered' : 'Remaining'}
-            </div>
           </button>
         ))}
       </div>
 
-      {!hideTabs && (
-        <div className="sticky top-0 z-30 flex items-center border-b border-border bg-background/95 px-6 backdrop-blur-md">
-          {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab.toLowerCase())}
-              className={cn(
-                'border-b-2 px-8 py-5 text-[10px] font-black tracking-[0.25em] transition-all',
-                activeTab.toUpperCase() === tab ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'
-              )}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Navigation Tabs */}
+      <div className="sticky top-0 z-30 flex items-center border-b border-border bg-background/95 px-6 backdrop-blur-md">
+        {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab.toLowerCase())}
+            className={cn(
+              'border-b-2 px-8 py-5 text-[10px] font-black tracking-[0.25em] transition-all',
+              activeTab.toUpperCase() === tab ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'
+            )}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
 
-      <div className={cn('grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b border-border bg-muted/30 px-6 py-3', hideTabs ? 'top-0' : 'top-[58px] sticky z-20')}>
+      {/* Table Header */}
+      <div className="grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b border-border bg-muted/30 px-6 py-3 sticky top-[58px] z-20">
         {['PRI', '', 'SENDER', 'MESSAGE DETAIL', 'AI SUGGESTION', 'RECEIVED'].map((h, i) => (
           <div key={i} className="text-[9px] font-black tracking-[0.2em] text-muted-foreground/60 uppercase">{h}</div>
         ))}
       </div>
 
+      {/* Email Rows */}
       <div className="divide-y divide-border/40">
-        {filteredEmails.map((email) => {
-          const isSelected = selectedEmail?.id === email.id
-          const isUnread = !email.isRead
-          const isHighPriority = email.urgency.label === 'High'
-
-          const actionConfig = {
-            Respond: { Icon: Reply, label: 'Reply', styles: 'border-primary/30 bg-primary/5 text-primary' },
-            Delegate: { Icon: UserPlus, label: 'Delegate', styles: 'border-border bg-card text-muted-foreground' },
-            'Review Later': { Icon: Clock, label: 'Later', styles: 'border-warning/30 bg-warning/5 text-warning' },
-            default: { Icon: Archive, label: 'Clear', styles: 'border-destructive/20 bg-destructive/5 text-destructive' }
-          }
-          const action = actionConfig[email.suggestedAction as keyof typeof actionConfig] || actionConfig.default
-
-          return (
-            <div
-              key={email.id}
-              onClick={() => onSelectEmail(email)}
-              className={cn(
-                'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-6 py-4 cursor-pointer transition-all',
-                isSelected ? 'bg-primary/[0.03] shadow-[inset_3px_0_0_var(--primary)]' : isUnread ? 'bg-background' : 'hover:bg-muted/20'
-              )}
-            >
-              <div className="flex items-center gap-2">
-                {isHighPriority ? <span className="text-xs font-black tracking-tighter text-orange-500">!!</span> : <div className="h-1 w-1 rounded-full bg-border" />}
-                {/* Point 3: Larger Star Hitbox */}
-                <button 
-                  onClick={(e) => { e.stopPropagation(); onToggleFavorite(email.id); }}
-                  className="p-3 -m-3 hover:bg-muted/50 rounded-full transition-all group"
-                >
-                  <Star className={cn('h-4 w-4 transition-all group-active:scale-125', email.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30')} />
-                </button>
-              </div>
-              <div />
-              <div className="flex flex-col pr-4 overflow-hidden">
-                <span className={cn("text-[13px] tracking-tight truncate", isUnread ? "font-black text-foreground" : "font-medium text-muted-foreground")}>
-                  {email.sender.name}
-                </span>
-                <span className="text-[10px] text-muted-foreground/60 truncate uppercase font-bold tracking-widest">{email.sender.email.split('@')[0]}</span>
-              </div>
-              <div className="flex flex-col pr-8 overflow-hidden">
-                <span className={cn("text-[13px] tracking-tight truncate", isUnread ? "font-black text-foreground" : "font-bold text-foreground/70")}>
-                  {email.subject}
-                </span>
-                <span className="text-[12px] text-muted-foreground line-clamp-1 mt-0.5">{email.bodyPreview}</span>
-              </div>
-              <div className="flex">
-                <div className={cn("flex items-center gap-2 px-3 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-widest", action.styles)}>
-                  <action.Icon className="h-3 w-3" />
-                  {action.label}
-                </div>
-              </div>
-              <div className="text-[10px] font-black text-muted-foreground/40 text-right uppercase tracking-widest">{email.timestamp}</div>
+        {filteredEmails.map((email) => (
+          <div
+            key={email.id}
+            onClick={() => onSelectEmail(email)}
+            className={cn(
+              'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-6 py-4 cursor-pointer transition-all',
+              selectedEmail?.id === email.id ? 'bg-primary/[0.03] shadow-[inset_3px_0_0_var(--primary)]' : 'hover:bg-muted/20'
+            )}
+          >
+            <div className="flex items-center gap-2">
+               <button onClick={(e) => { e.stopPropagation(); onToggleFavorite(email.id); }} className="p-2">
+                <Star className={cn('h-4 w-4', email.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30')} />
+              </button>
             </div>
-          )
-        })}
+            <div />
+            <div className="text-[13px] font-black text-foreground truncate">{email.sender.name}</div>
+            <div className="text-[13px] font-bold text-foreground/70 truncate pr-8">{email.subject}</div>
+            <div className="text-[10px] font-black text-primary/80 uppercase">{email.suggestedAction}</div>
+            <div className="text-[10px] font-black text-muted-foreground/40 text-right uppercase">{email.timestamp}</div>
+          </div>
+        ))}
       </div>
     </div>
   )
