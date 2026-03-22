@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo } from 'react'
-import { Reply, UserPlus, Archive, Clock, Star } from 'lucide-react'
+import { Reply, UserPlus, Archive, Clock, Star, Mail, AlertCircle, Sparkles, Zap } from 'lucide-react'
 import { Email } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -28,12 +28,49 @@ export function EmailList({
     const safe = emails ?? []
     const tab = activeTab.toLowerCase()
     if (tab === 'action') return safe.filter((e) => e.urgency.label === 'High')
+    if (tab === 'unread') return safe.filter((e) => !e.isRead)
     if (tab === 'noise') return safe.filter((e) => e.urgency.label === 'Low' || e.sender.name.toLowerCase().includes('news'))
     return safe
   }, [emails, activeTab])
 
+  // Stats for the top buttons
+  const stats = {
+    unread: emails.filter(e => !e.isRead).length,
+    urgent: emails.filter(e => e.urgency.label === 'High').length,
+    noise: '21%',
+    focus: '1.3h'
+  }
+
   return (
     <div className="relative flex-1 overflow-y-auto bg-card scrollbar-hide">
+      {/* Point 2: Functional Top Buttons */}
+      <div className="grid grid-cols-4 gap-4 px-6 pt-8 pb-4">
+        {[
+          { label: 'Unread', val: stats.unread, icon: Mail, tab: 'unread' },
+          { label: 'Urgent', val: stats.urgent, icon: AlertCircle, tab: 'action' },
+          { label: 'Noise', val: stats.noise, icon: Sparkles, tab: 'noise' },
+          { label: 'Focus Time', val: stats.focus, icon: Zap, tab: 'all' }
+        ].map((s) => (
+          <button 
+            key={s.label}
+            onClick={() => setActiveTab(s.tab)}
+            className={cn(
+              "flex flex-col items-start p-6 rounded-[2rem] border transition-all text-left",
+              activeTab === s.tab ? "bg-primary/5 border-primary shadow-sm" : "bg-white border-border hover:border-primary/40"
+            )}
+          >
+            <div className="flex justify-between w-full mb-4">
+              <s.icon className="h-5 w-5 text-muted-foreground" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{s.label}</span>
+            </div>
+            <div className="text-3xl font-black tracking-tighter">{s.val}</div>
+            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">
+              {s.label === 'Unread' ? 'Messages' : s.label === 'Urgent' ? 'Actions' : s.label === 'Noise' ? 'Auto-Filtered' : 'Remaining'}
+            </div>
+          </button>
+        ))}
+      </div>
+
       {!hideTabs && (
         <div className="sticky top-0 z-30 flex items-center border-b border-border bg-white/95 px-6 backdrop-blur-md">
           {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
@@ -82,12 +119,12 @@ export function EmailList({
             >
               <div className="flex items-center gap-2">
                 {isHighPriority ? <span className="text-xs font-black tracking-tighter text-orange-500">!!</span> : <div className="h-1 w-1 rounded-full bg-border" />}
-                {/* Point 5: Fixed Star button click event */}
+                {/* Point 3: Larger Star Button Hitbox */}
                 <button 
                   onClick={(e) => { e.stopPropagation(); onToggleFavorite(email.id); }}
-                  className="hover:scale-110 transition-transform"
+                  className="p-2 -m-2 hover:bg-muted rounded-full transition-all group"
                 >
-                  <Star className={cn('h-3.5 w-3.5', email.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30')} />
+                  <Star className={cn('h-4 w-4 transition-all group-active:scale-125', email.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30')} />
                 </button>
               </div>
 

@@ -69,13 +69,12 @@ export function EmailDetailSheet({
     const senderFirstName = email.sender.name.split(' ')[0]
     const lines = email.analysis?.summary ?? []
     const signature = `\n\n${globalSignOff},\n${globalFirstName}`
-    if (lines.length === 0) return `Hi ${senderFirstName},\n\nThanks for your email. I’ve received this.${signature}`
-    return `Hi ${senderFirstName},\n\nThanks for flagging this. I understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it and follow up shortly.${signature}`
+    if (lines.length === 0) return `Hi ${senderFirstName},\n\nThanks for your email.${signature}`
+    return `Hi ${senderFirstName},\n\nI understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it.${signature}`
   }, [email, globalFirstName, globalSignOff]) 
 
   if (!email) return null
 
-  // Point 6: Action with checkmark feedback
   const triggerSuccess = (actionType: string, callback: () => void) => {
     setSuccessAction(actionType)
     setTimeout(() => {
@@ -96,7 +95,6 @@ export function EmailDetailSheet({
     <Sheet open={open} onOpenChange={(val) => { if (!val) { setMode('default'); onOpenChange(false); } }}>
       <SheetContent side="right" className="w-[520px] max-w-[95vw] border-l border-border bg-sheet-solid p-0 shadow-2xl outline-none">
         <div className="flex h-full flex-col overflow-hidden bg-sheet-solid">
-          {/* Header */}
           <div className="shrink-0 border-b border-border px-10 pb-6 pt-10">
             <div className="mb-6 flex gap-3">
               <div className={`rounded-full border px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] ${priorityClass}`}>
@@ -117,7 +115,6 @@ export function EmailDetailSheet({
               <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary/40" /></div>
             ) : mode === 'reply' ? (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                {/* Point 4: Medium Sized Drafting Box */}
                 <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
                   <div className="mb-4 flex items-center gap-2 text-primary font-black uppercase text-[9px] tracking-widest">
                     <Reply className="h-3.5 w-3.5" /> Drafting Response
@@ -133,7 +130,6 @@ export function EmailDetailSheet({
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Point 1: Smaller Summary Container */}
                 <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
                   <div className="mb-4 flex items-center justify-between">
                     <div className="flex items-center gap-2 text-primary font-black uppercase text-[9px] tracking-widest">
@@ -164,7 +160,6 @@ export function EmailDetailSheet({
             )}
           </div>
 
-          {/* Footer Actions */}
           <div className="shrink-0 border-t border-border bg-background p-8">
             {mode === 'default' ? (
               <div className="grid grid-cols-2 gap-4">
@@ -175,7 +170,6 @@ export function EmailDetailSheet({
                   </div>
                 </Button>
                 
-                {/* Point 3: Fixed Popover Trigger */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-24 rounded-[2rem] border-border bg-card text-muted-foreground shadow-action">
@@ -185,7 +179,8 @@ export function EmailDetailSheet({
                       </div>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 z-[9999]">
+                  {/* Point 1: Added bg-popover and opacity-100 */}
+                  <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 z-[9999] bg-popover border-border shadow-xl opacity-100">
                     {[1, 3, 24].map(h => (
                       <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[9px] tracking-widest" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
                         {h === 24 ? 'Tomorrow' : `${h} Hours`}
@@ -194,14 +189,14 @@ export function EmailDetailSheet({
                   </PopoverContent>
                 </Popover>
 
-                {/* Point 2: Delegate Popover (Replaced separate mode) */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-14 rounded-2xl border-border bg-card text-muted-foreground uppercase text-[10px] font-black tracking-widest">
                       Delegate
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent side="top" className="w-56 rounded-2xl p-2 z-[9999]">
+                   {/* Point 1: Added bg-popover and opacity-100 */}
+                  <PopoverContent side="top" className="w-56 rounded-2xl p-2 z-[9999] bg-popover border-border shadow-xl opacity-100">
                     <div className="px-3 py-2 text-[8px] font-black uppercase tracking-tighter text-muted-foreground/60 border-b mb-1">Assign To</div>
                     {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
                       <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[9px] tracking-widest" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
@@ -211,7 +206,6 @@ export function EmailDetailSheet({
                   </PopoverContent>
                 </Popover>
 
-                {/* Point 6: Archive with checkmark feedback */}
                 <Button variant="outline" className="h-14 rounded-2xl border-destructive/20 text-destructive bg-destructive/5 uppercase text-[10px] font-black tracking-widest" onClick={() => triggerSuccess('archive', () => onArchive(email.id))}>
                   {successAction === 'archive' ? <Check className="h-5 w-5 animate-in zoom-in" /> : 'Archive'}
                 </Button>
