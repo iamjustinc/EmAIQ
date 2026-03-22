@@ -105,7 +105,7 @@ Alex`
   const handleRespond = () => {
     setMode('reply')
     setIsDrafting(true)
-    if (!replyText) setReplyText(generatedDraft)
+    setReplyText('') // Fix: Directly shows blank box as requested
   }
 
   const handleSend = () => {
@@ -201,6 +201,7 @@ Alex`
                     onChange={(e) => setReplyText(e.target.value)}
                     className="min-h-[220px] rounded-2xl border-border bg-white text-sm leading-relaxed text-foreground focus-visible:ring-1 focus-visible:ring-primary"
                     placeholder="Write your response..."
+                    autoFocus
                   />
                 </div>
               </div>
@@ -220,7 +221,7 @@ Alex`
                         <Button
                           key={team}
                           variant="outline"
-                          className="h-14 rounded-2xl border-border bg-white text-[10px] font-black uppercase tracking-[0.18em] text-foreground hover:bg-primary/5 hover:text-primary"
+                          className="h-14 rounded-2xl border-border bg-white text-[10px] font-black uppercase tracking-[0.18em] text-foreground transition-all duration-200 hover:bg-primary/5 hover:text-primary active:scale-95"
                           onClick={handleDelegateComplete}
                         >
                           {team}
@@ -232,9 +233,9 @@ Alex`
               </div>
             ) : (
               <div className="space-y-8">
-                {/* Intelligence card */}
-                <div className="rounded-[2.5rem] border border-border bg-white p-8 shadow-sm">
-                  <div className="mb-8 flex items-center justify-between gap-4">
+                {/* Intelligence card - Fixed Size */}
+                <div className="rounded-[2.5rem] border border-border bg-white p-6 shadow-sm">
+                  <div className="mb-6 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <Zap className="h-5 w-5 fill-primary text-primary" />
                       <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">
@@ -244,21 +245,21 @@ Alex`
 
                     <Button
                       variant="ghost"
-                      className="h-12 rounded-2xl border border-primary/25 bg-primary/5 px-6 text-[10px] font-black uppercase tracking-[0.18em] text-primary hover:bg-primary/10"
+                      className="h-10 rounded-2xl border border-primary/25 bg-primary/5 px-5 text-[10px] font-black uppercase tracking-[0.18em] text-primary transition-all duration-200 hover:bg-primary/10 active:scale-95"
                       onClick={handleUseDraft}
                     >
-                      <Zap className="mr-2 h-4 w-4 fill-primary" />
+                      <Zap className="mr-2 h-3.5 w-3.5 fill-primary" />
                       Use Draft
                     </Button>
                   </div>
 
-                  <ul className="space-y-8">
+                  <ul className="space-y-5">
                     {(email.analysis?.summary ?? []).map((point, i) => (
-                      <li key={i} className="flex gap-8">
+                      <li key={i} className="flex gap-6">
                         <span className="mt-1 text-[12px] font-black text-primary">
                           0{i + 1}
                         </span>
-                        <p className="max-w-[30ch] text-[18px] leading-[1.65] text-foreground/68">
+                        <p className="max-w-[32ch] text-[16px] leading-[1.5] text-foreground/68">
                           {point}
                         </p>
                       </li>
@@ -291,12 +292,12 @@ Alex`
             )}
           </div>
 
-          {/* Footer Actions */}
+          {/* Footer Actions - Added Hover & Active Animations */}
           <div className="shrink-0 border-t border-border/75 bg-sheet-solid p-8">
             {mode === 'default' && (
               <div className="grid grid-cols-2 gap-5">
                 <Button
-                  className="h-24 rounded-[2rem] bg-primary text-black shadow-action hover:bg-primary/90"
+                  className="h-24 rounded-[2rem] bg-primary text-black shadow-action transition-all duration-200 hover:bg-primary/90 hover:shadow-lg active:scale-95"
                   onClick={handleRespond}
                 >
                   <div className="flex flex-col items-center gap-2">
@@ -311,7 +312,7 @@ Alex`
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      className="h-24 rounded-[2rem] border-border bg-white text-muted-foreground shadow-action hover:bg-muted/10"
+                      className="h-24 rounded-[2rem] border-border bg-white text-muted-foreground shadow-action transition-all duration-200 hover:bg-muted/10 hover:shadow-lg active:scale-95"
                     >
                       <div className="flex flex-col items-center gap-2">
                         <Clock className="h-5 w-5" />
@@ -354,7 +355,7 @@ Alex`
 
                 <Button
                   variant="outline"
-                  className="h-24 rounded-[2rem] border-border bg-white text-muted-foreground shadow-action hover:bg-muted/10"
+                  className="h-24 rounded-[2rem] border-border bg-white text-muted-foreground shadow-action transition-all duration-200 hover:bg-muted/10 hover:shadow-lg active:scale-95"
                   onClick={handleDelegateStart}
                 >
                   <div className="flex flex-col items-center gap-2">
@@ -367,7 +368,7 @@ Alex`
 
                 <Button
                   variant="outline"
-                  className="h-24 rounded-[2rem] border-destructive/30 bg-white text-destructive shadow-action hover:bg-destructive/5"
+                  className="h-24 rounded-[2rem] border-destructive/30 bg-white text-destructive shadow-action transition-all duration-200 hover:bg-destructive/5 hover:shadow-lg active:scale-95"
                   onClick={handleArchive}
                 >
                   <div className="flex flex-col items-center gap-2">
@@ -384,7 +385,7 @@ Alex`
               <div className="flex gap-4">
                 <Button
                   variant="outline"
-                  className="h-14 flex-1 rounded-2xl border-border bg-white text-muted-foreground hover:bg-muted/10"
+                  className="h-14 flex-1 rounded-2xl border-border bg-white text-muted-foreground transition-all duration-200 hover:bg-muted/10 active:scale-95"
                   onClick={() => {
                     setMode('default')
                     setIsDrafting(false)
@@ -393,7 +394,7 @@ Alex`
                   Cancel
                 </Button>
                 <Button
-                  className="h-14 flex-[1.4] rounded-2xl bg-primary text-black hover:bg-primary/90"
+                  className="h-14 flex-[1.4] rounded-2xl bg-primary text-black transition-all duration-200 hover:bg-primary/90 active:scale-95"
                   onClick={handleSend}
                 >
                   Send Message
@@ -405,13 +406,13 @@ Alex`
               <div className="flex gap-4">
                 <Button
                   variant="outline"
-                  className="h-14 flex-1 rounded-2xl border-border bg-white text-muted-foreground hover:bg-muted/10"
+                  className="h-14 flex-1 rounded-2xl border-border bg-white text-muted-foreground transition-all duration-200 hover:bg-muted/10 active:scale-95"
                   onClick={() => setMode('default')}
                 >
                   Back
                 </Button>
                 <Button
-                  className="h-14 flex-[1.4] rounded-2xl bg-primary text-black hover:bg-primary/90"
+                  className="h-14 flex-[1.4] rounded-2xl bg-primary text-black transition-all duration-200 hover:bg-primary/90 active:scale-95"
                   onClick={handleDelegateComplete}
                 >
                   Confirm Delegate
