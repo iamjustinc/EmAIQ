@@ -15,6 +15,7 @@ import {
   Loader2,
   ChevronDown,
   ChevronUp,
+  Check,
 } from 'lucide-react'
 import { Email } from '@/lib/types'
 import { useUserStore } from '@/store/use-user-store'
@@ -30,7 +31,7 @@ interface EmailDetailSheetProps {
   setIsDrafting: (val: boolean) => void
 }
 
-type Mode = 'default' | 'reply' | 'delegate'
+type Mode = 'default' | 'reply'
 
 export function EmailDetailSheet({
   email,
@@ -46,6 +47,7 @@ export function EmailDetailSheet({
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [showFullEmail, setShowFullEmail] = useState(false)
   const [replyText, setReplyText] = useState('')
+  const [successAction, setSuccessAction] = useState<string | null>(null)
 
   const { firstName: globalFirstName, signOff: globalSignOff } = useUserStore()
 
@@ -56,11 +58,8 @@ export function EmailDetailSheet({
       setMode('default')
       setIsDrafting(false)
       setReplyText('')
-
-      const timer = setTimeout(() => {
-        setIsAnalyzing(false)
-      }, 450)
-
+      setSuccessAction(null)
+      const timer = setTimeout(() => setIsAnalyzing(false), 450)
       return () => clearTimeout(timer)
     }
   }, [open, email, setIsDrafting])
@@ -70,47 +69,22 @@ export function EmailDetailSheet({
     const senderFirstName = email.sender.name.split(' ')[0]
     const lines = email.analysis?.summary ?? []
     const signature = `\n\n${globalSignOff},\n${globalFirstName}`
-
-    if (lines.length === 0) {
-      return `Hi ${senderFirstName},\n\nThanks for your email. I’ve received this and will take a look right away.${signature}`
-    }
+    if (lines.length === 0) return `Hi ${senderFirstName},\n\nThanks for your email. I’ve received this.${signature}`
     return `Hi ${senderFirstName},\n\nThanks for flagging this. I understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it and follow up shortly.${signature}`
   }, [email, globalFirstName, globalSignOff]) 
 
   if (!email) return null
 
-  const resetAndClose = () => {
-    setMode('default')
-    setIsDrafting(false)
-    setReplyText('')
-    onOpenChange(false)
-  }
-
-  const handleUseDraft = () => {
-    setReplyText(generatedDraft)
-    setMode('reply')
-    setIsDrafting(true)
-  }
-
-  const handleRespond = () => {
-    setReplyText('') 
-    setMode('reply')
-    setIsDrafting(true)
-  }
-
-  const handleSend = () => {
-    onSent(email.id)
-    resetAndClose()
-  }
-
-  const handleArchive = () => {
-    onArchive(email.id)
-    resetAndClose()
-  }
-
-  const handleSnooze = (hours: number) => {
-    onSnooze(email.id, hours)
-    resetAndClose()
+  // Point 6: Action with checkmark feedback
+  const triggerSuccess = (actionType: string, callback: () => void) => {
+    setSuccessAction(actionType)
+    setTimeout(() => {
+      callback()
+      setSuccessAction(null)
+      setMode('default')
+      setIsDrafting(false)
+      onOpenChange(false)
+    }, 800)
   }
 
   const priorityLabel = email.urgency?.label === 'High' ? 'Critical' : 'Priority'
@@ -119,161 +93,134 @@ export function EmailDetailSheet({
     : 'border-border bg-card text-muted-foreground'
 
   return (
-    <Sheet open={open} onOpenChange={(val) => { if (!val) resetAndClose() }}>
-      <SheetContent
-        side="right"
-        className="w-[520px] max-w-[95vw] border-l border-border bg-sheet-solid p-0 shadow-2xl outline-none"
-      >
+    <Sheet open={open} onOpenChange={(val) => { if (!val) { setMode('default'); onOpenChange(false); } }}>
+      <SheetContent side="right" className="w-[520px] max-w-[95vw] border-l border-border bg-sheet-solid p-0 shadow-2xl outline-none">
         <div className="flex h-full flex-col overflow-hidden bg-sheet-solid">
           {/* Header */}
-          <div className="shrink-0 border-b border-border px-10 pb-8 pt-12">
-            <div className="mb-8 flex items-start justify-between">
-              <div className="flex gap-3">
-                <div className={`rounded-full border px-5 py-2 text-[10px] font-black uppercase tracking-[0.22em] ${priorityClass}`}>
-                  <AlertCircle className="mr-2 inline h-4 w-4" />
-                  {priorityLabel}
-                </div>
-                <div className="rounded-full border border-primary/25 bg-primary/5 px-5 py-2 text-[10px] font-black uppercase tracking-[0.22em] text-primary">
-                  AI Scanned
-                </div>
+          <div className="shrink-0 border-b border-border px-10 pb-6 pt-10">
+            <div className="mb-6 flex gap-3">
+              <div className={`rounded-full border px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] ${priorityClass}`}>
+                <AlertCircle className="mr-1.5 inline h-3.5 w-3.5" />
+                {priorityLabel}
               </div>
+              <div className="rounded-full border border-primary/25 bg-primary/5 px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-primary">AI Scanned</div>
             </div>
-            <h2 className="text-[32px] font-black leading-[1.05] tracking-tight text-foreground">
-              {email.subject}
-            </h2>
-            <div className="mt-8 flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.22em]">
+            <h2 className="text-[28px] font-black leading-tight tracking-tight text-foreground">{email.subject}</h2>
+            <div className="mt-6 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest">
               <span className="text-muted-foreground">Sender:</span>
               <span className="text-primary">{email.sender.name}</span>
             </div>
           </div>
 
-          {/* Body - Point 3 Fix: Tightened Padding */}
-          <div className="scrollbar-hide flex-1 overflow-y-auto px-10 py-4">
+          <div className="scrollbar-hide flex-1 overflow-y-auto px-10 py-6">
             {isAnalyzing ? (
-              <div className="flex h-full items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary/40" />
-              </div>
+              <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary/40" /></div>
             ) : mode === 'reply' ? (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                <div className="rounded-[2.5rem] border border-border bg-card p-8 shadow-sm">
-                  <div className="mb-6 flex items-center gap-3">
-                    <Reply className="h-4 w-4 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Drafting Response</span>
+              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                {/* Point 4: Medium Sized Drafting Box */}
+                <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
+                  <div className="mb-4 flex items-center gap-2 text-primary font-black uppercase text-[9px] tracking-widest">
+                    <Reply className="h-3.5 w-3.5" /> Drafting Response
                   </div>
                   <Textarea
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    className="min-h-[350px] border-none bg-transparent p-0 text-base leading-relaxed text-foreground focus-visible:ring-0"
+                    className="min-h-[220px] border-none bg-transparent p-0 text-[15px] leading-relaxed text-foreground focus-visible:ring-0"
                     placeholder="Type your message..."
                     autoFocus
                   />
                 </div>
               </div>
-            ) : mode === 'delegate' ? (
-              <div className="space-y-6 p-2">
-                <div className="rounded-[2.5rem] border border-border bg-card p-8 shadow-sm text-center">
-                  <Users className="mx-auto mb-4 h-8 w-8 text-primary" />
-                  <h3 className="text-lg font-black uppercase tracking-widest mb-6">Select Recipient</h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    {['Operations Team', 'Engineering', 'Executive Assistant'].map((team) => (
-                      <Button key={team} variant="outline" className="h-16 rounded-2xl border-border font-black uppercase tracking-widest hover:bg-primary/5" onClick={() => { onSent(email.id); resetAndClose(); }}>
-                        {team}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </div>
             ) : (
-              <div className="space-y-4"> {/* Reduced gap from 6 to 4 */}
-                <div className="rounded-[2.5rem] border border-border bg-card p-8 shadow-sm">
-                  <div className="mb-6 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Zap className="h-4 w-4 fill-primary text-primary" />
-                      <span className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Intelligence Report</span>
+              <div className="space-y-4">
+                {/* Point 1: Smaller Summary Container */}
+                <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-primary font-black uppercase text-[9px] tracking-widest">
+                      <Zap className="h-3.5 w-3.5 fill-primary" /> Intelligence Report
                     </div>
-                    <Button
-                      variant="ghost"
-                      className="h-9 rounded-xl border border-primary/20 bg-primary/5 px-4 text-[9px] font-black uppercase tracking-[0.22em] text-primary"
-                      onClick={handleUseDraft}
-                    >
+                    <Button variant="ghost" className="h-8 rounded-lg border border-primary/20 bg-primary/5 px-3 text-[9px] font-black uppercase tracking-widest text-primary" onClick={() => { setReplyText(generatedDraft); setMode('reply'); setIsDrafting(true); }}>
                       Use AI Draft
                     </Button>
                   </div>
-                  <ul className="space-y-4">
+                  <ul className="space-y-3">
                     {(email.analysis?.summary ?? []).map((point, i) => (
-                      <li key={i} className="flex gap-5">
-                        <span className="mt-1 text-[11px] font-black text-primary/40">0{i + 1}</span>
-                        <p className="text-[15px] font-bold leading-snug tracking-tight text-foreground/90">
-                          {point}
-                        </p>
+                      <li key={i} className="flex gap-4">
+                        <span className="mt-1 text-[10px] font-black text-primary/40">0{i + 1}</span>
+                        <p className="text-[13px] font-bold leading-normal tracking-tight text-foreground/90">{point}</p>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowFullEmail(!showFullEmail)}
-                    className="flex w-full items-center justify-between text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground hover:text-foreground"
-                  >
+                <div className="pt-2">
+                  <button type="button" onClick={() => setShowFullEmail(!showFullEmail)} className="flex w-full items-center justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground">
                     <span>Original Message</span>
                     {showFullEmail ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </button>
-                  {showFullEmail && (
-                    <div className="mt-4 rounded-2xl border border-border bg-muted/20 p-6 text-[14px] leading-relaxed text-foreground/70 italic">
-                      {email.body || email.bodyPreview}
-                    </div>
-                  )}
+                  {showFullEmail && <div className="mt-3 rounded-xl border border-border bg-muted/10 p-5 text-[13px] leading-relaxed text-foreground/70 italic">{email.body || email.bodyPreview}</div>}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Footer - Point 3 Fix: Massive Contrast for Respond Button */}
-          <div className="shrink-0 border-t border-border bg-background p-10">
+          {/* Footer Actions */}
+          <div className="shrink-0 border-t border-border bg-background p-8">
             {mode === 'default' ? (
-              <div className="grid grid-cols-2 gap-5">
-                <Button
-                  className="h-28 rounded-[2.5rem] bg-foreground text-background shadow-action transition-all active:scale-95"
-                  onClick={handleRespond}
-                >
+              <div className="grid grid-cols-2 gap-4">
+                <Button className="h-24 rounded-[2rem] bg-foreground text-background shadow-action" onClick={() => { setReplyText(''); setMode('reply'); setIsDrafting(true); }}>
                   <div className="flex flex-col items-center gap-2">
-                    <Reply className="h-6 w-6" />
-                    <span className="text-[11px] font-black uppercase tracking-widest">Respond</span>
+                    <Reply className="h-5 w-5" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Respond</span>
                   </div>
                 </Button>
                 
+                {/* Point 3: Fixed Popover Trigger */}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="h-28 rounded-[2.5rem] border-border bg-card text-muted-foreground shadow-action transition-all active:scale-95">
+                    <Button variant="outline" className="h-24 rounded-[2rem] border-border bg-card text-muted-foreground shadow-action">
                       <div className="flex flex-col items-center gap-2">
-                        <Clock className="h-6 w-6" />
-                        <span className="text-[11px] font-black uppercase tracking-widest">Later</span>
+                        <Clock className="h-5 w-5" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Later</span>
                       </div>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent side="top" className="w-56 rounded-[1.5rem] p-2">
+                  <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 z-[9999]">
                     {[1, 3, 24].map(h => (
-                      <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest" onClick={() => handleSnooze(h)}>
+                      <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[9px] tracking-widest" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
                         {h === 24 ? 'Tomorrow' : `${h} Hours`}
                       </Button>
                     ))}
                   </PopoverContent>
                 </Popover>
 
-                <Button variant="outline" className="h-16 rounded-2xl border-border bg-card text-muted-foreground uppercase text-[10px] font-black tracking-widest" onClick={() => setMode('delegate')}>
-                  Delegate
-                </Button>
-                <Button variant="outline" className="h-16 rounded-2xl border-destructive/20 text-destructive bg-destructive/5 uppercase text-[10px] font-black tracking-widest" onClick={handleArchive}>
-                  Archive
+                {/* Point 2: Delegate Popover (Replaced separate mode) */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="h-14 rounded-2xl border-border bg-card text-muted-foreground uppercase text-[10px] font-black tracking-widest">
+                      Delegate
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent side="top" className="w-56 rounded-2xl p-2 z-[9999]">
+                    <div className="px-3 py-2 text-[8px] font-black uppercase tracking-tighter text-muted-foreground/60 border-b mb-1">Assign To</div>
+                    {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
+                      <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[9px] tracking-widest" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
+                        {team}
+                      </Button>
+                    ))}
+                  </PopoverContent>
+                </Popover>
+
+                {/* Point 6: Archive with checkmark feedback */}
+                <Button variant="outline" className="h-14 rounded-2xl border-destructive/20 text-destructive bg-destructive/5 uppercase text-[10px] font-black tracking-widest" onClick={() => triggerSuccess('archive', () => onArchive(email.id))}>
+                  {successAction === 'archive' ? <Check className="h-5 w-5 animate-in zoom-in" /> : 'Archive'}
                 </Button>
               </div>
             ) : (
               <div className="flex gap-4">
-                <Button variant="outline" className="h-16 flex-1 rounded-2xl" onClick={() => setMode('default')}>Cancel</Button>
-                <Button className="h-16 flex-[1.5] rounded-2xl bg-primary text-white font-black uppercase tracking-widest" onClick={() => { onSent(email.id); resetAndClose(); }}>
-                  {mode === 'reply' ? 'Send Reply' : 'Delegate Now'}
+                <Button variant="outline" className="h-14 flex-1 rounded-2xl border-border" onClick={() => { setMode('default'); setIsDrafting(false); }}>Cancel</Button>
+                <Button className="h-14 flex-[1.5] rounded-2xl bg-primary text-white font-black uppercase tracking-widest" onClick={() => triggerSuccess('send', () => onSent(email.id))}>
+                  {successAction === 'send' ? <Check className="h-5 w-5 animate-in zoom-in" /> : 'Send Message'}
                 </Button>
               </div>
             )}

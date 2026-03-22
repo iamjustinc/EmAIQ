@@ -51,7 +51,6 @@ export function EmailList({
         </div>
       )}
 
-      {/* Grid Header */}
       <div className={cn('grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b border-border bg-muted/30 px-6 py-3', hideTabs ? 'top-0' : 'top-[58px] sticky z-20')}>
         {['PRI', '', 'SENDER', 'MESSAGE DETAIL', 'AI SUGGESTION', 'RECEIVED'].map((h, i) => (
           <div key={i} className="text-[9px] font-black tracking-[0.2em] text-muted-foreground/60">{h}</div>
@@ -81,23 +80,25 @@ export function EmailList({
                 isSelected ? 'bg-primary/[0.03] shadow-[inset_3px_0_0_var(--primary)]' : isUnread ? 'bg-white' : 'hover:bg-muted/20'
               )}
             >
-              {/* PRI */}
               <div className="flex items-center gap-2">
                 {isHighPriority ? <span className="text-xs font-black tracking-tighter text-orange-500">!!</span> : <div className="h-1 w-1 rounded-full bg-border" />}
-                <Star className={cn('h-3.5 w-3.5', email.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30')} />
+                {/* Point 5: Fixed Star button click event */}
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onToggleFavorite(email.id); }}
+                  className="hover:scale-110 transition-transform"
+                >
+                  <Star className={cn('h-3.5 w-3.5', email.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30')} />
+                </button>
               </div>
 
-              {/* UNREAD DOT */}
               <div className="flex justify-center">
                 {isUnread && <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />}
               </div>
 
-              {/* SENDER - BOLD IF UNREAD */}
               <div className={cn('truncate pr-4 text-[13px] tracking-tight', isUnread ? 'font-black text-foreground' : 'font-medium text-muted-foreground')}>
                 {email.sender.name}
               </div>
 
-              {/* SUBJECT & PREVIEW */}
               <div className="flex flex-col min-w-0 pr-8">
                 <span className={cn('truncate text-[13px] tracking-tight', isUnread ? 'font-bold text-foreground' : 'text-foreground/80')}>
                   {email.subject}
@@ -105,7 +106,6 @@ export function EmailList({
                 <span className="truncate text-[11px] text-muted-foreground/70">{email.bodyPreview}</span>
               </div>
 
-              {/* AI SUGGESTION */}
               <div className="flex justify-start">
                 <div className={cn('flex items-center gap-2 rounded-full border px-3 py-1.5 text-[9px] font-black uppercase tracking-widest', action.styles)}>
                   <action.Icon className="h-3 w-3" />
@@ -113,7 +113,6 @@ export function EmailList({
                 </div>
               </div>
 
-              {/* TIME */}
               <div className="text-right text-[10px] font-bold text-muted-foreground/50 uppercase tracking-tighter">
                 14H AGO
               </div>
