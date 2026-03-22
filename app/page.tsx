@@ -84,26 +84,32 @@ export default function InboxPage() {
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12] animate-in fade-in duration-500">
         <Header title="Inbox" />
-        {/* Fixed: Removed space-y-8 to eliminate the scrolling gap */}
-        <main className="flex-1 overflow-y-auto flex flex-col px-8 pb-8 w-full scrollbar-hide">
-          {/* KPI Grid with vertical padding to maintain spacing without breaking stickiness */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-8">
-            <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
-            <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
-            <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" onClick={() => setActiveTab('noise')} />
-            <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" variant="default" onClick={() => setActiveTab('action')} />
+        
+        {/* The main scroll area */}
+        <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
+          
+          {/* KPI Grid Section with horizontal padding only */}
+          <div className="px-8 pt-8 pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
+              <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
+              <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" onClick={() => setActiveTab('noise')} />
+              <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" variant="default" onClick={() => setActiveTab('action')} />
+            </div>
           </div>
 
-          {/* Email List Container sits flush against the KPI section */}
-          <div className="flex-1 min-h-[500px] bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl overflow-hidden">
-            <EmailList 
-              emails={emails || []} 
-              selectedEmail={currentSelectedEmail} 
-              onSelectEmail={handleSelectEmail} 
-              onToggleFavorite={toggleFavorite}
-              activeTab={activeTab} 
-              setActiveTab={setActiveTab} 
-            />
+          {/* Email List Container - Removed top margin to sit flush */}
+          <div className="flex-1 px-8 pb-8">
+            <div className="min-h-[500px] bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl overflow-hidden">
+              <EmailList 
+                emails={emails || []} 
+                selectedEmail={currentSelectedEmail} 
+                onSelectEmail={handleSelectEmail} 
+                onToggleFavorite={toggleFavorite}
+                activeTab={activeTab} 
+                setActiveTab={setActiveTab} 
+              />
+            </div>
           </div>
         </main>
         
