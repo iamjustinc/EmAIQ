@@ -135,10 +135,10 @@ export function EmailList({
               className={cn(
                 'email-list-grid email-row cursor-pointer px-row py-row transition-colors duration-200',
                 isSelected
-                  ? 'bg-primary/10 shadow-[inset_4px_0_0_var(--primary)]'
+                  ? 'bg-primary/12 shadow-[inset_4px_0_0_var(--primary)]'
                   : isUnread
-                    ? 'bg-muted/45'
-                    : 'bg-card hover:bg-muted/20',
+                    ? 'bg-[color:color-mix(in_oklab,var(--primary)_10%,var(--card))]'
+                    : 'bg-card hover:bg-[color:color-mix(in_oklab,var(--muted)_55%,var(--card))]',
               )}
               onClick={() => onSelectEmail(email)}
             >
@@ -146,7 +146,7 @@ export function EmailList({
               <div className="flex w-16 shrink-0 items-center justify-center gap-2">
                 <div className="flex w-4 justify-center">
                   {isHighPriority ? (
-                    <div className="flex gap-0.5 text-sm font-black tracking-tighter text-warning drop-shadow-[0_0_6px_color-mix(in_oklab,var(--warning)40%,transparent)]">
+                    <div className="flex gap-0.5 text-sm font-black tracking-tighter text-warning drop-shadow-[0_0_6px_color-mix(in_oklab,var(--warning)_40%,transparent)]">
                       <span>!</span>
                       <span>!</span>
                     </div>
@@ -177,7 +177,7 @@ export function EmailList({
               {/* 2. unread dot */}
               <div className="flex w-4 shrink-0 justify-center">
                 {isUnread && (
-                  <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_color-mix(in_oklab,var(--primary)55%,transparent)]" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_45%,transparent)]" />
                 )}
               </div>
 
@@ -188,7 +188,7 @@ export function EmailList({
                     'block truncate',
                     isUnread
                       ? 'font-bold text-foreground'
-                      : 'font-medium text-foreground/85',
+                      : 'font-medium text-muted-foreground',
                   )}
                 >
                   {email.sender.name}
@@ -200,7 +200,7 @@ export function EmailList({
                 <span
                   className={cn(
                     'truncate',
-                    isUnread ? 'font-medium text-foreground' : 'text-foreground/85',
+                    isUnread ? 'font-medium text-foreground' : 'text-foreground/80',
                   )}
                 >
                   {email.subject}
