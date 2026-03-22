@@ -1,14 +1,16 @@
 /**
  * Appearance / theme system — extend with new presets by:
  * 1. Add id here and to `ThemePresetMeta` in theme-metadata.ts
- * 2. Add matching `[data-theme="your-id"] { ... }` block in `app/globals.css`
+ * 2. Add matching `[data-theme="your-id"] { ... }` block in appearance-themes.css
  */
 
 export type ThemePresetId =
   | 'midnight-intelligence'
   | 'creator-editorial'
   | 'sunlit-creator'
-  | 'eco-signal';
+  | 'eco-signal'
+  | 'ocean-air'
+  | 'sunset-ocean';
 
 export type DensityMode = 'compact' | 'comfortable' | 'spacious';
 
@@ -21,7 +23,7 @@ export interface AppearanceState {
 }
 
 export const DEFAULT_APPEARANCE: AppearanceState = {
-  themePreset: 'midnight-intelligence',
+  themePreset: 'creator-editorial',
   density: 'comfortable',
   fontScale: 'medium',
 };
@@ -33,7 +35,9 @@ export function isThemePresetId(v: string): v is ThemePresetId {
     v === 'midnight-intelligence' ||
     v === 'creator-editorial' ||
     v === 'sunlit-creator' ||
-    v === 'eco-signal'
+    v === 'eco-signal' ||
+    v === 'ocean-air' ||
+    v === 'sunset-ocean'
   );
 }
 

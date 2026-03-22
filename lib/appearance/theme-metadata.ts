@@ -39,6 +39,20 @@ export const THEME_PRESETS: ThemePresetMeta[] = [
     description: 'Earthy greens with amber signal — bold & refined.',
     swatches: ['#173222', '#264734', '#E29A2D', '#F8F1E7'],
   },
+  {
+    id: 'ocean-air',
+    name: 'Ocean Air',
+    shortLabel: 'Ocean',
+    description: 'Cool, airy blues with crisp coastal clarity.',
+    swatches: ['#EEF6FA', '#FFFFFF', '#4DA3D9', '#183247'],
+  },
+  {
+    id: 'sunset-ocean',
+    name: 'Sunset Ocean',
+    shortLabel: 'Sunset',
+    description: 'Warm coastal blush with ocean teal contrast.',
+    swatches: ['#FFF4F1', '#FFB5B0', '#8DD8CF', '#3C9C97'],
+  },
 ];
 
 export function getThemeMeta(id: ThemePresetId): ThemePresetMeta {

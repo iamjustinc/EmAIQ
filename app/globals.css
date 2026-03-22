@@ -1,184 +1,163 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@import './appearance-themes.css';
-
-@custom-variant dark (&:is(.dark *));
-
-/* -----------------------------------------------------------------------------
-   SSR / no-JS fallback — matches Midnight Intelligence + comfortable + medium
-   Overridden by html[data-theme] / data-density / data-font-scale when present.
-   ----------------------------------------------------------------------------- */
-:root {
-  --radius: 0.75rem;
-  --app-gap: 1rem;
-  --card-padding: 1.25rem;
-  --row-padding-y: 0.5rem;
-  --row-padding-x: 1.25rem;
-  --sidebar-item-py: 0.5rem;
-  --sidebar-item-px: 0.75rem;
-  --panel-padding: 1.25rem;
-  --button-height: 2.25rem;
-  --radius-card: 1.25rem;
-  --header-h: 4rem;
-  --kpi-icon-box: 2.75rem;
-  --font-body: 0.875rem;
-  --font-label: 0.625rem;
-  --font-title: 1.25rem;
-  --font-kpi: 1.75rem;
-  --font-table-header: 0.5625rem;
-  --font-micro: 0.5rem;
-
-  --background: #070b14;
-  --foreground: #f5f7fb;
-  --card: #101827;
-  --card-foreground: #f5f7fb;
-  --popover: #0d1320;
-  --popover-foreground: #f5f7fb;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --secondary: #0d1320;
-  --secondary-foreground: #f5f7fb;
-  --muted: #0d1320;
-  --muted-foreground: #8b98b8;
-  --accent: rgba(59, 130, 246, 0.14);
-  --accent-foreground: #f5f7fb;
-  --destructive: #f05a67;
-  --destructive-foreground: #ffffff;
-  --border: #1f2a3d;
-  --input: #1f2a3d;
-  --ring: #3b82f6;
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --danger: #f05a67;
-  --info: #55c2ff;
-  --chart-1: #3b82f6;
-  --chart-2: #22c55e;
-  --chart-3: #f59e0b;
-  --chart-4: #f05a67;
-  --chart-5: #8b98b8;
-  --sidebar: #0d1320;
-  --sidebar-foreground: #f5f7fb;
-  --sidebar-primary: #3b82f6;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1a2332;
-  --sidebar-accent-foreground: #f5f7fb;
-  --sidebar-border: #1f2a3d;
-  --sidebar-ring: #3b82f6;
-}
-
-.dark {
-  color-scheme: dark;
-}
-
-.light {
-  color-scheme: light;
-}
-
-@theme inline {
-  --font-sans: var(--font-inter), 'Inter', 'Inter Fallback', sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
-  --color-info: var(--info);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  html {
-    transition:
-      background-color 0.4s ease,
-      color 0.35s ease;
-  }
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-size: var(--font-body);
-    transition:
-      background-color 0.4s ease,
-      color 0.35s ease,
-      font-size 0.2s ease;
-  }
-}
-
-@layer utilities {
-  .text-body {
-    font-size: var(--font-body);
-  }
-  .text-label-scale {
-    font-size: var(--font-label);
-  }
-  .text-title-scale {
-    font-size: var(--font-title);
-  }
-  .text-kpi-scale {
-    font-size: var(--font-kpi);
-  }
-  .text-table-header {
-    font-size: var(--font-table-header);
-  }
-  .gap-app {
-    gap: var(--app-gap);
-  }
-  .p-card-ui {
-    padding: var(--card-padding);
-  }
-  .p-panel {
-    padding: var(--panel-padding);
-  }
-  .px-row {
-    padding-left: var(--row-padding-x);
-    padding-right: var(--row-padding-x);
-  }
-  .py-row {
-    padding-top: var(--row-padding-y);
-    padding-bottom: var(--row-padding-y);
-  }
-  .rounded-card-ui {
-    border-radius: var(--radius-card);
-  }
-  .h-header-app {
-    height: var(--header-h);
-  }
-  .min-h-row {
-    min-height: calc(var(--row-padding-y) * 2 + var(--font-body) * 1.5);
-  }
-}
+/* =======================================================================
+   GLOBALS  –  Tailwind core + animation helpers + theme overrides
+   ======================================================================= */
+   @import 'tailwindcss';
+   @import 'tw-animate-css';
+   @import './appearance-themes.css';   /* ⬅️  per-theme tokens live here */
+   
+   /* ----------------------------------------------------------------------------
+      DEFAULT TOKENS  (Creator Editorial  – light)
+      ---------------------------------------------------------------------------- */
+   :root {
+     /* scale + rhythm */
+     --radius: 0.75rem;
+     --app-gap: 1rem;
+     --card-padding: 1.25rem;
+     --row-padding-y: 0.5rem;
+     --row-padding-x: 1.25rem;
+     --sidebar-item-py: 0.5rem;
+     --sidebar-item-px: 0.75rem;
+     --panel-padding: 1.25rem;
+     --button-height: 2.25rem;
+     --radius-card: 1.25rem;
+     --header-h: 4rem;
+     --kpi-icon-box: 2.75rem;
+   
+     /* typography scale */
+     --font-body: 0.875rem;        /* 14 px   */
+     --font-label: 0.625rem;       /* 10 px   */
+     --font-title: 1.25rem;        /* 20 px   */
+     --font-kpi: 1.75rem;          /* 28 px   */
+     --font-table-header: 0.5625rem;/* 9 px   */
+   
+     /* Creator Editorial palette  (light default) */
+     --background: #f7f1eb;
+     --foreground: #201b18;
+   
+     --card: #fffdf9;
+     --card-foreground: #201b18;
+   
+     --popover: #fff8f2;
+     --popover-foreground: #201b18;
+   
+     --primary: #f59e72;
+     --primary-foreground: #ffffff;
+   
+     --secondary: #fff8f2;
+     --secondary-foreground: #201b18;
+   
+     --muted: #fff8f2;
+     --muted-foreground: #6e6259;
+   
+     --accent: rgba(245, 158, 114, 0.16);
+     --accent-foreground: #201b18;
+   
+     --destructive: #d95d5d;
+     --border: #e8ddd2;
+     --input:  #e8ddd2;
+     --ring:   #f59e72;
+   
+     --success: #4e9b6e;
+     --warning: #d89a3d;
+     --danger:  #d95d5d;
+     --info:    #4da3d9;
+   
+     /* charts + sidebar */
+     --chart-1: #f59e72;
+     --chart-2: #4e9b6e;
+     --chart-3: #d89a3d;
+     --chart-4: #d95d5d;
+     --chart-5: #6e6259;
+   
+     --sidebar: #fff8f2;
+     --sidebar-foreground: #201b18;
+     --sidebar-primary: #f59e72;
+     --sidebar-primary-foreground: #ffffff;
+     --sidebar-accent: #f3e8dd;
+     --sidebar-accent-foreground: #201b18;
+     --sidebar-border: #e8ddd2;
+     --sidebar-ring: #f59e72;
+   
+     /* table-header whisper shade */
+     --table-header-color: rgba(32, 27, 24, 0.42);
+   }
+   
+   /* ----------------------------------------------------------------------------
+      LIGHT / DARK helpers applied by AppearanceProvider
+      ---------------------------------------------------------------------------- */
+   .dark  { color-scheme: dark;  }
+   .light { color-scheme: light; }
+   
+   /* ----------------------------------------------------------------------------
+      THEME-AGNOSTIC LAYERS (Tailwind directive mix)
+      ---------------------------------------------------------------------------- */
+   @layer base {
+     *,::before,::after { @apply border-border box-border; }
+   
+     html {
+       transition: background-color .35s ease, color .35s ease;
+     }
+   
+     body {
+       @apply bg-background text-foreground antialiased;
+       font-size: var(--font-body);
+       transition:
+         background-color .35s ease,
+         color            .35s ease,
+         font-size        .2s  ease;
+     }
+   }
+   
+   @layer utilities {
+     /* text scales */
+     .text-body         { font-size: var(--font-body);  }
+     .text-label-scale  { font-size: var(--font-label); }
+     .text-title-scale  { font-size: var(--font-title); }
+     .text-kpi-scale    { font-size: var(--font-kpi);   }
+     .text-table-header { font-size: var(--font-table-header); }
+   
+     /* rhythm helpers */
+     .gap-app    { gap: var(--app-gap); }
+     .p-card-ui  { padding: var(--card-padding); }
+     .px-row     { padding-inline: var(--row-padding-x); }
+     .py-row     { padding-block: var(--row-padding-y); }
+   
+     /* rounding */
+     .rounded-card-ui { border-radius: var(--radius-card); }
+   
+     /* header + row heights */
+     .h-header-app { height: var(--header-h); }
+     .min-h-row    { min-height: calc(var(--row-padding-y)*2 + 1.5em); }
+   }
+   
+   /* ----------------------------------------------------------------------------
+      DATA-TABLE GRID  (shared by header + each row)
+      ---------------------------------------------------------------------------- */
+   .email-list-grid {
+     display: grid;
+     grid-template-columns:
+       72px                 /* PRI icon */
+       220px                /* SENDER  */
+       minmax(320px,1fr)    /* MESSAGE DETAIL */
+       180px                /* AI SUGGESTION  */
+       120px;               /* RECEIVED       */
+     align-items: center;
+   }
+   
+   .email-list-header {
+     padding: .4rem var(--row-padding-x);
+     border-bottom: 1px solid var(--border);
+   }
+   
+   .email-list-header-label {
+     font-size:   var(--font-table-header);
+     letter-spacing: .22em;
+     text-transform: uppercase;
+     font-weight: 600;
+     color: var(--table-header-color);
+     white-space: nowrap;
+   }
+   
+   /* row hover feedback */
+   .email-row { transition: background .18s ease; }
+   .email-row:hover { background: var(--accent); }

@@ -56,7 +56,13 @@ function applyToDocument(state: AppearanceState) {
   root.dataset.density = state.density;
   root.dataset.fontScale = state.fontScale;
 
-  const lightThemes: ThemePresetId[] = ['creator-editorial', 'sunlit-creator'];
+  const lightThemes: ThemePresetId[] = [
+    'creator-editorial',
+    'sunlit-creator',
+    'ocean-air',
+    'sunset-ocean',
+  ];
+
   root.classList.toggle('dark', !lightThemes.includes(state.themePreset));
   root.classList.toggle('light', lightThemes.includes(state.themePreset));
 }
@@ -78,10 +84,12 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
     const stored = parseStored(
       typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null,
     );
+
     const next: AppearanceState = {
       ...DEFAULT_APPEARANCE,
       ...stored,
     };
+
     setState(next);
     applyToDocument(next);
     setReady(true);
