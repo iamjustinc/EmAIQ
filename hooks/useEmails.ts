@@ -12,7 +12,6 @@ export function useEmails() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       try {
@@ -24,6 +23,7 @@ export function useEmails() {
       const initialData = (rawEmails as any[]).map(e => ({
         ...e,
         isActioned: e.isActioned || false,
+        isSent: e.isSent || false, // New property
         isRead: e.isRead || false,
         isFavorite: e.isFavorite || false,
         snoozedUntil: null
@@ -48,6 +48,10 @@ export function useEmails() {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e))
   }
 
+  const markAsSent = (id: string) => {
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, isSent: true, isRead: true, snoozedUntil: null } : e))
+  }
+
   const toggleFavorite = (id: string) => {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isFavorite: !e.isFavorite } : e))
   }
@@ -57,25 +61,21 @@ export function useEmails() {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, snoozedUntil: until, isRead: true } : e))
   }
 
-  // Filtered for the Main Inbox
   const inboxEmails = loading ? [] : emails
     .filter(e => {
-      if (e.isActioned) return false;
+      if (e.isActioned || e.isSent) return false; // Hide both from Inbox
       if (e.snoozedUntil && e.snoozedUntil > Date.now()) return false;
       return true;
     })
-    .sort((a, b) => {
-      const aTime = new Date(a.receivedAt).getTime();
-      const bTime = new Date(b.receivedAt).getTime();
-      return bTime - aTime;
-    });
+    .sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime());
 
   return {
-    emails: inboxEmails,      // For Inbox
-    allEmails: emails,       // For Favorites/Archive pages
+    emails: inboxEmails,
+    allEmails: emails,
     loading,
     markAsRead,
     archiveEmail,
+    markAsSent,
     snoozeEmail,
     toggleFavorite,
     archiveAllNoise: () => setEmails(prev => prev.map(e => e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e))

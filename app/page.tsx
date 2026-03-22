@@ -12,22 +12,19 @@ import { Email } from '@/lib/types';
 import { Mail, Zap, AlertCircle, Trash2 } from 'lucide-react';
 
 export default function InboxPage() {
-  const { emails, archiveEmail, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
+  const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
   const { firstName } = useUser(); 
   
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   const [isDrafting, setIsDrafting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Default to false
+  const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-    
-    // Check if we've already shown the welcome screen this session
     const hasSeenWelcome = sessionStorage.getItem('emaiq_welcome_seen');
-    
     if (!hasSeenWelcome) {
       setIsLoading(true);
       const timer = setTimeout(() => { 
@@ -48,18 +45,6 @@ export default function InboxPage() {
     setIsDetailsOpen(true);
     setIsDrafting(false); 
   }, [markAsRead]);
-
-  const handleArchiveEmail = useCallback((emailId: string) => {
-    archiveEmail(emailId);
-    setIsDetailsOpen(false);
-    setSelectedEmailId(null);
-  }, [archiveEmail]);
-
-  const handleSnoozeEmail = useCallback((emailId: string, hours: number) => {
-    snoozeEmail(emailId, hours);
-    setIsDetailsOpen(false);
-    setSelectedEmailId(null);
-  }, [snoozeEmail]);
 
   const stats = useMemo(() => {
     const safeEmails = emails || [];
@@ -82,18 +67,14 @@ export default function InboxPage() {
         <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-white animate-in slide-in-from-bottom-2 duration-1000">
           Welcome {firstName}!
         </p>
-        <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.3em] text-gray-500">
-          Syncing Inbox
-        </p>
+        <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.3em] text-gray-500">Syncing Inbox</p>
         <style jsx>{`
           @keyframes outlook-load {
             0% { transform: scaleX(0); opacity: 1; }
             70% { transform: scaleX(0.8); opacity: 1; }
             100% { transform: scaleX(1); opacity: 0; }
           }
-          .animate-outlook-load {
-            animation: outlook-load 2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-          }
+          .animate-outlook-load { animation: outlook-load 2s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
         `}</style>
       </div>
     );
@@ -103,7 +84,6 @@ export default function InboxPage() {
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12] animate-in fade-in duration-500">
         <Header title="Inbox" />
-        {/* Changed p-8 to px-8 pb-8 and removed overflow-hidden from main */}
         <main className="flex-1 overflow-y-auto flex flex-col px-8 pb-8 space-y-8 w-full scrollbar-hide">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-8">
             <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
@@ -126,8 +106,9 @@ export default function InboxPage() {
           email={currentSelectedEmail} 
           open={isDetailsOpen} 
           onOpenChange={setIsDetailsOpen} 
-          onArchive={handleArchiveEmail} 
-          onSnooze={handleSnoozeEmail} 
+          onArchive={archiveEmail} 
+          onSent={markAsSent} // Passing markAsSent
+          onSnooze={snoozeEmail} 
           isDrafting={isDrafting} 
           setIsDrafting={setIsDrafting} 
         />

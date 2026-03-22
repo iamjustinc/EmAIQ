@@ -13,12 +13,13 @@ interface EmailDetailSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onArchive: (emailId: string) => void;
-  onSnooze: (emailId: string, hours: number) => void; // New Prop
+  onSent: (emailId: string) => void; // New Prop
+  onSnooze: (emailId: string, hours: number) => void;
   isDrafting: boolean;
   setIsDrafting: (isDrafting: boolean) => void;
 }
 
-export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooze, isDrafting, setIsDrafting }: EmailDetailSheetProps) {
+export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSent, onSnooze, isDrafting, setIsDrafting }: EmailDetailSheetProps) {
   const [sentSuccess, setSentSuccess] = useState(false);
   const [isDelegating, setIsDelegating] = useState(false);
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false); 
@@ -51,7 +52,7 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooz
     setIsDrafting(true);
   };
 
-  const handleAction = async (msg: string, actionType: 'archive' | 'snooze' = 'archive', hours?: number) => {
+  const handleAction = async (msg: string, type: 'archive' | 'sent' | 'snooze', hours?: number) => {
     setSuccessMessage(msg);
     await new Promise((res) => setTimeout(res, 400));
     setSentSuccess(true);
@@ -59,11 +60,9 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooz
       setSentSuccess(false);
       setIsDrafting(false);
       setIsDelegating(false);
-      if (actionType === 'snooze' && hours) {
-        onSnooze(email.id, hours);
-      } else {
-        onArchive(email.id);
-      }
+      if (type === 'snooze' && hours) onSnooze(email.id, hours);
+      else if (type === 'sent') onSent(email.id);
+      else onArchive(email.id);
       onOpenChange(false);
     }, 1200);
   };
@@ -77,9 +76,7 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooz
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-[9px] font-black text-red-500 uppercase tracking-widest">
                 <AlertCircle className="h-3 w-3" /> {email.priority === 'High' ? 'Critical' : 'Priority'}
               </div>
-              <div className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black text-blue-400 uppercase tracking-widest">
-                AI Scanned
-              </div>
+              <div className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-black text-blue-400 uppercase tracking-widest">AI Scanned</div>
             </div>
           </div>
           <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-100 pr-10">{email.subject}</h2>
@@ -131,11 +128,7 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooz
                   <span className="text-[10px] font-bold uppercase tracking-widest">Original Thread</span>
                   {showFullEmail ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </button>
-                {showFullEmail && (
-                  <div className="mt-4 text-[13px] leading-relaxed text-gray-400 bg-white/[0.01] p-4 rounded-xl border border-white/5">
-                    {email.body || email.bodyPreview}
-                  </div>
-                )}
+                {showFullEmail && <div className="mt-4 text-[13px] leading-relaxed text-gray-400 bg-white/[0.01] p-4 rounded-xl border border-white/5">{email.body || email.bodyPreview}</div>}
               </div>
             </>
           )}
@@ -149,8 +142,6 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooz
                   <Reply className="h-4 w-4" />
                   <span className="text-[9px] font-bold uppercase tracking-widest">Respond</span>
                 </Button>
-                
-                {/* DYNAMIC LATER BUTTON */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-20 border-white/10 bg-white/5 rounded-2xl flex flex-col gap-1 text-gray-400">
@@ -163,19 +154,16 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooz
                       <p className="text-[8px] font-black uppercase tracking-widest text-gray-500 p-2">Snooze until...</p>
                       {[{ label: '1 Hour', v: 1 }, { label: '3 Hours', v: 3 }, { label: 'Tomorrow', v: 24 }].map((opt) => (
                         <Button key={opt.label} variant="ghost" className="justify-start h-9 text-[10px] font-bold uppercase tracking-widest hover:bg-blue-500/10 hover:text-blue-400"
-                          onClick={() => handleAction(`Snoozed for ${opt.label}`, 'snooze', opt.v)}>
-                          {opt.label}
-                        </Button>
+                          onClick={() => handleAction(`Snoozed for ${opt.label}`, 'snooze', opt.v)}>{opt.label}</Button>
                       ))}
                     </div>
                   </PopoverContent>
                 </Popover>
-
                 <Button variant="outline" className="h-20 border-white/10 bg-white/5 rounded-2xl flex flex-col gap-1 text-gray-400" onClick={() => setIsDelegating(true)}>
                   <Users className="h-4 w-4" />
                   <span className="text-[9px] font-bold uppercase tracking-widest">Delegate</span>
                 </Button>
-                <Button variant="outline" className="h-20 border-white/10 bg-white/5 rounded-2xl flex flex-col gap-1 text-red-400/60 hover:text-red-400" onClick={() => handleAction("Archived")}>
+                <Button variant="outline" className="h-20 border-white/10 bg-white/5 rounded-2xl flex flex-col gap-1 text-red-400/60 hover:text-red-400" onClick={() => handleAction("Archived", 'archive')}>
                   <Archive className="h-4 w-4" />
                   <span className="text-[9px] font-bold uppercase tracking-widest">Archive</span>
                 </Button>
@@ -185,14 +173,14 @@ export function EmailDetailSheet({ email, open, onOpenChange, onArchive, onSnooz
                 <Textarea className="min-h-[180px] bg-white/5 border-white/10 rounded-2xl p-4 text-sm focus:ring-1 focus:ring-blue-500 outline-none text-white" value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder="Drafting response..."/>
                 <div className="flex gap-3">
                   <Button variant="outline" className="flex-1 border-white/10 bg-white/5" onClick={() => setIsDrafting(false)}>Cancel</Button>
-                  <Button className="flex-[2] bg-blue-600" onClick={() => handleAction("Response Sent")}>Send Message</Button>
+                  <Button className="flex-[2] bg-blue-600" onClick={() => handleAction("Response Sent", 'sent')}>Send Message</Button>
                 </div>
               </div>
             ) : (
                 <div className="space-y-4 animate-in slide-in-from-bottom-4">
                    <div className="grid grid-cols-2 gap-3">
                         {['Sarah (Ops)', 'Mike (Sales)', 'Legal Team', 'Support'].map((team) => (
-                            <Button key={team} variant="outline" className="h-12 border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-widest hover:bg-blue-500/10 hover:border-blue-500/50" onClick={() => handleAction(`Delegated to ${team}`)}>
+                            <Button key={team} variant="outline" className="h-12 border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-widest hover:bg-blue-500/10 hover:border-blue-500/50" onClick={() => handleAction(`Delegated to ${team}`, 'sent')}>
                                 {team}
                             </Button>
                         ))}
