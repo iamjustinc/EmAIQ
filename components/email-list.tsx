@@ -41,17 +41,13 @@ export function EmailList({
       )
     }
 
-    if (tab === 'today') {
-      return safe
-    }
-
     return safe
   }, [emails, activeTab])
 
   return (
     <div className="relative flex-1 overflow-y-auto bg-card scrollbar-hide">
       {!hideTabs && (
-        <div className="sticky top-0 z-30 flex items-center border-b border-border bg-card/95 px-6 backdrop-blur-md">
+        <div className="sticky top-0 z-30 flex items-center border-b border-border bg-card/95 px-6">
           {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
             <button
               key={tab}
@@ -72,7 +68,7 @@ export function EmailList({
 
       <div
         className={cn(
-          'email-list-grid email-list-header sticky z-20 backdrop-blur-sm',
+          'email-list-grid email-list-header sticky z-20',
           hideTabs ? 'top-0' : 'top-[53px]',
         )}
       >
@@ -80,7 +76,7 @@ export function EmailList({
         <div />
         <div className="email-list-header-label">SENDER</div>
         <div className="email-list-header-label">MESSAGE DETAIL</div>
-        <div className="email-list-header-label">AI SUGGESTION</div>
+        <div className="email-list-header-label text-primary">AI SUGGESTION</div>
         <div className="email-list-header-label">RECEIVED</div>
       </div>
 
@@ -96,27 +92,27 @@ export function EmailList({
                 return {
                   Icon: Reply,
                   label: 'Reply',
-                  styles: 'border-primary/25 bg-primary/10 text-primary',
+                  styles: 'border-primary/30 bg-primary/5 text-primary',
                 }
               case 'Delegate':
                 return {
                   Icon: UserPlus,
                   label: 'Delegate',
                   styles:
-                    'border-muted-foreground/25 bg-muted text-muted-foreground',
+                    'border-border bg-white text-muted-foreground',
                 }
               case 'Review Later':
                 return {
                   Icon: Clock,
                   label: 'Review Later',
-                  styles: 'border-warning/30 bg-warning/10 text-warning',
+                  styles: 'border-warning/35 bg-warning/5 text-warning',
                 }
               default:
                 return {
                   Icon: Archive,
                   label: 'Clear',
                   styles:
-                    'border-destructive/30 bg-destructive/10 text-destructive',
+                    'border-destructive/30 bg-destructive/5 text-destructive',
                 }
             }
           })()
@@ -132,26 +128,25 @@ export function EmailList({
                   onSelectEmail(email)
                 }
               }}
-              className={cn(
-                'email-list-grid email-row cursor-pointer px-row py-row transition-colors duration-200',
-                isSelected
-                  ? 'bg-primary/12 shadow-[inset_4px_0_0_var(--primary)]'
-                  : isUnread
-                    ? 'bg-[color:color-mix(in_oklab,var(--primary)_12%,var(--card))]'
-                    : 'bg-card hover:bg-[color:color-mix(in_oklab,var(--muted)_60%,var(--card))]',
-              )}
               onClick={() => onSelectEmail(email)}
+              className={cn(
+                'email-list-grid email-row cursor-pointer px-row py-row',
+                isSelected
+                  ? 'bg-[color:color-mix(in_oklab,var(--primary)_10%,white)] shadow-[inset_4px_0_0_var(--primary)]'
+                  : isUnread
+                    ? 'bg-[color:color-mix(in_oklab,var(--primary)_7%,white)]'
+                    : 'bg-card',
+              )}
             >
-              {/* 1. priority + star */}
               <div className="flex w-16 shrink-0 items-center justify-center gap-2">
                 <div className="flex w-4 justify-center">
                   {isHighPriority ? (
-                    <div className="flex gap-0.5 text-sm font-black tracking-tighter text-warning drop-shadow-[0_0_6px_color-mix(in_oklab,var(--warning)_40%,transparent)]">
+                    <div className="flex gap-0.5 text-sm font-black tracking-tighter text-warning">
                       <span>!</span>
                       <span>!</span>
                     </div>
                   ) : (
-                    <div className="h-1 w-1 rounded-full bg-border" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-border" />
                   )}
                 </div>
 
@@ -161,56 +156,52 @@ export function EmailList({
                     e.stopPropagation()
                     onToggleFavorite(email.id)
                   }}
-                  className="group/star relative p-1 outline-none"
+                  className="relative p-1 outline-none"
                 >
                   <Star
                     className={cn(
-                      'h-4 w-4 transition-all duration-300 active:scale-150',
+                      'h-4 w-4 transition-all duration-200',
                       email.isFavorite
-                        ? 'scale-100 fill-yellow-400 text-yellow-400'
-                        : 'text-muted-foreground opacity-40 group-hover/star:opacity-100',
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-muted-foreground opacity-45 hover:opacity-100',
                     )}
                   />
                 </button>
               </div>
 
-              {/* 2. unread dot */}
               <div className="flex w-4 shrink-0 justify-center">
-              {isUnread && (
-  <div className="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_12px_color-mix(in_oklab,var(--primary)_55%,transparent)]" />
-)}
+                {isUnread && (
+                  <div className="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_12px_color-mix(in_oklab,var(--primary)_55%,transparent)]" />
+                )}
               </div>
 
-              {/* 3. sender */}
               <div className="w-40 shrink-0">
-              <span
-  className={cn(
-    'block truncate',
-    isUnread
-      ? 'font-bold text-foreground'
-      : 'font-medium text-foreground/70',
-  )}
->
-  {email.sender.name}
-</span>
+                <span
+                  className={cn(
+                    'block truncate',
+                    isUnread
+                      ? 'font-bold text-foreground'
+                      : 'font-medium text-foreground/70',
+                  )}
+                >
+                  {email.sender.name}
+                </span>
               </div>
 
-              {/* 4. message detail */}
               <div className="flex min-w-0 flex-1 flex-col">
-              <span
-  className={cn(
-    'truncate',
-    isUnread ? 'font-medium text-foreground' : 'text-foreground/70',
-  )}
->
-  {email.subject}
-</span>
+                <span
+                  className={cn(
+                    'truncate',
+                    isUnread ? 'font-medium text-foreground' : 'text-foreground/70',
+                  )}
+                >
+                  {email.subject}
+                </span>
                 <span className="mt-0.5 truncate text-[11px] text-muted-foreground">
                   {email.bodyPreview}
                 </span>
               </div>
 
-              {/* 5. AI suggestion */}
               <div className="flex w-32 shrink-0 justify-center">
                 <div
                   className={cn(
@@ -223,7 +214,6 @@ export function EmailList({
                 </div>
               </div>
 
-              {/* 6. received */}
               <div className="flex w-28 shrink-0 items-center justify-end">
                 <span
                   className={cn(

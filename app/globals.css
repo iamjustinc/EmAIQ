@@ -13,7 +13,7 @@
      --row-padding-x: 1.25rem;
      --sidebar-item-py: 0.5rem;
      --sidebar-item-px: 0.75rem;
-     --panel-padding: 1.25rem;
+     --panel-padding: 1.75rem;
      --button-height: 2.25rem;
      --radius-card: 1.25rem;
      --header-h: 4rem;
@@ -25,13 +25,13 @@
      --font-kpi: 1.75rem;
      --font-table-header: 0.5625rem;
    
-     --background: #f7f1eb; 
+     --background: #f7f1eb;
      --foreground: #201b18;
-     --card: #ffffff; 
+     --card: #ffffff;
      --card-foreground: #201b18;
      --popover: #ffffff;
      --popover-foreground: #201b18;
-     --primary: #f59e72;
+     --primary: #e48a5d;
      --primary-foreground: #ffffff;
      --secondary: #fff8f2;
      --secondary-foreground: #201b18;
@@ -48,11 +48,14 @@
      --danger: #d95d5d;
      --info: #4da3d9;
    
-     --table-header-color: rgba(32, 27, 24, 0.45);
+     --table-header-color: rgba(32, 27, 24, 0.55);
    }
    
    @layer base {
-     * { border-color: var(--border); }
+     * {
+       border-color: var(--border);
+     }
+   
      body {
        background-color: var(--background);
        color: var(--foreground);
@@ -61,22 +64,21 @@
    }
    
    @layer utilities {
-     /* Match the cream background exactly and allow interaction */
      .bg-sheet-solid {
        background-color: #f7f1eb !important;
-       pointer-events: auto !important;
      }
    
-     .text-table-header { 
-       font-size: var(--font-table-header); 
+     .text-table-header {
+       font-size: var(--font-table-header);
        letter-spacing: 0.2em;
        text-transform: uppercase;
        font-weight: 800;
      }
    
-     /* Custom shadow for the action buttons to match screenshot */
      .shadow-action {
-       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+       box-shadow:
+         0 10px 25px -5px rgba(0, 0, 0, 0.05),
+         0 8px 10px -6px rgba(0, 0, 0, 0.05);
      }
    }
    
@@ -86,12 +88,35 @@
      align-items: center;
    }
    
-   .email-row {
-     transition: background 0.15s ease-out;
-     background-color: var(--card);
+   .email-list-header {
+     padding: 0.4rem var(--row-padding-x);
+     border-bottom: 1px solid var(--border);
+     background: rgba(255, 255, 255, 0.92);
    }
    
-   .email-row:hover { background: var(--accent); }
+   .email-list-header-label {
+     font-size: var(--font-table-header);
+     letter-spacing: 0.22em;
+     text-transform: uppercase;
+     font-weight: 700;
+     color: var(--table-header-color);
+     white-space: nowrap;
+   }
    
-   .scrollbar-hide::-webkit-scrollbar { display: none; }
-   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+   .email-row {
+     transition:
+       background 0.18s ease,
+       box-shadow 0.18s ease;
+   }
+   
+   .email-row:hover {
+     background: var(--accent);
+   }
+   
+   .scrollbar-hide::-webkit-scrollbar {
+     display: none;
+   }
+   .scrollbar-hide {
+     -ms-overflow-style: none;
+     scrollbar-width: none;
+   }
