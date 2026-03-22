@@ -18,6 +18,7 @@ export default function InboxPage() {
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState(''); // New state for search
   const [isDrafting, setIsDrafting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -38,6 +39,23 @@ export default function InboxPage() {
   const currentSelectedEmail = useMemo(() => 
     emails?.find(e => e.id === selectedEmailId) || null, [emails, selectedEmailId]
   );
+
+  // Filter logic for both Tabs and Search
+  const filteredEmails = useMemo(() => {
+    let result = emails || [];
+
+    // Apply Search Filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(email => 
+        email.sender.name.toLowerCase().includes(query) ||
+        email.subject.toLowerCase().includes(query) ||
+        email.bodyPreview.toLowerCase().includes(query)
+      );
+    }
+
+    return result;
+  }, [emails, searchQuery]);
 
   const handleSelectEmail = useCallback((email: Email) => {
     markAsRead(email.id);
@@ -83,12 +101,13 @@ export default function InboxPage() {
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12] animate-in fade-in duration-500">
-        <Header title="Inbox" />
+        <Header 
+          title="Inbox" 
+          searchValue={searchQuery}
+          onSearchChange={(e) => setSearchQuery(e.target.value)}
+        />
         
-        {/* The main scroll area */}
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
-          
-          {/* KPI Grid Section with horizontal padding only */}
           <div className="px-8 pt-8 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
@@ -98,11 +117,10 @@ export default function InboxPage() {
             </div>
           </div>
 
-          {/* Email List Container - Removed top margin to sit flush */}
           <div className="flex-1 px-8 pb-8">
             <div className="min-h-[500px] bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl overflow-hidden">
               <EmailList 
-                emails={emails || []} 
+                emails={filteredEmails} 
                 selectedEmail={currentSelectedEmail} 
                 onSelectEmail={handleSelectEmail} 
                 onToggleFavorite={toggleFavorite}
