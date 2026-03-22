@@ -9,7 +9,6 @@ import {
   Archive,
   Reply,
   Clock,
-  Users,
   Zap,
   AlertCircle,
   Loader2,
@@ -93,8 +92,8 @@ export function EmailDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={(val) => { if (!val) { setMode('default'); onOpenChange(false); } }}>
-      <SheetContent side="right" className="w-[520px] max-w-[95vw] border-l border-border bg-sheet-solid p-0 shadow-2xl outline-none">
-        <div className="flex h-full flex-col overflow-hidden bg-sheet-solid">
+      <SheetContent side="right" className="w-[520px] max-w-[95vw] border-l border-border bg-background p-0 shadow-2xl outline-none">
+        <div className="flex h-full flex-col overflow-hidden bg-background">
           <div className="shrink-0 border-b border-border px-10 pb-6 pt-10">
             <div className="mb-6 flex gap-3">
               <div className={`rounded-full border px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] ${priorityClass}`}>
@@ -163,7 +162,7 @@ export function EmailDetailSheet({
           <div className="shrink-0 border-t border-border bg-background p-8">
             {mode === 'default' ? (
               <div className="grid grid-cols-2 gap-4">
-                <Button className="h-24 rounded-[2rem] bg-foreground text-background shadow-action" onClick={() => { setReplyText(''); setMode('reply'); setIsDrafting(true); }}>
+                <Button className="h-24 rounded-[2rem] bg-foreground text-background shadow-lg" onClick={() => { setReplyText(''); setMode('reply'); setIsDrafting(true); }}>
                   <div className="flex flex-col items-center gap-2">
                     <Reply className="h-5 w-5" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Respond</span>
@@ -172,15 +171,14 @@ export function EmailDetailSheet({
                 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="h-24 rounded-[2rem] border-border bg-card text-muted-foreground shadow-action">
+                    <Button variant="outline" className="h-24 rounded-[2rem] border-border bg-card text-muted-foreground">
                       <div className="flex flex-col items-center gap-2">
                         <Clock className="h-5 w-5" />
                         <span className="text-[10px] font-black uppercase tracking-widest">Later</span>
                       </div>
                     </Button>
                   </PopoverTrigger>
-                  {/* Point 1: Added bg-popover and opacity-100 */}
-                  <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 z-[9999] bg-popover border-border shadow-xl opacity-100">
+                  <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 z-[9999] bg-popover border-border shadow-2xl opacity-100 !opacity-100">
                     {[1, 3, 24].map(h => (
                       <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[9px] tracking-widest" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
                         {h === 24 ? 'Tomorrow' : `${h} Hours`}
@@ -195,8 +193,7 @@ export function EmailDetailSheet({
                       Delegate
                     </Button>
                   </PopoverTrigger>
-                   {/* Point 1: Added bg-popover and opacity-100 */}
-                  <PopoverContent side="top" className="w-56 rounded-2xl p-2 z-[9999] bg-popover border-border shadow-xl opacity-100">
+                  <PopoverContent side="top" className="w-56 rounded-2xl p-2 z-[9999] bg-popover border-border shadow-2xl opacity-100 !opacity-100">
                     <div className="px-3 py-2 text-[8px] font-black uppercase tracking-tighter text-muted-foreground/60 border-b mb-1">Assign To</div>
                     {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
                       <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[9px] tracking-widest" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
@@ -213,7 +210,7 @@ export function EmailDetailSheet({
             ) : (
               <div className="flex gap-4">
                 <Button variant="outline" className="h-14 flex-1 rounded-2xl border-border" onClick={() => { setMode('default'); setIsDrafting(false); }}>Cancel</Button>
-                <Button className="h-14 flex-[1.5] rounded-2xl bg-primary text-white font-black uppercase tracking-widest" onClick={() => triggerSuccess('send', () => onSent(email.id))}>
+                <Button className="h-14 flex-[1.5] rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest" onClick={() => triggerSuccess('send', () => onSent(email.id))}>
                   {successAction === 'send' ? <Check className="h-5 w-5 animate-in zoom-in" /> : 'Send Message'}
                 </Button>
               </div>
