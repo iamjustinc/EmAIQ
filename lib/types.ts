@@ -6,8 +6,8 @@ export interface Email {
     avatarUrl?: string;
   };
   subject: string;
-  bodyPreview: string; // This is what's in your JSON
-  body?: string;       // Added as optional fallback
+  bodyPreview: string;
+  body?: string;
   receivedAt: string; 
   category: 'Client' | 'Internal' | 'Recruiting' | 'Finance' | 'Logistics' | 'Newsletter';
   urgency: {
@@ -22,6 +22,7 @@ export interface Email {
   suggestedAction: 'Respond' | 'Review Later' | 'Delegate' | 'Archive';
   isRead: boolean;
   isActioned: boolean;
+  isFavorite: boolean; // Added this
 }
 
 export type Category = Email['category'];

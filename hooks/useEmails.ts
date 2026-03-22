@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import rawEmails from "@/email.json" 
 import { Email } from "@/lib/types" 
 
-// Updated storage key to match EmAIQ
 const STORAGE_KEY = "emaiq_emails_v3" 
 
 export function useEmails() {
@@ -13,19 +12,15 @@ export function useEmails() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
-      try {
-        setEmails(JSON.parse(stored))
-      } catch (e) {
-        console.error("Failed to parse emails", e)
-      }
+      try { setEmails(JSON.parse(stored)) } catch (e) { console.error(e) }
     } else {
       const initialData = (rawEmails as any[]).map(e => ({
         ...e,
         isActioned: e.isActioned || false,
         isRead: e.isRead || false,
+        isFavorite: e.isFavorite || false, // Initialize favorite status
         snoozedUntil: null
       }))
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData))
@@ -39,6 +34,10 @@ export function useEmails() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(emails))
     }
   }, [emails, loading])
+
+  const toggleFavorite = (id: string) => {
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, isFavorite: !e.isFavorite } : e))
+  }
 
   const markAsRead = (id: string) => {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isRead: true } : e))
@@ -59,11 +58,7 @@ export function useEmails() {
       if (e.snoozedUntil && e.snoozedUntil > Date.now()) return false;
       return true;
     })
-    .sort((a, b) => {
-      const aExpired = a.snoozedUntil && a.snoozedUntil <= Date.now() ? 1 : 0;
-      const bExpired = b.snoozedUntil && b.snoozedUntil <= Date.now() ? 1 : 0;
-      return bExpired - aExpired;
-    });
+    .sort((a, b) => (b.snoozedUntil || 0) - (a.snoozedUntil || 0));
 
   return {
     emails: processedEmails,
@@ -71,6 +66,7 @@ export function useEmails() {
     markAsRead,
     archiveEmail,
     snoozeEmail,
+    toggleFavorite, // Exported this
     archiveAllNoise: () => setEmails(prev => prev.map(e => e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e))
   }
 }
