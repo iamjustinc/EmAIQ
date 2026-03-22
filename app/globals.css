@@ -5,9 +5,6 @@
    @import 'tw-animate-css';
    @import './appearance-themes.css';
    
-   /* ----------------------------------------------------------------------------
-      DEFAULT TOKENS (Creator Editorial – Light Cream)
-      ---------------------------------------------------------------------------- */
    :root {
      --radius: 0.75rem;
      --app-gap: 1rem;
@@ -28,125 +25,65 @@
      --font-kpi: 1.75rem;
      --font-table-header: 0.5625rem;
    
-     /* Solid Opaque Backgrounds to prevent ghosting */
      --background: #f7f1eb; 
      --foreground: #201b18;
-   
      --card: #ffffff; 
      --card-foreground: #201b18;
-   
      --popover: #ffffff;
      --popover-foreground: #201b18;
-   
      --primary: #f59e72;
      --primary-foreground: #ffffff;
-   
      --secondary: #fff8f2;
      --secondary-foreground: #201b18;
-   
      --muted: #f3e8dd;
      --muted-foreground: #6e6259;
-   
      --accent: rgba(245, 158, 114, 0.12);
      --accent-foreground: #201b18;
-   
      --destructive: #d95d5d;
      --border: #e8ddd2;
      --input: #e8ddd2;
      --ring: #f59e72;
-   
      --success: #4e9b6e;
      --warning: #d89a3d;
      --danger: #d95d5d;
      --info: #4da3d9;
    
-     --chart-1: #f59e72;
-     --chart-2: #4e9b6e;
-     --chart-3: #d89a3d;
-     --chart-4: #d95d5d;
-     --chart-5: #6e6259;
-   
-     --sidebar: #fff8f2;
-     --sidebar-foreground: #201b18;
-     --sidebar-primary: #f59e72;
-     --sidebar-primary-foreground: #ffffff;
-     --sidebar-accent: #f3e8dd;
-     --sidebar-accent-foreground: #201b18;
-     --sidebar-border: #e8ddd2;
-     --sidebar-ring: #f59e72;
-   
      --table-header-color: rgba(32, 27, 24, 0.45);
    }
    
-   .dark { color-scheme: dark; }
-   .light { color-scheme: light; }
-   
    @layer base {
-     * {
-       border-color: var(--border);
-       outline-color: color-mix(in oklab, var(--ring) 30%, transparent);
-     }
-   
-     html {
-       transition: background-color 0.4s ease;
-     }
-   
+     * { border-color: var(--border); }
      body {
        background-color: var(--background);
        color: var(--foreground);
        -webkit-font-smoothing: antialiased;
-       -moz-osx-font-smoothing: grayscale;
-       font-size: var(--font-body);
      }
    }
    
    @layer utilities {
-     /* FIX: Forces the panel to be solid and responsive to clicks */
+     /* Match the cream background exactly and allow interaction */
      .bg-sheet-solid {
        background-color: #f7f1eb !important;
-       opacity: 1 !important;
        pointer-events: auto !important;
      }
    
-     .text-body { font-size: var(--font-body); }
-     .text-label-scale { font-size: var(--font-label); }
-     .text-title-scale { font-size: var(--font-title); }
-     .text-kpi-scale { font-size: var(--font-kpi); }
-     
      .text-table-header { 
        font-size: var(--font-table-header); 
        letter-spacing: 0.2em;
        text-transform: uppercase;
        font-weight: 800;
-       color: var(--table-header-color);
      }
    
-     .gap-app { gap: var(--app-gap); }
-     .p-card-ui { padding: var(--card-padding); }
-     .px-row { padding-inline: var(--row-padding-x); }
-     .py-row { padding-block: var(--row-padding-y); }
-   
-     .rounded-card-ui { border-radius: var(--radius-card); }
-     .h-header-app { height: var(--header-h); }
-     
-     .min-h-row {
-       min-height: calc(var(--row-padding-y) * 2 + 1.5em);
+     /* Custom shadow for the action buttons to match screenshot */
+     .shadow-action {
+       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
      }
    }
    
-   /* ----------------------------------------------------------------------------
-      DATA-TABLE GRID
-      ---------------------------------------------------------------------------- */
    .email-list-grid {
      display: grid;
      grid-template-columns: 72px 28px 220px minmax(320px, 1fr) 180px 120px;
      align-items: center;
-   }
-   
-   .email-list-header {
-     padding: 0.6rem var(--row-padding-x);
-     border-bottom: 1px solid var(--border);
-     background: var(--card);
    }
    
    .email-row {
@@ -154,15 +91,7 @@
      background-color: var(--card);
    }
    
-   .email-row:hover {
-     background: var(--accent);
-   }
+   .email-row:hover { background: var(--accent); }
    
-   /* Scrollbar Hide Utility */
-   .scrollbar-hide::-webkit-scrollbar {
-     display: none;
-   }
-   .scrollbar-hide {
-     -ms-overflow-style: none;
-     scrollbar-width: none;
-   }
+   .scrollbar-hide::-webkit-scrollbar { display: none; }
+   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

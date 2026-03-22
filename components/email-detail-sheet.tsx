@@ -44,7 +44,6 @@ export function EmailDetailSheet({
   const [showFullEmail, setShowFullEmail] = useState(false)
   const [replyText, setReplyText] = useState('')
 
-  // Simulate analysis when opening a new email
   useEffect(() => {
     if (open && email) {
       setIsAnalyzing(true)
@@ -53,7 +52,7 @@ export function EmailDetailSheet({
     }
   }, [open, email])
 
-  const handleAction = (message: string, type: 'archive' | 'sent' | 'snooze', value?: number) => {
+  const handleAction = (type: 'archive' | 'sent' | 'snooze', value?: number) => {
     if (!email) return
     if (type === 'archive') onArchive(email.id)
     if (type === 'sent') onSent(email.id)
@@ -68,16 +67,15 @@ export function EmailDetailSheet({
       onOpenChange(val)
       if (!val) { setIsDrafting(false); setIsDelegating(false); }
     }}>
-      {/* Reduced backdrop intensity so the sidebar remains visible */}
-      <SheetOverlay className="bg-black/5 backdrop-blur-[2px]" />
+      <SheetOverlay className="bg-black/10 backdrop-blur-[1px] z-[399]" />
       
       <SheetContent
         side="right"
-        className="z-[400] flex h-full w-[480px] max-w-[95vw] flex-col border-l border-border p-0 shadow-2xl bg-sheet-solid pointer-events-auto"
+        className="z-[400] flex h-full w-[480px] max-w-[95vw] flex-col border-l border-border p-0 shadow-2xl bg-sheet-solid pointer-events-auto outline-none"
       >
         <div className="flex h-full flex-col overflow-hidden">
           
-          {/* Header Section */}
+          {/* Header */}
           <div className="shrink-0 p-8 pb-4">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex gap-2">
@@ -92,7 +90,7 @@ export function EmailDetailSheet({
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="z-50 h-8 w-8 rounded-lg border border-border bg-white text-muted-foreground hover:bg-muted/10"
+                className="h-8 w-8 rounded-lg border border-border bg-white text-muted-foreground"
                 onClick={() => onOpenChange(false)}
               >
                 <X className="h-4 w-4" />
@@ -109,7 +107,7 @@ export function EmailDetailSheet({
             </div>
           </div>
 
-          {/* Scrollable Content */}
+          {/* Content */}
           <div className="scrollbar-hide flex-1 space-y-8 overflow-y-auto px-8 py-4">
             {isAnalyzing ? (
               <div className="flex flex-col items-center justify-center py-20">
@@ -127,7 +125,7 @@ export function EmailDetailSheet({
                     </div>
                     <Button
                       variant="ghost"
-                      className="h-9 rounded-2xl bg-primary/10 px-4 text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/20"
+                      className="h-9 rounded-2xl bg-primary/10 px-4 text-[9px] font-black uppercase tracking-widest text-primary"
                     >
                       <Zap className="mr-1 h-3 w-3 fill-primary" />
                       Use Draft
@@ -166,12 +164,12 @@ export function EmailDetailSheet({
 
           {/* Action Grid */}
           {!isAnalyzing && (
-            <div className="shrink-0 border-t border-border/60 p-8 bg-[#f7f1eb] pointer-events-auto z-50">
+            <div className="shrink-0 border-t border-border/60 p-8 bg-[#f7f1eb] z-50">
               {!isDrafting && !isDelegating ? (
                 <div className="grid grid-cols-2 gap-4">
                   <Button
-                    className="flex h-24 flex-col gap-1.5 rounded-[2.5rem] bg-primary text-white shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all"
-                    onClick={() => setIsDrafting(true)}
+                    className="flex h-24 flex-col gap-1.5 rounded-[2rem] bg-primary text-white shadow-action hover:bg-primary/90 transition-all active:scale-[0.96]"
+                    onClick={(e) => { e.stopPropagation(); setIsDrafting(true); }}
                   >
                     <Reply className="h-5 w-5" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Respond</span>
@@ -179,20 +177,20 @@ export function EmailDetailSheet({
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="flex h-24 flex-col gap-1.5 rounded-[2.5rem] border-border bg-white text-muted-foreground hover:bg-muted/10 active:scale-[0.98]">
+                      <Button variant="outline" className="flex h-24 flex-col gap-1.5 rounded-[2rem] border-border bg-white text-muted-foreground shadow-action hover:bg-muted/5 active:scale-[0.96]">
                         <Clock className="h-5 w-5" />
                         <span className="text-[10px] font-black uppercase tracking-widest">Later</span>
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent side="top" className="z-[600] w-48 rounded-2xl border-border bg-white p-2 shadow-2xl">
-                       <Button variant="ghost" className="w-full justify-start text-[10px] font-bold" onClick={() => handleAction('Snoozed', 'snooze', 24)}>Tomorrow</Button>
+                       <Button variant="ghost" className="w-full justify-start text-[10px] font-bold" onClick={() => handleAction('snooze', 24)}>Tomorrow</Button>
                     </PopoverContent>
                   </Popover>
 
                   <Button
                     variant="outline"
-                    className="flex h-24 flex-col gap-1.5 rounded-[2.5rem] border-border bg-white text-muted-foreground active:scale-[0.98]"
-                    onClick={() => setIsDelegating(true)}
+                    className="flex h-24 flex-col gap-1.5 rounded-[2rem] border-border bg-white text-muted-foreground shadow-action active:scale-[0.96]"
+                    onClick={(e) => { e.stopPropagation(); setIsDelegating(true); }}
                   >
                     <Users className="h-5 w-5" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Delegate</span>
@@ -200,24 +198,24 @@ export function EmailDetailSheet({
 
                   <Button
                     variant="outline"
-                    className="flex h-24 flex-col gap-1.5 rounded-[2.5rem] border-danger/20 bg-white text-danger hover:bg-danger/5 active:scale-[0.98]"
-                    onClick={() => handleAction('Archived', 'archive')}
+                    className="flex h-24 flex-col gap-1.5 rounded-[2rem] border-danger/20 bg-white text-danger hover:bg-danger/5 shadow-action active:scale-[0.96]"
+                    onClick={(e) => { e.stopPropagation(); handleAction('archive'); }}
                   >
                     <Archive className="h-5 w-5" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Archive</span>
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
                   <Textarea 
-                    className="min-h-[150px] rounded-2xl border-border bg-white focus-visible:ring-primary" 
+                    className="min-h-[150px] rounded-3xl border-border bg-white focus-visible:ring-primary p-6 text-sm" 
                     placeholder="Type your response..." 
                     value={replyText} 
                     onChange={(e) => setReplyText(e.target.value)}
                   />
-                  <div className="flex gap-2">
-                    <Button variant="outline" className="flex-1 rounded-xl" onClick={() => {setIsDrafting(false); setIsDelegating(false);}}>Cancel</Button>
-                    <Button className="flex-[2] rounded-xl bg-primary text-white" onClick={() => handleAction('Sent!', 'sent')}>Send</Button>
+                  <div className="flex gap-3">
+                    <Button variant="outline" className="flex-1 rounded-2xl h-12 font-bold text-[10px] uppercase tracking-widest" onClick={() => {setIsDrafting(false); setIsDelegating(false);}}>Cancel</Button>
+                    <Button className="flex-[2] rounded-2xl h-12 bg-primary text-white font-bold text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20" onClick={() => handleAction('sent')}>Send Response</Button>
                   </div>
                 </div>
               )}
