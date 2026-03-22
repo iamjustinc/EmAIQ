@@ -135,7 +135,7 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
 >
             <div className="mb-6 flex items-start justify-between">
               <div className="flex gap-2">
-                <div className="flex items-center gap-1.5 rounded-full border border-destructive/25 bg-destructive/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-destructive">
+              <div className="rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-primary">
                   <AlertCircle className="h-3 w-3" />
                   {email.urgency.label === 'High' ? 'Critical' : 'Priority'}
                 </div>
@@ -150,9 +150,9 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
             </h2>
 
             <p className="mt-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              From:
-              <span className="ml-2 text-primary">{email.sender.name}</span>
-            </p>
+  From:
+  <span className="ml-2 font-black text-primary">{email.sender.name}</span>
+</p>
           </div>
 
           <div
@@ -185,7 +185,7 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
               </div>
             ) : (
               <>
-                <div className="relative space-y-5 rounded-3xl border border-border bg-muted/30 p-6">
+                <div className="relative space-y-5 rounded-3xl border border-border bg-background p-6">
                   <div className="mb-2 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Zap className="h-3.5 w-3.5 fill-primary text-primary" />
@@ -195,11 +195,11 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
                     </div>
 
                     <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleUseDraft}
-                      className="h-7 border border-primary/25 bg-primary/10 px-3 text-[9px] font-bold uppercase text-primary hover:bg-primary/20"
-                    >
+  variant="ghost"
+  size="sm"
+  onClick={handleUseDraft}
+  className="h-11 rounded-2xl border border-primary/30 bg-primary/5 px-5 text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/10"
+>
                       <Zap className="mr-1.5 h-3 w-3 fill-primary" />
                       Use Draft
                     </Button>
@@ -211,7 +211,7 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
                         <span className="mt-1 text-[10px] font-black tracking-tighter text-primary">
                           0{i + 1}
                         </span>
-                        <p className="text-[13px] leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground">
+                        <p className="text-[13px] leading-relaxed text-foreground/65 transition-colors group-hover:text-foreground/80">
                           {point}
                         </p>
                       </li>
@@ -219,11 +219,11 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
                   </ul>
                 </div>
 
-                <div className="border-t border-border pt-6">
+                <div className="border-t border-border pt-10">
                   <button
                     type="button"
                     onClick={() => setShowFullEmail(!showFullEmail)}
-                    className="flex w-full items-center justify-between text-muted-foreground transition-colors hover:text-foreground"
+                    className="flex w-full items-center justify-between text-muted-foreground transition-colors hover:text-foreground/80"
                   >
                     <span className="text-[10px] font-bold uppercase tracking-widest">
                       Original Thread
@@ -253,7 +253,7 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
               {!isDrafting && !isDelegating ? (
                 <div className="grid grid-cols-2 gap-4">
                   <Button
-                    className="flex h-20 flex-col gap-1 rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
+  className="flex h-20 flex-col gap-1 rounded-[2rem] bg-primary text-primary-foreground shadow-none hover:bg-primary/90"
                     onClick={() => setIsDrafting(true)}
                   >
                     <Reply className="h-4 w-4" />
@@ -264,10 +264,10 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="flex h-20 flex-col gap-1 rounded-2xl border-border bg-muted/40 text-muted-foreground"
-                      >
+                    <Button
+  variant="outline"
+  className="flex h-20 flex-col gap-1 rounded-[2rem] border-border bg-background text-muted-foreground hover:bg-muted/20"
+>
                         <Clock className="h-4 w-4" />
                         <span className="text-[9px] font-bold uppercase tracking-widest">
                           Later
@@ -316,10 +316,10 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
                   </Button>
 
                   <Button
-                    variant="outline"
-                    className="flex h-20 flex-col gap-1 rounded-2xl border-destructive/30 bg-destructive/5 text-destructive hover:bg-destructive/10"
-                    onClick={() => handleAction('Archived', 'archive')}
-                  >
+  variant="outline"
+  className="flex h-20 flex-col gap-1 rounded-[2rem] border-destructive/30 bg-background text-destructive hover:bg-destructive/5"
+  onClick={() => handleAction('Archived', 'archive')}
+>
                     <Archive className="h-4 w-4" />
                     <span className="text-[9px] font-bold uppercase tracking-widest">
                       Archive
