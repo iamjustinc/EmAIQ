@@ -43,7 +43,7 @@ function SheetOverlay({
     <SheetPrimitive.Overlay
       data-slot="sheet-overlay"
       className={cn(
-        'fixed inset-0 z-[200] bg-black/28 backdrop-blur-[1px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+        'fixed inset-0 z-[300] bg-black/35 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         className,
       )}
       {...props}
@@ -65,9 +65,9 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          'fixed z-[210] flex flex-col gap-4 border-border bg-card text-card-foreground shadow-2xl isolate opacity-100 transition ease-in-out data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:duration-300 data-[state=open]:duration-500',
+          'fixed z-[310] flex flex-col gap-4 border-border bg-background text-foreground shadow-2xl opacity-100 transition ease-in-out data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:duration-300 data-[state=open]:duration-500',
           side === 'right' &&
-            'inset-y-0 right-0 h-full w-[460px] max-w-[95vw] border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right',
+            'inset-y-0 right-0 h-full w-[460px] max-w-[95vw] border-l bg-background data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right',
           side === 'left' &&
             'inset-y-0 left-0 h-full w-[460px] max-w-[95vw] border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left',
           side === 'top' &&
