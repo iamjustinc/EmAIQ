@@ -113,11 +113,26 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
       }}
     >
       <SheetContent
-        side="right"
-        className="z-[80] flex h-full w-[460px] max-w-[95vw] flex-col overflow-hidden border-l border-border bg-card p-0 text-card-foreground shadow-2xl"
-      >
-        <div className="relative flex h-full flex-col bg-card">
-          <div className="relative border-b border-border bg-card p-panel pb-6">
+  side="right"
+  className="z-[400] flex h-full w-[460px] max-w-[95vw] flex-col overflow-hidden border-l border-border p-0 shadow-2xl"
+  style={{
+    backgroundColor: 'var(--background)',
+    color: 'var(--foreground)',
+    opacity: 1,
+  }}
+>
+  <div
+    className="relative flex h-full w-full flex-col"
+    style={{
+      backgroundColor: 'var(--background)',
+      color: 'var(--foreground)',
+      opacity: 1,
+    }}
+  >
+          <div
+  className="relative border-b border-border p-panel pb-6"
+  style={{ backgroundColor: 'var(--background)' }}
+>
             <div className="mb-6 flex items-start justify-between">
               <div className="flex gap-2">
                 <div className="flex items-center gap-1.5 rounded-full border border-destructive/25 bg-destructive/10 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-destructive">
@@ -140,7 +155,10 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
             </p>
           </div>
 
-          <div className="scrollbar-hide flex-1 space-y-8 overflow-y-auto bg-card p-panel pt-6">
+          <div
+  className="scrollbar-hide flex-1 space-y-8 overflow-y-auto p-panel pt-6"
+  style={{ backgroundColor: 'var(--background)' }}
+>
             {sentSuccess ? (
               <div className="animate-in zoom-in flex flex-col items-center justify-center py-20 duration-300">
                 <CheckCircle2 className="mb-4 h-12 w-12 text-success" />
@@ -228,7 +246,10 @@ Thanks for reaching out. I've received your email regarding "${email.subject}" a
           </div>
 
           {!sentSuccess && !isAnalyzing && !isGeneratingDraft && (
-            <div className="mt-auto border-t border-border bg-card p-panel">
+            <div
+            className="mt-auto border-t border-border p-panel"
+            style={{ backgroundColor: 'var(--background)' }}
+          >
               {!isDrafting && !isDelegating ? (
                 <div className="grid grid-cols-2 gap-4">
                   <Button

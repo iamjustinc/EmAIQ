@@ -137,8 +137,8 @@ export function EmailList({
                 isSelected
                   ? 'bg-primary/12 shadow-[inset_4px_0_0_var(--primary)]'
                   : isUnread
-                    ? 'bg-[color:color-mix(in_oklab,var(--primary)_10%,var(--card))]'
-                    : 'bg-card hover:bg-[color:color-mix(in_oklab,var(--muted)_55%,var(--card))]',
+                    ? 'bg-[color:color-mix(in_oklab,var(--primary)_12%,var(--card))]'
+                    : 'bg-card hover:bg-[color:color-mix(in_oklab,var(--muted)_60%,var(--card))]',
               )}
               onClick={() => onSelectEmail(email)}
             >
@@ -176,35 +176,35 @@ export function EmailList({
 
               {/* 2. unread dot */}
               <div className="flex w-4 shrink-0 justify-center">
-                {isUnread && (
-                  <div className="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_45%,transparent)]" />
-                )}
+              {isUnread && (
+  <div className="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_12px_color-mix(in_oklab,var(--primary)_55%,transparent)]" />
+)}
               </div>
 
               {/* 3. sender */}
               <div className="w-40 shrink-0">
-                <span
-                  className={cn(
-                    'block truncate',
-                    isUnread
-                      ? 'font-bold text-foreground'
-                      : 'font-medium text-muted-foreground',
-                  )}
-                >
-                  {email.sender.name}
-                </span>
+              <span
+  className={cn(
+    'block truncate',
+    isUnread
+      ? 'font-bold text-foreground'
+      : 'font-medium text-foreground/70',
+  )}
+>
+  {email.sender.name}
+</span>
               </div>
 
               {/* 4. message detail */}
               <div className="flex min-w-0 flex-1 flex-col">
-                <span
-                  className={cn(
-                    'truncate',
-                    isUnread ? 'font-medium text-foreground' : 'text-foreground/80',
-                  )}
-                >
-                  {email.subject}
-                </span>
+              <span
+  className={cn(
+    'truncate',
+    isUnread ? 'font-medium text-foreground' : 'text-foreground/70',
+  )}
+>
+  {email.subject}
+</span>
                 <span className="mt-0.5 truncate text-[11px] text-muted-foreground">
                   {email.bodyPreview}
                 </span>
