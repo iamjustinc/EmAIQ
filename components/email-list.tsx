@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo } from 'react'
-import { Reply, UserPlus, Archive, Clock, Star, Mail, AlertCircle, Sparkles, Zap } from 'lucide-react'
+import { Star, AlertCircle } from 'lucide-react'
 import { Email } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -23,11 +23,6 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
 
   return (
     <div className="relative flex-1 overflow-y-auto bg-card scrollbar-hide">
-      {/* 
-         NOTE: If you see DUPLICATE buttons, delete the block below 
-         and move it to your parent page.tsx instead.
-      */}
-
       {/* Navigation Tabs */}
       <div className="sticky top-0 z-30 flex items-center border-b border-border bg-background/95 px-6 backdrop-blur-md">
         {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
@@ -67,7 +62,14 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
                 <Star className={cn('h-4 w-4', email.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30')} />
               </button>
             </div>
-            <div />
+            
+            {/* COLUMN 2: URGENCY ICON */}
+            <div className="flex justify-center">
+              {email.urgency.label === 'High' && (
+                <AlertCircle className="h-4 w-4 text-destructive" />
+              )}
+            </div>
+
             <div className="text-[13px] font-black text-foreground truncate">{email.sender.name}</div>
             <div className="text-[13px] font-bold text-foreground/70 truncate pr-8">{email.subject}</div>
             <div className="text-[10px] font-black text-primary/80 uppercase">{email.suggestedAction}</div>
