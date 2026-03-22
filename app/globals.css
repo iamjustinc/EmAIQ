@@ -75,10 +75,11 @@
        font-weight: 800;
      }
    
+     /* Refined tactile shadow for large grid buttons */
      .shadow-action {
        box-shadow:
-         0 10px 25px -5px rgba(0, 0, 0, 0.05),
-         0 8px 10px -6px rgba(0, 0, 0, 0.05);
+         0 12px 30px -10px rgba(0, 0, 0, 0.08),
+         0 4px 10px -2px rgba(0, 0, 0, 0.03);
      }
    }
    
