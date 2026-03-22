@@ -17,6 +17,8 @@ import {
   ChevronUp,
 } from 'lucide-react'
 import { Email } from '@/lib/types'
+// Import the global store
+import { useUserStore } from '@/store/use-user-store'
 
 interface EmailDetailSheetProps {
   email: Email | null
@@ -46,11 +48,8 @@ export function EmailDetailSheet({
   const [showFullEmail, setShowFullEmail] = useState(false)
   const [replyText, setReplyText] = useState('')
 
-  // Profile data that drives the sign-off
-  const [userProfile] = useState({
-    name: "Alex",
-    signOff: "Best"
-  })
+  // Grab the global user data (firstName and signOff)
+  const { firstName: globalFirstName, signOff: globalSignOff } = useUserStore()
 
   useEffect(() => {
     if (open && email) {
@@ -70,16 +69,17 @@ export function EmailDetailSheet({
 
   const generatedDraft = useMemo(() => {
     if (!email) return ''
-    const firstName = email.sender.name.split(' ')[0]
+    const senderFirstName = email.sender.name.split(' ')[0]
     const lines = email.analysis?.summary ?? []
     
-    const signOff = `\n\n${userProfile.signOff},\n${userProfile.name}`
+    // Construct the signature using the global store values
+    const signature = `\n\n${globalSignOff},\n${globalFirstName}`
 
     if (lines.length === 0) {
-      return `Hi ${firstName},\n\nThanks for your email. I’ve received this and will take a look right away.${signOff}`
+      return `Hi ${senderFirstName},\n\nThanks for your email. I’ve received this and will take a look right away.${signature}`
     }
-    return `Hi ${firstName},\n\nThanks for flagging this. I understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it and follow up shortly.${signOff}`
-  }, [email, userProfile]) // Updates automatically when userProfile changes
+    return `Hi ${senderFirstName},\n\nThanks for flagging this. I understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it and follow up shortly.${signature}`
+  }, [email, globalFirstName, globalSignOff]) 
 
   if (!email) return null
 
@@ -206,7 +206,6 @@ export function EmailDetailSheet({
               </div>
             ) : (
               <div className="space-y-6">
-                {/* Intelligence card - SHRUNK SIZE */}
                 <div className="rounded-[2.25rem] border border-border bg-white p-5 shadow-sm">
                   <div className="mb-5 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
@@ -234,7 +233,6 @@ export function EmailDetailSheet({
                   </ul>
                 </div>
 
-                {/* Original thread */}
                 <div className="border-t border-border/75 pt-6">
                   <button
                     type="button"
@@ -258,7 +256,6 @@ export function EmailDetailSheet({
           <div className="shrink-0 border-t border-border/75 bg-sheet-solid p-8">
             {mode === 'default' && (
               <div className="grid grid-cols-2 gap-5">
-                {/* FIXED: Solid Primary (Peach) for Respond button with shadow-action */}
                 <Button
                   className="h-24 rounded-[2rem] bg-primary text-white border-none shadow-action transition-all hover:brightness-105 active:scale-[0.97]"
                   onClick={handleRespond}
