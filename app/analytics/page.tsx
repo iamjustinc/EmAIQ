@@ -49,7 +49,15 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const COLORS = ['#8B7CFF', '#3DD9A3', '#FFB84D', '#FF5D73', '#55C2FF', '#A6ADBB'];
+/** Theme-aware chart fills (see `app/appearance-themes.css` / `--chart-*`) */
+const CHART_FILLS = [
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
+  'var(--muted-foreground)',
+];
 
 function StatCard({ 
   icon: Icon, 
@@ -142,7 +150,7 @@ export default function AnalyticsPage() {
                 size={100}
                 strokeWidth={8}
                 label="Actionable Rate"
-                color="#3DD9A3"
+                color="var(--success)"
               />
             </div>
             <StatCard
@@ -180,17 +188,17 @@ export default function AnalyticsPage() {
               <h3 className="mb-4 font-semibold text-foreground">Urgent vs Non-Urgent by Day</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={urgentByDay}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#2A3140" />
-                  <XAxis dataKey="day" stroke="#A6ADBB" fontSize={12} />
-                  <YAxis stroke="#A6ADBB" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="day" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend
                     formatter={(value) => (
                       <span className="text-sm text-muted-foreground capitalize">{value}</span>
                     )}
                   />
-                  <Bar dataKey="nonUrgent" name="Non-Urgent" stackId="a" fill="#3DD9A3" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="urgent" name="Urgent" stackId="a" fill="#FF5D73" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="nonUrgent" name="Non-Urgent" stackId="a" fill="var(--chart-2)" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="urgent" name="Urgent" stackId="a" fill="var(--chart-4)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -202,19 +210,19 @@ export default function AnalyticsPage() {
                 <AreaChart data={hourlyLoad}>
                   <defs>
                     <linearGradient id="colorEmails" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8B7CFF" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#8B7CFF" stopOpacity={0} />
+                      <stop offset="5%" stopColor="var(--chart-1)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--chart-1)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#2A3140" />
-                  <XAxis dataKey="hour" stroke="#A6ADBB" fontSize={11} interval={1} />
-                  <YAxis stroke="#A6ADBB" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="hour" stroke="var(--muted-foreground)" fontSize={11} interval={1} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip content={<CustomTooltip />} />
                   <Area
                     type="monotone"
                     dataKey="emails"
                     name="Emails"
-                    stroke="#8B7CFF"
+                    stroke="var(--chart-1)"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorEmails)"
@@ -284,7 +292,7 @@ export default function AnalyticsPage() {
                     dataKey="value"
                   >
                     {analyticsData.categoryBreakdown.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={CHART_FILLS[index % CHART_FILLS.length]} />
                     ))}
                   </Pie>
                   <Tooltip content={<CustomTooltip />} />
@@ -302,19 +310,19 @@ export default function AnalyticsPage() {
                 <AreaChart data={analyticsData.focusScore}>
                   <defs>
                     <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3DD9A3" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#3DD9A3" stopOpacity={0} />
+                      <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--chart-2)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#2A3140" />
-                  <XAxis dataKey="day" stroke="#A6ADBB" fontSize={12} />
-                  <YAxis stroke="#A6ADBB" fontSize={12} domain={[0, 100]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="day" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={12} domain={[0, 100]} />
                   <Tooltip content={<CustomTooltip />} />
                   <Area
                     type="monotone"
                     dataKey="score"
                     name="Score"
-                    stroke="#3DD9A3"
+                    stroke="var(--chart-2)"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorScore)"

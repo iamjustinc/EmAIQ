@@ -74,18 +74,18 @@ export default function InboxPage() {
 
   if (isLoading || !isMounted) {
     return (
-      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0B0D12]">
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
         <div className="relative mb-8 animate-in fade-in zoom-in duration-700">
-          <Mail className="h-12 w-12 text-blue-500" />
-          <div className="absolute inset-0 h-12 w-12 blur-2xl bg-blue-500/30 animate-pulse" />
+          <Mail className="h-12 w-12 text-primary" />
+          <div className="absolute inset-0 h-12 w-12 animate-pulse blur-2xl bg-primary/30" />
         </div>
-        <div className="w-48 h-[1px] bg-white/10 rounded-full overflow-hidden">
-          <div className="h-full bg-blue-500 animate-outlook-load origin-left" />
+        <div className="h-[1px] w-48 overflow-hidden rounded-full bg-border">
+          <div className="h-full origin-left animate-outlook-load bg-primary" />
         </div>
-        <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-white animate-in slide-in-from-bottom-2 duration-1000">
+        <p className="mt-6 animate-in slide-in-from-bottom-2 text-[11px] font-black uppercase tracking-[0.4em] text-foreground duration-1000">
           Welcome {firstName}!
         </p>
-        <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.3em] text-gray-500">Syncing Inbox</p>
+        <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground">Syncing Inbox</p>
         <style jsx>{`
           @keyframes outlook-load {
             0% { transform: scaleX(0); opacity: 1; }
@@ -100,7 +100,7 @@ export default function InboxPage() {
 
   return (
     <AppShell>
-      <div className="flex h-full flex-col bg-[#0B0D12] animate-in fade-in duration-500">
+      <div className="flex h-full flex-col bg-background animate-in fade-in duration-500">
         <Header 
           title="Inbox" 
           searchValue={searchQuery}
@@ -108,8 +108,8 @@ export default function InboxPage() {
         />
         
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
-          <div className="px-8 pt-8 pb-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="px-8 pb-6 pt-8">
+            <div className="grid grid-cols-1 gap-app md:grid-cols-4">
               <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
               <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
               <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" onClick={() => setActiveTab('noise')} />
@@ -118,7 +118,7 @@ export default function InboxPage() {
           </div>
 
           <div className="flex-1 px-8 pb-8">
-            <div className="min-h-[500px] bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl overflow-hidden">
+            <div className="flex min-h-[500px] flex-col overflow-hidden rounded-card-ui border border-border bg-card shadow-2xl">
               <EmailList 
                 emails={filteredEmails} 
                 selectedEmail={currentSelectedEmail} 

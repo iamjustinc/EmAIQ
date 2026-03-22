@@ -22,7 +22,10 @@ export interface Email {
   suggestedAction: 'Respond' | 'Review Later' | 'Delegate' | 'Archive';
   isRead: boolean;
   isActioned: boolean;
-  isFavorite: boolean; // Added this
+  isFavorite: boolean;
+  /** Optional workflow flags used by `useEmails` */
+  isSent?: boolean;
+  snoozedUntil?: string | null;
 }
 
 export type Category = Email['category'];

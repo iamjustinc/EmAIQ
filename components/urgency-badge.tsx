@@ -15,9 +15,9 @@ interface UrgencyBadgeProps {
 }
 
 const urgencyStyles: Record<UrgencyLabel, string> = {
-  High: 'bg-red-500/10 text-red-500',
-  Medium: 'bg-yellow-500/10 text-yellow-500',
-  Low: 'bg-green-500/10 text-green-500',
+  High: 'bg-danger/10 text-danger',
+  Medium: 'bg-warning/10 text-warning',
+  Low: 'bg-success/10 text-success',
 };
 
 export function UrgencyBadge({ 
@@ -57,7 +57,7 @@ export function UrgencyBadge({
               "h-4 w-4 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] transform",
               isFavorite 
                 ? "fill-yellow-400 text-yellow-400 scale-110" 
-                : "text-gray-600 group-hover/star:text-gray-400 scale-100",
+                : "text-muted-foreground group-hover/star:text-foreground/70 scale-100",
               "active:scale-150"
             )}
           />

@@ -19,7 +19,7 @@ export function CircularGauge({
   strokeWidth = 8,
   label,
   sublabel,
-  color = '#8B7CFF',
+  color = 'var(--chart-1)',
 }: CircularGaugeProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;

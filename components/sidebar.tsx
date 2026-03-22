@@ -35,25 +35,23 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
   return (
     <aside
       className={cn(
-        'flex h-screen flex-col border-r border-white/5 bg-[#0B0D12] transition-all duration-300',
-        isCollapsed ? 'w-16' : 'w-60'
+        'flex h-screen flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all duration-300',
+        isCollapsed ? 'w-16' : 'w-60',
       )}
     >
-      {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-white/5 px-4 shrink-0">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 shadow-lg shadow-blue-500/20">
-          <Mail className="h-4 w-4 text-white" />
+      <div className="flex h-16 shrink-0 items-center gap-3 border-b border-sidebar-border px-4">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+          <Mail className="h-4 w-4" />
         </div>
         {!isCollapsed && (
           <div className="flex items-center gap-1">
-            <span className="text-lg font-bold text-white tracking-tight">EmAIQ</span>
-            <Sparkles className="h-4 w-4 text-blue-400 fill-blue-400" />
+            <span className="text-lg font-bold tracking-tight">EmAIQ</span>
+            <Sparkles className="h-4 w-4 fill-primary text-primary" />
           </div>
         )}
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 space-y-1 p-2 overflow-y-auto pt-4 scrollbar-hide">
+      <nav className="scrollbar-hide flex flex-1 flex-col gap-app overflow-y-auto p-2 pt-4">
         {mainNav.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -61,10 +59,11 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
               key={item.name}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all group',
+                'flex items-center gap-3 rounded-xl font-medium transition-all group',
+                'py-[var(--sidebar-item-py)] px-[var(--sidebar-item-px)] text-[length:var(--font-body)]',
                 isActive
-                  ? 'bg-blue-600/10 text-blue-400'
-                  : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
               )}
             >
               <item.icon className="h-5 w-5 shrink-0" />
@@ -74,22 +73,24 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
         })}
       </nav>
 
-      {/* Bottom Profile & Settings Section */}
-      <div className="mt-auto border-t border-white/5 p-2 space-y-1">
+      <div className="mt-auto space-y-1 border-t border-sidebar-border p-2">
         <Link
           href="/settings"
           className={cn(
-            'flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all hover:bg-white/5 group',
-            isCollapsed ? 'justify-center' : ''
+            'flex items-center gap-3 rounded-xl py-3 font-medium transition-all hover:bg-sidebar-accent group',
+            isCollapsed ? 'justify-center' : '',
+            'px-[var(--sidebar-item-px)]',
           )}
         >
-          <div className="h-7 w-7 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-[10px] font-black text-white shrink-0 shadow-lg">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-[10px] font-black text-primary-foreground shadow-lg">
             {firstName?.charAt(0).toUpperCase() || 'U'}
           </div>
           {!isCollapsed && (
-            <div className="flex flex-col min-w-0">
-              <span className="text-xs text-white font-semibold truncate leading-tight">{firstName}</span>
-              <span className="text-[10px] text-gray-600 truncate leading-tight">View Profile</span>
+            <div className="flex min-w-0 flex-col">
+              <span className="truncate text-xs font-semibold leading-tight text-sidebar-foreground">
+                {firstName}
+              </span>
+              <span className="truncate text-[10px] leading-tight text-muted-foreground">View Profile</span>
             </div>
           )}
         </Link>
@@ -97,8 +98,11 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
         <Link
           href="/settings"
           className={cn(
-            'flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all group',
-            pathname === '/settings' ? 'bg-white/5 text-white' : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+            'flex items-center gap-3 rounded-xl py-2 font-medium transition-all group',
+            'px-[var(--sidebar-item-px)]',
+            pathname === '/settings'
+              ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+              : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
           )}
         >
           <Settings className="h-5 w-5 shrink-0" />
@@ -109,7 +113,7 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
           variant="ghost"
           size="sm"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-full justify-center text-gray-600 hover:bg-white/5 hover:text-white mt-2"
+          className="mt-2 w-full justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
         >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>

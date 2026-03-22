@@ -9,6 +9,9 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { useUser } from '@/lib/user-context';
+import { useAppearanceSettings } from '@/lib/appearance-context';
+import { getThemeMeta } from '@/lib/appearance/theme-metadata';
+import { AppearanceSettingsPanel } from '@/components/appearance/appearance-settings-panel';
 import { toast } from 'sonner';
 import {
   User,
@@ -25,7 +28,11 @@ import {
   Smartphone,
 } from 'lucide-react';
 
-type SettingsView = 'menu' | 'profile' | 'emailAccounts' | 'passwordSecurity';
+type SettingsView = 'menu' | 'profile' | 'emailAccounts' | 'passwordSecurity' | 'appearance';
+
+function formatSettingLabel(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 export default function SettingsPage() {
   const {
@@ -47,6 +54,8 @@ export default function SettingsPage() {
     passwordLastChanged,
     changePassword,
   } = useUser();
+
+  const { themePreset, density, fontScale } = useAppearanceSettings();
 
   const [view, setView] = useState<SettingsView>('menu');
 
@@ -74,6 +83,8 @@ export default function SettingsPage() {
         return 'Email Accounts';
       case 'passwordSecurity':
         return 'Password & Security';
+      case 'appearance':
+        return 'Appearance';
       default:
         return 'Settings';
     }
@@ -123,6 +134,14 @@ export default function SettingsPage() {
     }
     if (item === 'Password & security') {
       setView('passwordSecurity');
+      return;
+    }
+    toast.info('Coming soon', { description: `${item} will be available in a future update.` });
+  }
+
+  function handleAppearanceItem(item: string) {
+    if (item === 'Theme' || item === 'Density' || item === 'Font size') {
+      setView('appearance');
       return;
     }
     toast.info('Coming soon', { description: `${item} will be available in a future update.` });
@@ -206,21 +225,21 @@ export default function SettingsPage() {
 
   return (
     <AppShell>
-      <div className="flex h-full flex-col bg-[#0B0D12]">
+      <div className="flex h-full flex-col bg-background">
         <Header title={headerTitle} hideSearch />
 
         <div className="flex-1 overflow-auto p-6">
           <div className="mx-auto max-w-2xl space-y-6">
             {view === 'menu' && (
               <div className="animate-in fade-in duration-500">
-                <div className="mb-6 rounded-2xl border border-white/5 bg-[#0F1117] p-5 shadow-xl">
+                <div className="mb-6 rounded-2xl border border-border bg-card p-5 shadow-xl">
                   <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10">
-                      <Mail className="h-5 w-5 text-blue-500" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                      <Mail className="h-5 w-5 text-primary" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-sm font-semibold text-white">Connected Email</h3>
-                      <p className="truncate text-xs text-gray-500">{primaryEmail}</p>
+                      <h3 className="text-sm font-semibold text-foreground">Connected Email</h3>
+                      <p className="truncate text-xs text-muted-foreground">{primaryEmail}</p>
                     </div>
                   </div>
                   <Button
@@ -228,7 +247,7 @@ export default function SettingsPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setView('emailAccounts')}
-                    className="border-white/10 bg-transparent text-[10px] font-bold uppercase tracking-wider text-gray-400 transition-all hover:bg-white/5 hover:text-white"
+                    className="border-border bg-transparent text-[10px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
                   >
                     Manage Connection
                   </Button>
@@ -238,15 +257,15 @@ export default function SettingsPage() {
                   {settingsSections.map((section) => (
                     <div
                       key={section.title}
-                      className="rounded-2xl border border-white/5 bg-[#0F1117] p-5 shadow-xl"
+                      className="rounded-2xl border border-border bg-card p-5 shadow-xl"
                     >
                       <div className="mb-4 flex items-start gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5">
-                          <section.icon className="h-5 w-5 text-gray-400" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/50">
+                          <section.icon className="h-5 w-5 text-muted-foreground" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-semibold text-white">{section.title}</h3>
-                          <p className="text-xs text-gray-500">{section.description}</p>
+                          <h3 className="text-sm font-semibold text-foreground">{section.title}</h3>
+                          <p className="text-xs text-muted-foreground">{section.description}</p>
                         </div>
                       </div>
                       <div className="space-y-1">
@@ -254,24 +273,42 @@ export default function SettingsPage() {
                           <button
                             key={item}
                             type="button"
-                            onClick={() =>
-                              section.title === 'Account'
-                                ? handleAccountItem(item)
-                                : toast.info('Coming soon', {
-                                    description: `${item} will be available in a future update.`,
-                                  })
-                            }
-                            className="group flex w-full items-center justify-between rounded-xl px-3 py-3 text-left text-[13px] text-gray-400 transition-all hover:bg-white/5 hover:text-white"
+                            onClick={() => {
+                              if (section.title === 'Account') handleAccountItem(item);
+                              else if (section.title === 'Appearance') handleAppearanceItem(item);
+                              else
+                                toast.info('Coming soon', {
+                                  description: `${item} will be available in a future update.`,
+                                });
+                            }}
+                            className="group flex w-full items-center justify-between rounded-xl px-3 py-3 text-left text-[13px] text-muted-foreground transition-all hover:bg-muted/50 hover:text-foreground"
                           >
-                            <span className="flex items-center gap-2">
-                              {item}
-                              {item === 'Profile' && (
-                                <span className="ml-2 rounded-full bg-blue-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-blue-400">
-                                  {firstName}
+                            <span className="flex min-w-0 flex-1 flex-col items-start gap-0.5 text-left sm:flex-row sm:items-center sm:gap-2">
+                              <span className="flex items-center gap-2">
+                                {item}
+                                {item === 'Profile' && (
+                                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+                                    {firstName}
+                                  </span>
+                                )}
+                              </span>
+                              {section.title === 'Appearance' && item === 'Theme' && (
+                                <span className="text-[11px] text-muted-foreground/80 sm:ml-auto">
+                                  {getThemeMeta(themePreset).shortLabel}
+                                </span>
+                              )}
+                              {section.title === 'Appearance' && item === 'Density' && (
+                                <span className="text-[11px] text-muted-foreground/80 sm:ml-auto">
+                                  {formatSettingLabel(density)}
+                                </span>
+                              )}
+                              {section.title === 'Appearance' && item === 'Font size' && (
+                                <span className="text-[11px] text-muted-foreground/80 sm:ml-auto">
+                                  {formatSettingLabel(fontScale)}
                                 </span>
                               )}
                             </span>
-                            <ChevronRight className="h-4 w-4 opacity-20 transition-opacity group-hover:opacity-100" />
+                            <ChevronRight className="h-4 w-4 shrink-0 opacity-20 transition-opacity group-hover:opacity-100" />
                           </button>
                         ))}
                       </div>
@@ -617,6 +654,8 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 )}
+
+                {view === 'appearance' && <AppearanceSettingsPanel />}
               </div>
             )}
           </div>

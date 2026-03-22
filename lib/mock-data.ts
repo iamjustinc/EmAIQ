@@ -27,6 +27,7 @@ export const mockEmails: Email[] = [
     suggestedAction: 'Respond',
     isRead: false,
     isActioned: false,
+    isFavorite: false,
   },
 ];
 
@@ -37,7 +38,7 @@ export const analyticsData = {
     { name: 'Newsletter', value: 20, fill: 'var(--chart-3)' },
     { name: 'Finance', value: 10, fill: 'var(--chart-4)' },
     { name: 'Recruiting', value: 5, fill: 'var(--chart-5)' },
-    { name: 'Logistics', value: 5, fill: 'var(--color-muted-foreground)' },
+    { name: 'Logistics', value: 5, fill: 'var(--muted-foreground)' },
   ],
   emailVolume: [
     { day: 'Mon', emails: 45 },

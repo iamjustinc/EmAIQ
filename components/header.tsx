@@ -2,6 +2,7 @@
 
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 interface HeaderProps {
   title: string;
@@ -21,22 +22,25 @@ export function Header({
   const handleSearch = onSearchChange ?? (() => {});
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-white/5 bg-[#0B0D12] px-8">
-      {/* Title Section */}
-      <div className="flex items-center min-w-0">
-        <h1 className="text-xs font-black uppercase tracking-[0.3em] text-white truncate">
+    <header
+      className={cn(
+        'flex h-header-app min-h-[3.5rem] items-center justify-between border-b border-border bg-background px-8 transition-colors duration-300',
+      )}
+    >
+      <div className="flex min-w-0 items-center">
+        <h1 className="text-table-header font-black uppercase tracking-[0.3em] text-foreground truncate">
           {title}
         </h1>
       </div>
 
       {!hideSearch ? (
-        <div className="relative group shrink-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500 transition-colors group-focus-within:text-blue-400" />
+        <div className="group relative shrink-0">
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
           <Input
             placeholder="Search emails..."
             value={searchValue}
             onChange={handleSearch}
-            className="h-9 w-80 pl-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-0 transition-all placeholder:text-gray-600"
+            className="h-9 w-80 rounded-xl border-border bg-muted/30 pl-10 text-[length:var(--font-body)] text-foreground transition-all placeholder:text-muted-foreground focus-visible:border-primary/50 focus-visible:bg-muted/50 focus-visible:ring-0"
           />
         </div>
       ) : (
