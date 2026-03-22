@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useEmails } from '@/hooks/useEmails'; 
-import { useUser } from '@/lib/user-context'; // Import this
+import { useUser } from '@/lib/user-context'; 
 import { AppShell } from '@/components/app-shell';
 import { Header } from '@/components/header';
 import { KPICard } from '@/components/kpi-card';
@@ -12,8 +12,9 @@ import { Email } from '@/lib/types';
 import { Mail, Zap, AlertCircle, Trash2 } from 'lucide-react';
 
 export default function InboxPage() {
-  const { emails, archiveEmail, markAsRead, snoozeEmail } = useEmails();
-  const { firstName } = useUser(); // Get name from context
+  // Added toggleFavorite to the hook destructuring
+  const { emails, archiveEmail, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
+  const { firstName } = useUser(); 
   
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -54,7 +55,8 @@ export default function InboxPage() {
   const stats = useMemo(() => {
     const safeEmails = emails || [];
     const unread = safeEmails.filter((e) => !e.isRead).length;
-    const urgentCount = safeEmails.filter((e) => e.priority === 'High' || e.urgency.label === 'High').length;
+    // Keeping your logic: checks both priority 'High' and urgency label 'High'
+    const urgentCount = safeEmails.filter((e) => e.urgency.label === 'High').length;
     const focusHours = (urgentCount * 0.25).toFixed(1);
     return { unread, urgent: urgentCount, focusTime: `${focusHours}h` };
   }, [emails]);
@@ -69,7 +71,6 @@ export default function InboxPage() {
         <div className="w-48 h-[1px] bg-white/10 rounded-full overflow-hidden">
           <div className="h-full bg-blue-500 animate-outlook-load origin-left" />
         </div>
-        {/* PERSONALIZED WELCOME ANIMATION */}
         <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-white animate-in slide-in-from-bottom-2 duration-1000">
           Welcome {firstName}!
         </p>
@@ -102,10 +103,25 @@ export default function InboxPage() {
             <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" variant="default" onClick={() => setActiveTab('action')} />
           </div>
           <div className="flex-1 overflow-hidden bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl">
-            <EmailList emails={emails || []} selectedEmail={currentSelectedEmail} onSelectEmail={handleSelectEmail} activeTab={activeTab} setActiveTab={setActiveTab} />
+            <EmailList 
+              emails={emails || []} 
+              selectedEmail={currentSelectedEmail} 
+              onSelectEmail={handleSelectEmail} 
+              onToggleFavorite={toggleFavorite} // Added this prop
+              activeTab={activeTab} 
+              setActiveTab={setActiveTab} 
+            />
           </div>
         </main>
-        <EmailDetailSheet email={currentSelectedEmail} open={isDetailsOpen} onOpenChange={setIsDetailsOpen} onArchive={handleArchiveEmail} onSnooze={handleSnoozeEmail} isDrafting={isDrafting} setIsDrafting={setIsDrafting} />
+        <EmailDetailSheet 
+          email={currentSelectedEmail} 
+          open={isDetailsOpen} 
+          onOpenChange={setIsDetailsOpen} 
+          onArchive={handleArchiveEmail} 
+          onSnooze={handleSnoozeEmail} 
+          isDrafting={isDrafting} 
+          setIsDrafting={setIsDrafting} 
+        />
       </div>
     </AppShell>
   );

@@ -12,15 +12,20 @@ export function useEmails() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
-      try { setEmails(JSON.parse(stored)) } catch (e) { console.error(e) }
+      try {
+        setEmails(JSON.parse(stored))
+      } catch (e) {
+        console.error("Failed to parse emails", e)
+      }
     } else {
       const initialData = (rawEmails as any[]).map(e => ({
         ...e,
         isActioned: e.isActioned || false,
         isRead: e.isRead || false,
-        isFavorite: e.isFavorite || false, // Initialize favorite status
+        isFavorite: e.isFavorite || false,
         snoozedUntil: null
       }))
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData))
@@ -35,10 +40,6 @@ export function useEmails() {
     }
   }, [emails, loading])
 
-  const toggleFavorite = (id: string) => {
-    setEmails(prev => prev.map(e => e.id === id ? { ...e, isFavorite: !e.isFavorite } : e))
-  }
-
   const markAsRead = (id: string) => {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isRead: true } : e))
   }
@@ -47,26 +48,36 @@ export function useEmails() {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e))
   }
 
+  const toggleFavorite = (id: string) => {
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, isFavorite: !e.isFavorite } : e))
+  }
+
   const snoozeEmail = (id: string, hours: number) => {
     const until = Date.now() + hours * 60 * 60 * 1000;
     setEmails(prev => prev.map(e => e.id === id ? { ...e, snoozedUntil: until, isRead: true } : e))
   }
 
-  const processedEmails = loading ? [] : emails
+  // Filtered for the Main Inbox
+  const inboxEmails = loading ? [] : emails
     .filter(e => {
       if (e.isActioned) return false;
       if (e.snoozedUntil && e.snoozedUntil > Date.now()) return false;
       return true;
     })
-    .sort((a, b) => (b.snoozedUntil || 0) - (a.snoozedUntil || 0));
+    .sort((a, b) => {
+      const aTime = new Date(a.receivedAt).getTime();
+      const bTime = new Date(b.receivedAt).getTime();
+      return bTime - aTime;
+    });
 
   return {
-    emails: processedEmails,
+    emails: inboxEmails,      // For Inbox
+    allEmails: emails,       // For Favorites/Archive pages
     loading,
     markAsRead,
     archiveEmail,
     snoozeEmail,
-    toggleFavorite, // Exported this
+    toggleFavorite,
     archiveAllNoise: () => setEmails(prev => prev.map(e => e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e))
   }
 }
