@@ -46,6 +46,12 @@ export function EmailDetailSheet({
   const [showFullEmail, setShowFullEmail] = useState(false)
   const [replyText, setReplyText] = useState('')
 
+  // Profile data that drives the sign-off
+  const [userProfile] = useState({
+    name: "Alex",
+    signOff: "Best"
+  })
+
   useEffect(() => {
     if (open && email) {
       setIsAnalyzing(true)
@@ -66,11 +72,14 @@ export function EmailDetailSheet({
     if (!email) return ''
     const firstName = email.sender.name.split(' ')[0]
     const lines = email.analysis?.summary ?? []
+    
+    const signOff = `\n\n${userProfile.signOff},\n${userProfile.name}`
+
     if (lines.length === 0) {
-      return `Hi ${firstName},\n\nThanks for your email. I’ve received this and will take a look right away.\n\nBest,\nAlex`
+      return `Hi ${firstName},\n\nThanks for your email. I’ve received this and will take a look right away.${signOff}`
     }
-    return `Hi ${firstName},\n\nThanks for flagging this. I understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it and follow up shortly.\n\nBest,\nAlex`
-  }, [email])
+    return `Hi ${firstName},\n\nThanks for flagging this. I understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it and follow up shortly.${signOff}`
+  }, [email, userProfile]) // Updates automatically when userProfile changes
 
   if (!email) return null
 
@@ -88,7 +97,7 @@ export function EmailDetailSheet({
   }
 
   const handleRespond = () => {
-    setReplyText('') // Ensure it's blank
+    setReplyText('') 
     setMode('reply')
     setIsDrafting(true)
   }
@@ -249,8 +258,9 @@ export function EmailDetailSheet({
           <div className="shrink-0 border-t border-border/75 bg-sheet-solid p-8">
             {mode === 'default' && (
               <div className="grid grid-cols-2 gap-5">
+                {/* FIXED: Solid Primary (Peach) for Respond button with shadow-action */}
                 <Button
-                  className="h-24 rounded-[2rem] bg-primary text-white shadow-action transition-all hover:bg-primary/90 active:scale-[0.97]"
+                  className="h-24 rounded-[2rem] bg-primary text-white border-none shadow-action transition-all hover:brightness-105 active:scale-[0.97]"
                   onClick={handleRespond}
                 >
                   <div className="flex flex-col items-center gap-2">
@@ -291,7 +301,7 @@ export function EmailDetailSheet({
                 </Button>
               </div>
             )}
-            {/* ... rest of footer logic remains identical ... */}
+            
             {(mode === 'reply' || mode === 'delegate') && (
                <div className="flex gap-4">
                 <Button variant="outline" className="h-14 flex-1 rounded-2xl border-border bg-white active:scale-95" onClick={() => { setMode('default'); setIsDrafting(false); }}>
