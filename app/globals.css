@@ -1,12 +1,12 @@
 /* =======================================================================
-   GLOBALS  –  Tailwind core + animation helpers + theme overrides
+   GLOBALS – Tailwind core + animation helpers + theme overrides
    ======================================================================= */
    @import 'tailwindcss';
    @import 'tw-animate-css';
    @import './appearance-themes.css';
    
    /* ----------------------------------------------------------------------------
-      DEFAULT TOKENS  (Creator Editorial  – light)
+      DEFAULT TOKENS (Creator Editorial – Light Cream)
       ---------------------------------------------------------------------------- */
    :root {
      --radius: 0.75rem;
@@ -28,13 +28,17 @@
      --font-kpi: 1.75rem;
      --font-table-header: 0.5625rem;
    
-     --background: #f7f1eb;
+     /* 
+        FIX: Use solid hex codes. 
+        Avoid RGBA for background/card to prevent 'ghosting' bleed-through.
+     */
+     --background: #f7f1eb; 
      --foreground: #201b18;
    
-     --card: #fffdf9;
+     --card: #ffffff; /* Pure white cards pop against the cream background */
      --card-foreground: #201b18;
    
-     --popover: #fff8f2;
+     --popover: #ffffff;
      --popover-foreground: #201b18;
    
      --primary: #f59e72;
@@ -43,10 +47,10 @@
      --secondary: #fff8f2;
      --secondary-foreground: #201b18;
    
-     --muted: #fff8f2;
+     --muted: #f3e8dd;
      --muted-foreground: #6e6259;
    
-     --accent: rgba(245, 158, 114, 0.16);
+     --accent: rgba(245, 158, 114, 0.12); /* Subtle hover state */
      --accent-foreground: #201b18;
    
      --destructive: #d95d5d;
@@ -59,42 +63,25 @@
      --danger: #d95d5d;
      --info: #4da3d9;
    
-     --chart-1: #f59e72;
-     --chart-2: #4e9b6e;
-     --chart-3: #d89a3d;
-     --chart-4: #d95d5d;
-     --chart-5: #6e6259;
-   
      --sidebar: #fff8f2;
      --sidebar-foreground: #201b18;
-     --sidebar-primary: #f59e72;
-     --sidebar-primary-foreground: #ffffff;
-     --sidebar-accent: #f3e8dd;
-     --sidebar-accent-foreground: #201b18;
      --sidebar-border: #e8ddd2;
-     --sidebar-ring: #f59e72;
-   
-     --table-header-color: rgba(32, 27, 24, 0.42);
+     
+     --table-header-color: rgba(32, 27, 24, 0.45);
    }
    
-   .dark {
-     color-scheme: dark;
-   }
-   
-   .light {
-     color-scheme: light;
-   }
+   .dark { color-scheme: dark; }
+   .light { color-scheme: light; }
    
    @layer base {
      * {
        border-color: var(--border);
-       outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+       /* Smoother focus rings for the editorial look */
+       outline-color: color-mix(in oklab, var(--ring) 30%, transparent);
      }
    
      html {
-       transition:
-         background-color 0.4s ease,
-         color 0.35s ease;
+       transition: background-color 0.4s ease;
      }
    
      body {
@@ -103,96 +90,63 @@
        -webkit-font-smoothing: antialiased;
        -moz-osx-font-smoothing: grayscale;
        font-size: var(--font-body);
-       transition:
-         background-color 0.4s ease,
-         color 0.35s ease,
-         font-size 0.2s ease;
+       /* Ensure body doesn't allow transparency */
+       opacity: 1 !important; 
      }
    }
    
    @layer utilities {
-     .text-body {
-       font-size: var(--font-body);
-     }
-     .text-label-scale {
-       font-size: var(--font-label);
-     }
-     .text-title-scale {
-       font-size: var(--font-title);
-     }
-     .text-kpi-scale {
-       font-size: var(--font-kpi);
-     }
-     .text-table-header {
-       font-size: var(--font-table-header);
+     /* 
+        CRITICAL FIX: Force the Sheet to be solid cream. 
+        This prevents the inbox from showing through the Detail Panel.
+     */
+     .bg-sheet-solid {
+       background-color: #f7f1eb !important;
+       opacity: 1 !important;
      }
    
-     .gap-app {
-       gap: var(--app-gap);
-     }
-     .p-card-ui {
-       padding: var(--card-padding);
-     }
-     .px-row {
-       padding-inline: var(--row-padding-x);
-     }
-     .py-row {
-       padding-block: var(--row-padding-y);
-     }
+     .text-body { font-size: var(--font-body); }
+     .text-label-scale { font-size: var(--font-label); }
+     .text-title-scale { font-size: var(--font-title); }
+     .text-kpi-scale { font-size: var(--font-kpi); }
+     .text-table-header { font-size: var(--font-table-header); }
    
-     .rounded-card-ui {
-       border-radius: var(--radius-card);
-     }
-   
-     .h-header-app {
-       height: var(--header-h);
-     }
-     .min-h-row {
-       min-height: calc(var(--row-padding-y) * 2 + 1.5em);
-     }
+     .gap-app { gap: var(--app-gap); }
+     .p-card-ui { padding: var(--card-padding); }
+     .px-row { padding-inline: var(--row-padding-x); }
+     .py-row { padding-block: var(--row-padding-y); }
+     .rounded-card-ui { border-radius: var(--radius-card); }
+     .h-header-app { height: var(--header-h); }
    }
    
    /* ----------------------------------------------------------------------------
       DATA-TABLE GRID
-      6 columns:
-      1) priority + star
-      2) unread dot
-      3) sender
-      4) message detail
-      5) AI suggestion
-      6) received
       ---------------------------------------------------------------------------- */
    .email-list-grid {
      display: grid;
-     grid-template-columns:
-       72px
-       28px
-       220px
-       minmax(320px, 1fr)
-       180px
-       120px;
+     grid-template-columns: 72px 28px 220px minmax(320px, 1fr) 180px 120px;
      align-items: center;
    }
    
    .email-list-header {
-     padding: 0.4rem var(--row-padding-x);
+     padding: 0.6rem var(--row-padding-x);
      border-bottom: 1px solid var(--border);
      background: var(--card);
    }
    
    .email-list-header-label {
      font-size: var(--font-table-header);
-     letter-spacing: 0.22em;
+     letter-spacing: 0.2em;
      text-transform: uppercase;
-     font-weight: 600;
+     font-weight: 800; /* Heavier weight for editorial feel */
      color: var(--table-header-color);
      white-space: nowrap;
    }
    
    .email-row {
-     transition:
-       background 0.18s ease,
-       box-shadow 0.18s ease;
+     transition: background 0.15s ease-out;
+     /* Ensure row itself isn't transparent */
+     background-color: var(--card);
    }
    
    .email-row:hover {
