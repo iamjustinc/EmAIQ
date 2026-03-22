@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetOverlay } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -18,7 +18,16 @@ import {
   X
 } from 'lucide-react'
 
-// ... (keep interface EmailDetailSheetProps)
+interface EmailDetailSheetProps {
+  email: Email | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onArchive: (id: string) => void
+  onSent: (id: string) => void
+  onSnooze: (id: string, hours: number) => void
+  isDrafting: boolean
+  setIsDrafting: (val: boolean) => void
+}
 
 export function EmailDetailSheet({
   email,
@@ -30,7 +39,27 @@ export function EmailDetailSheet({
   isDrafting,
   setIsDrafting,
 }: EmailDetailSheetProps) {
-  // ... (keep existing state hooks and handleAction logic)
+  const [isDelegating, setIsDelegating] = useState(false)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [showFullEmail, setShowFullEmail] = useState(false)
+  const [replyText, setReplyText] = useState('')
+
+  // Simulate analysis when opening a new email
+  useEffect(() => {
+    if (open && email) {
+      setIsAnalyzing(true)
+      const timer = setTimeout(() => setIsAnalyzing(false), 800)
+      return () => clearTimeout(timer)
+    }
+  }, [open, email])
+
+  const handleAction = (message: string, type: 'archive' | 'sent' | 'snooze', value?: number) => {
+    if (!email) return
+    if (type === 'archive') onArchive(email.id)
+    if (type === 'sent') onSent(email.id)
+    if (type === 'snooze' && value) onSnooze(email.id, value)
+    onOpenChange(false)
+  }
 
   if (!email) return null
 
@@ -39,12 +68,13 @@ export function EmailDetailSheet({
       onOpenChange(val)
       if (!val) { setIsDrafting(false); setIsDelegating(false); }
     }}>
+      {/* Reduced backdrop intensity so the sidebar remains visible */}
+      <SheetOverlay className="bg-black/5 backdrop-blur-[2px]" />
+      
       <SheetContent
         side="right"
-        // bg-sheet-solid handles the opacity and background fix
         className="z-[400] flex h-full w-[480px] max-w-[95vw] flex-col border-l border-border p-0 shadow-2xl bg-sheet-solid pointer-events-auto"
       >
-        {/* Main Wrapper */}
         <div className="flex h-full flex-col overflow-hidden">
           
           {/* Header Section */}
@@ -53,7 +83,7 @@ export function EmailDetailSheet({
               <div className="flex gap-2">
                 <div className="rounded-full border border-danger/20 bg-danger/5 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-danger">
                   <AlertCircle className="mr-1 h-3 w-3 inline" />
-                  {email.urgency.label === 'High' ? 'Critical' : 'Priority'}
+                  {email.urgency?.label === 'High' ? 'Critical' : 'Priority'}
                 </div>
                 <div className="rounded-full border border-border bg-white px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                   AI Scanned
@@ -87,7 +117,6 @@ export function EmailDetailSheet({
               </div>
             ) : (
               <>
-                {/* Intelligence Report Card */}
                 <div className="rounded-[2.5rem] border border-border bg-white p-8 shadow-sm">
                   <div className="mb-6 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
@@ -135,7 +164,7 @@ export function EmailDetailSheet({
             )}
           </div>
 
-          {/* Action Grid - Forced Opaque and Interactive */}
+          {/* Action Grid */}
           {!isAnalyzing && (
             <div className="shrink-0 border-t border-border/60 p-8 bg-[#f7f1eb] pointer-events-auto z-50">
               {!isDrafting && !isDelegating ? (

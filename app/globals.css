@@ -28,7 +28,7 @@
      --font-kpi: 1.75rem;
      --font-table-header: 0.5625rem;
    
-     /* Solid Opaque Backgrounds */
+     /* Solid Opaque Backgrounds to prevent ghosting */
      --background: #f7f1eb; 
      --foreground: #201b18;
    
@@ -101,7 +101,7 @@
    }
    
    @layer utilities {
-     /* FIX: Solid background utility that doesn't block clicks */
+     /* FIX: Forces the panel to be solid and responsive to clicks */
      .bg-sheet-solid {
        background-color: #f7f1eb !important;
        opacity: 1 !important;
