@@ -27,29 +27,6 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
          NOTE: If you see DUPLICATE buttons, delete the block below 
          and move it to your parent page.tsx instead.
       */}
-      <div className="grid grid-cols-4 gap-4 px-6 pt-8 pb-4">
-        {[
-          { label: 'Unread', val: (emails ?? []).filter(e => !e.isRead).length, icon: Mail, tab: 'unread' },
-          { label: 'Urgent', val: (emails ?? []).filter(e => e.urgency.label === 'High').length, icon: AlertCircle, tab: 'action' },
-          { label: 'Noise', val: '21%', icon: Sparkles, tab: 'noise' },
-          { label: 'Focus Time', val: '1.3h', icon: Zap, tab: 'all' }
-        ].map((s) => (
-          <button 
-            key={s.label}
-            onClick={() => setActiveTab(s.tab)}
-            className={cn(
-              "flex flex-col items-start p-6 rounded-[2rem] border transition-all text-left",
-              activeTab === s.tab ? "bg-primary/5 border-primary shadow-sm" : "bg-card border-border hover:border-primary/40"
-            )}
-          >
-            <div className="flex justify-between w-full mb-4">
-              <s.icon className="h-5 w-5 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{s.label}</span>
-            </div>
-            <div className="text-3xl font-black tracking-tighter text-foreground">{s.val}</div>
-          </button>
-        ))}
-      </div>
 
       {/* Navigation Tabs */}
       <div className="sticky top-0 z-30 flex items-center border-b border-border bg-background/95 px-6 backdrop-blur-md">
