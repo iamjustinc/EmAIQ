@@ -3,13 +3,12 @@
    ======================================================================= */
    @import 'tailwindcss';
    @import 'tw-animate-css';
-   @import './appearance-themes.css';   /* ⬅️  per-theme tokens live here */
+   @import './appearance-themes.css';
    
    /* ----------------------------------------------------------------------------
       DEFAULT TOKENS  (Creator Editorial  – light)
       ---------------------------------------------------------------------------- */
    :root {
-     /* scale + rhythm */
      --radius: 0.75rem;
      --app-gap: 1rem;
      --card-padding: 1.25rem;
@@ -23,14 +22,12 @@
      --header-h: 4rem;
      --kpi-icon-box: 2.75rem;
    
-     /* typography scale */
-     --font-body: 0.875rem;        /* 14 px   */
-     --font-label: 0.625rem;       /* 10 px   */
-     --font-title: 1.25rem;        /* 20 px   */
-     --font-kpi: 1.75rem;          /* 28 px   */
-     --font-table-header: 0.5625rem;/* 9 px   */
+     --font-body: 0.875rem;
+     --font-label: 0.625rem;
+     --font-title: 1.25rem;
+     --font-kpi: 1.75rem;
+     --font-table-header: 0.5625rem;
    
-     /* Creator Editorial palette  (light default) */
      --background: #f7f1eb;
      --foreground: #201b18;
    
@@ -54,15 +51,14 @@
    
      --destructive: #d95d5d;
      --border: #e8ddd2;
-     --input:  #e8ddd2;
-     --ring:   #f59e72;
+     --input: #e8ddd2;
+     --ring: #f59e72;
    
      --success: #4e9b6e;
      --warning: #d89a3d;
-     --danger:  #d95d5d;
-     --info:    #4da3d9;
+     --danger: #d95d5d;
+     --info: #4da3d9;
    
-     /* charts + sidebar */
      --chart-1: #f59e72;
      --chart-2: #4e9b6e;
      --chart-3: #d89a3d;
@@ -78,94 +74,127 @@
      --sidebar-border: #e8ddd2;
      --sidebar-ring: #f59e72;
    
-     /* table-header whisper shade */
      --table-header-color: rgba(32, 27, 24, 0.42);
    }
    
-   /* ----------------------------------------------------------------------------
-      LIGHT / DARK helpers applied by AppearanceProvider
-      ---------------------------------------------------------------------------- */
-   .dark  { color-scheme: dark;  }
-   .light { color-scheme: light; }
+   .dark {
+     color-scheme: dark;
+   }
    
-   /* ----------------------------------------------------------------------------
-      THEME-AGNOSTIC LAYERS (Tailwind directive mix)
-      ---------------------------------------------------------------------------- */
-      @layer base {
-        * {
-          border-color: var(--border);
-          outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
-        }
-      
-        html {
-          transition:
-            background-color 0.4s ease,
-            color 0.35s ease;
-        }
-      
-        body {
-          background-color: var(--background);
-          color: var(--foreground);
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          font-size: var(--font-body);
-          transition:
-            background-color 0.4s ease,
-            color 0.35s ease,
-            font-size 0.2s ease;
-        }
-      }
+   .light {
+     color-scheme: light;
+   }
+   
+   @layer base {
+     * {
+       border-color: var(--border);
+       outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+     }
+   
+     html {
+       transition:
+         background-color 0.4s ease,
+         color 0.35s ease;
+     }
+   
+     body {
+       background-color: var(--background);
+       color: var(--foreground);
+       -webkit-font-smoothing: antialiased;
+       -moz-osx-font-smoothing: grayscale;
+       font-size: var(--font-body);
+       transition:
+         background-color 0.4s ease,
+         color 0.35s ease,
+         font-size 0.2s ease;
+     }
+   }
    
    @layer utilities {
-     /* text scales */
-     .text-body         { font-size: var(--font-body);  }
-     .text-label-scale  { font-size: var(--font-label); }
-     .text-title-scale  { font-size: var(--font-title); }
-     .text-kpi-scale    { font-size: var(--font-kpi);   }
-     .text-table-header { font-size: var(--font-table-header); }
+     .text-body {
+       font-size: var(--font-body);
+     }
+     .text-label-scale {
+       font-size: var(--font-label);
+     }
+     .text-title-scale {
+       font-size: var(--font-title);
+     }
+     .text-kpi-scale {
+       font-size: var(--font-kpi);
+     }
+     .text-table-header {
+       font-size: var(--font-table-header);
+     }
    
-     /* rhythm helpers */
-     .gap-app    { gap: var(--app-gap); }
-     .p-card-ui  { padding: var(--card-padding); }
-     .px-row     { padding-inline: var(--row-padding-x); }
-     .py-row     { padding-block: var(--row-padding-y); }
+     .gap-app {
+       gap: var(--app-gap);
+     }
+     .p-card-ui {
+       padding: var(--card-padding);
+     }
+     .px-row {
+       padding-inline: var(--row-padding-x);
+     }
+     .py-row {
+       padding-block: var(--row-padding-y);
+     }
    
-     /* rounding */
-     .rounded-card-ui { border-radius: var(--radius-card); }
+     .rounded-card-ui {
+       border-radius: var(--radius-card);
+     }
    
-     /* header + row heights */
-     .h-header-app { height: var(--header-h); }
-     .min-h-row    { min-height: calc(var(--row-padding-y)*2 + 1.5em); }
+     .h-header-app {
+       height: var(--header-h);
+     }
+     .min-h-row {
+       min-height: calc(var(--row-padding-y) * 2 + 1.5em);
+     }
    }
    
    /* ----------------------------------------------------------------------------
-      DATA-TABLE GRID  (shared by header + each row)
+      DATA-TABLE GRID
+      6 columns:
+      1) priority + star
+      2) unread dot
+      3) sender
+      4) message detail
+      5) AI suggestion
+      6) received
       ---------------------------------------------------------------------------- */
    .email-list-grid {
      display: grid;
      grid-template-columns:
-       72px                 /* PRI icon */
-       220px                /* SENDER  */
-       minmax(320px,1fr)    /* MESSAGE DETAIL */
-       180px                /* AI SUGGESTION  */
-       120px;               /* RECEIVED       */
+       72px
+       28px
+       220px
+       minmax(320px, 1fr)
+       180px
+       120px;
      align-items: center;
    }
    
    .email-list-header {
-     padding: .4rem var(--row-padding-x);
+     padding: 0.4rem var(--row-padding-x);
      border-bottom: 1px solid var(--border);
+     background: var(--card);
    }
    
    .email-list-header-label {
-     font-size:   var(--font-table-header);
-     letter-spacing: .22em;
+     font-size: var(--font-table-header);
+     letter-spacing: 0.22em;
      text-transform: uppercase;
      font-weight: 600;
      color: var(--table-header-color);
      white-space: nowrap;
    }
    
-   /* row hover feedback */
-   .email-row { transition: background .18s ease; }
-   .email-row:hover { background: var(--accent); }
+   .email-row {
+     transition:
+       background 0.18s ease,
+       box-shadow 0.18s ease;
+   }
+   
+   .email-row:hover {
+     background: var(--accent);
+   }

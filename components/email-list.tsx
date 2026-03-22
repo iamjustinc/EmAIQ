@@ -25,9 +25,6 @@ export function EmailList({
   setActiveTab,
   hideTabs = false,
 }: EmailListProps) {
-  /* ---------------------------------------------------------------------- */
-  /* filtering by tab                                                       */
-  /* ---------------------------------------------------------------------- */
   const filteredEmails = useMemo(() => {
     const safe = emails ?? []
     const tab = activeTab.toLowerCase()
@@ -35,6 +32,7 @@ export function EmailList({
     if (tab === 'action') {
       return safe.filter((e) => e.urgency.label === 'High')
     }
+
     if (tab === 'noise') {
       return safe.filter(
         (e) =>
@@ -42,17 +40,18 @@ export function EmailList({
           e.sender.name.toLowerCase().includes('news'),
       )
     }
+
+    if (tab === 'today') {
+      return safe
+    }
+
     return safe
   }, [emails, activeTab])
 
-  /* ---------------------------------------------------------------------- */
-  /* JSX                                                                    */
-  /* ---------------------------------------------------------------------- */
   return (
     <div className="relative flex-1 overflow-y-auto bg-card scrollbar-hide">
-      {/* ── TAB BAR ─────────────────────────────────────────────────────── */}
       {!hideTabs && (
-        <div className="sticky top-0 z-30 flex items-center border-b border-border bg-card/80 px-6 backdrop-blur-md">
+        <div className="sticky top-0 z-30 flex items-center border-b border-border bg-card/95 px-6 backdrop-blur-md">
           {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
             <button
               key={tab}
@@ -71,7 +70,6 @@ export function EmailList({
         </div>
       )}
 
-      {/* ── GRID-ALIGNED HEADER (“whisper” labels) ──────────────────────── */}
       <div
         className={cn(
           'email-list-grid email-list-header sticky z-20 backdrop-blur-sm',
@@ -79,27 +77,19 @@ export function EmailList({
         )}
       >
         <div className="email-list-header-label">PRI</div>
-        <div /> {/* spacer for unread-dot column */}
+        <div />
         <div className="email-list-header-label">SENDER</div>
         <div className="email-list-header-label">MESSAGE DETAIL</div>
-        <div className="email-list-header-label">AI&nbsp;SUGGESTION</div>
+        <div className="email-list-header-label">AI SUGGESTION</div>
         <div className="email-list-header-label">RECEIVED</div>
       </div>
 
-      {/* ── EMAIL ROWS ──────────────────────────────────────────────────── */}
       <div className="relative z-10 divide-y divide-border/60">
         {filteredEmails.map((email) => {
           const isSelected = selectedEmail?.id === email.id
           const isUnread = !email.isRead
           const isHighPriority = email.urgency.label === 'High'
 
-          /* label colours ------------------------------------------------ */
-          const isClient = email.category === 'Client'
-          const labelStyles = isClient
-            ? 'border-success/30 bg-success/10 text-success'
-            : 'border-border bg-secondary/60 text-muted-foreground'
-
-          /* action chip config ------------------------------------------ */
           const { Icon, label, styles } = (() => {
             switch (email.suggestedAction) {
               case 'Respond':
@@ -131,7 +121,6 @@ export function EmailList({
             }
           })()
 
-          /* row ---------------------------------------------------------- */
           return (
             <div
               key={email.id}
@@ -148,12 +137,12 @@ export function EmailList({
                 isSelected
                   ? 'bg-primary/10 shadow-[inset_4px_0_0_var(--primary)]'
                   : isUnread
-                  ? 'bg-muted/40'
-                  : 'hover:bg-muted/25',
+                    ? 'bg-muted/45'
+                    : 'bg-card hover:bg-muted/20',
               )}
               onClick={() => onSelectEmail(email)}
             >
-              {/* PRI + star */}
+              {/* 1. priority + star */}
               <div className="flex w-16 shrink-0 items-center justify-center gap-2">
                 <div className="flex w-4 justify-center">
                   {isHighPriority ? (
@@ -185,33 +174,33 @@ export function EmailList({
                 </button>
               </div>
 
-              {/* unread dot */}
+              {/* 2. unread dot */}
               <div className="flex w-4 shrink-0 justify-center">
                 {isUnread && (
                   <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_color-mix(in_oklab,var(--primary)55%,transparent)]" />
                 )}
               </div>
 
-              {/* sender */}
+              {/* 3. sender */}
               <div className="w-40 shrink-0">
                 <span
                   className={cn(
                     'block truncate',
                     isUnread
                       ? 'font-bold text-foreground'
-                      : 'font-medium text-muted-foreground',
+                      : 'font-medium text-foreground/85',
                   )}
                 >
                   {email.sender.name}
                 </span>
               </div>
 
-              {/* subject + preview */}
+              {/* 4. message detail */}
               <div className="flex min-w-0 flex-1 flex-col">
                 <span
                   className={cn(
                     'truncate',
-                    isUnread ? 'font-medium' : 'text-foreground/90',
+                    isUnread ? 'font-medium text-foreground' : 'text-foreground/85',
                   )}
                 >
                   {email.subject}
@@ -221,7 +210,7 @@ export function EmailList({
                 </span>
               </div>
 
-              {/* action chip */}
+              {/* 5. AI suggestion */}
               <div className="flex w-32 shrink-0 justify-center">
                 <div
                   className={cn(
@@ -234,23 +223,15 @@ export function EmailList({
                 </div>
               </div>
 
-              {/* category & time */}
-              <div className="flex w-32 shrink-0 items-center justify-end gap-3">
-                <span
-                  className={cn(
-                    'rounded-full border px-2 py-0.5 text-[8px] font-black uppercase tracking-widest',
-                    labelStyles,
-                  )}
-                >
-                  {email.category}
-                </span>
+              {/* 6. received */}
+              <div className="flex w-28 shrink-0 items-center justify-end">
                 <span
                   className={cn(
                     'shrink-0 text-[10px] font-bold uppercase',
                     isUnread ? 'text-primary' : 'text-muted-foreground',
                   )}
                 >
-                  14h ago
+                  14H AGO
                 </span>
               </div>
             </div>
