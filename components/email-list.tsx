@@ -34,10 +34,10 @@ export function EmailList({
   }, [emails, activeTab]);
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hide bg-[#0F1117]">
+    <div className="flex-1 overflow-y-auto scrollbar-hide bg-[#0F1117] relative">
       {/* Tabs */}
       {!hideTabs && (
-        <div className="flex items-center border-b border-white/5 px-6 sticky top-0 bg-[#0F1117] z-10">
+        <div className="flex items-center border-b border-white/5 px-6 sticky top-0 bg-[#0F1117] z-20">
           {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
             <button 
               key={tab} 
@@ -53,8 +53,11 @@ export function EmailList({
         </div>
       )}
 
-      {/* Table Header */}
-      <div className="flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky top-[53px] bg-[#0F1117] z-10">
+      {/* Table Header - adjusted z-index and top offset */}
+      <div className={cn(
+        "flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky bg-[#0F1117] z-10 border-b border-white/[0.02]",
+        hideTabs ? "top-0" : "top-[53px]" 
+      )}>
         <div className="w-16 shrink-0 text-center">PRI</div>
         <div className="w-4 shrink-0" />
         <div className="w-40 shrink-0">Sender</div>
@@ -88,7 +91,7 @@ export function EmailList({
               )}
               onClick={() => onSelectEmail(email)}
             >
-              {/* 1. URGENCY & STAR BUTTON (Revised Layout) */}
+              {/* 1. URGENCY & STAR BUTTON */}
               <div className="w-16 shrink-0 flex justify-center items-center gap-2">
                 <div className="w-4 flex justify-center">
                   {isHighPriority ? (

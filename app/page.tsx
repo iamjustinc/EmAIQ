@@ -12,7 +12,6 @@ import { Email } from '@/lib/types';
 import { Mail, Zap, AlertCircle, Trash2 } from 'lucide-react';
 
 export default function InboxPage() {
-  // Added toggleFavorite to the hook destructuring
   const { emails, archiveEmail, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
   const { firstName } = useUser(); 
   
@@ -20,13 +19,23 @@ export default function InboxPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   const [isDrafting, setIsDrafting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Default to false
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-    const timer = setTimeout(() => { setIsLoading(false); }, 2200);
-    return () => clearTimeout(timer);
+    
+    // Check if we've already shown the welcome screen this session
+    const hasSeenWelcome = sessionStorage.getItem('emaiq_welcome_seen');
+    
+    if (!hasSeenWelcome) {
+      setIsLoading(true);
+      const timer = setTimeout(() => { 
+        setIsLoading(false); 
+        sessionStorage.setItem('emaiq_welcome_seen', 'true');
+      }, 2200);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const currentSelectedEmail = useMemo(() => 
@@ -55,7 +64,6 @@ export default function InboxPage() {
   const stats = useMemo(() => {
     const safeEmails = emails || [];
     const unread = safeEmails.filter((e) => !e.isRead).length;
-    // Keeping your logic: checks both priority 'High' and urgency label 'High'
     const urgentCount = safeEmails.filter((e) => e.urgency.label === 'High').length;
     const focusHours = (urgentCount * 0.25).toFixed(1);
     return { unread, urgent: urgentCount, focusTime: `${focusHours}h` };
@@ -93,21 +101,22 @@ export default function InboxPage() {
 
   return (
     <AppShell>
-      <div className="flex h-full flex-col bg-[#0B0D12] animate-in fade-in duration-1000">
+      <div className="flex h-full flex-col bg-[#0B0D12] animate-in fade-in duration-500">
         <Header title="Inbox" />
-        <main className="flex-1 overflow-hidden flex flex-col p-8 space-y-8 w-full">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Changed p-8 to px-8 pb-8 and removed overflow-hidden from main */}
+        <main className="flex-1 overflow-y-auto flex flex-col px-8 pb-8 space-y-8 w-full scrollbar-hide">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-8">
             <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
             <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
             <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" onClick={() => setActiveTab('noise')} />
             <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" variant="default" onClick={() => setActiveTab('action')} />
           </div>
-          <div className="flex-1 overflow-hidden bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl">
+          <div className="flex-1 min-h-[500px] bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl overflow-hidden">
             <EmailList 
               emails={emails || []} 
               selectedEmail={currentSelectedEmail} 
               onSelectEmail={handleSelectEmail} 
-              onToggleFavorite={toggleFavorite} // Added this prop
+              onToggleFavorite={toggleFavorite}
               activeTab={activeTab} 
               setActiveTab={setActiveTab} 
             />
