@@ -124,7 +124,7 @@ export default function AnalyticsPage() {
   return (
     <AppShell>
       <div className="flex h-full flex-col">
-        <Header title="Analytics" showFilters={false} />
+        <Header title="Analytics" hideSearch />
         
         <div className="flex-1 overflow-auto p-6 space-y-6">
           {/* Summary Strip */}
