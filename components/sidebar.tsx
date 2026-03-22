@@ -117,6 +117,26 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
         >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
+        // Inside your Sidebar component...
+{mainNav.map((item) => {
+  const isActive = pathname === item.href;
+  return (
+    <Link
+      key={item.name}
+      href={item.href}
+      className={cn(
+        'flex items-center gap-3 rounded-xl transition-all group',
+        'py-3 px-4 text-[13px] font-bold tracking-tight',
+        isActive
+          ? 'bg-foreground text-background shadow-md' // Clearer, high-contrast active state
+          : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
+      )}
+    >
+      <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "stroke-[2.5px]" : "stroke-[2px]")} />
+      {!isCollapsed && <span>{item.name}</span>}
+    </Link>
+  );
+})}
       </div>
     </aside>
   );

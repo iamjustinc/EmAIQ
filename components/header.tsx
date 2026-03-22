@@ -6,10 +6,8 @@ import { cn } from '@/lib/utils';
 
 interface HeaderProps {
   title: string;
-  /** When omitted, search is empty and inert unless you pass handlers. */
   searchValue?: string;
   onSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  /** Hide the inbox search bar (settings, analytics, etc.). */
   hideSearch?: boolean;
 }
 
@@ -28,7 +26,7 @@ export function Header({
       )}
     >
       <div className="flex min-w-0 items-center">
-        <h1 className="text-table-header font-black uppercase tracking-[0.3em] text-foreground truncate">
+        <h1 className="text-table-header font-black uppercase tracking-[0.4em] text-foreground truncate">
           {title}
         </h1>
       </div>
@@ -40,7 +38,7 @@ export function Header({
             placeholder="Search emails..."
             value={searchValue}
             onChange={handleSearch}
-            className="h-9 w-80 rounded-xl border-border bg-muted/30 pl-10 text-[length:var(--font-body)] text-foreground transition-all placeholder:text-muted-foreground focus-visible:border-primary/50 focus-visible:bg-muted/50 focus-visible:ring-0"
+            className="h-9 w-80 rounded-xl border-border bg-muted/30 pl-10 text-[length:var(--font-body)] font-medium text-foreground transition-all placeholder:text-muted-foreground/60 focus-visible:border-primary/50 focus-visible:bg-muted/50 focus-visible:ring-0"
           />
         </div>
       ) : (

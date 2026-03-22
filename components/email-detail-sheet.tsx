@@ -48,7 +48,7 @@ export function EmailDetailSheet({
   const [showFullEmail, setShowFullEmail] = useState(false)
   const [replyText, setReplyText] = useState('')
 
-  // Grab the global user data (firstName and signOff)
+  // Grab the global user data
   const { firstName: globalFirstName, signOff: globalSignOff } = useUserStore()
 
   useEffect(() => {
@@ -72,7 +72,6 @@ export function EmailDetailSheet({
     const senderFirstName = email.sender.name.split(' ')[0]
     const lines = email.analysis?.summary ?? []
     
-    // Construct the signature using the global store values
     const signature = `\n\n${globalSignOff},\n${globalFirstName}`
 
     if (lines.length === 0) {
@@ -152,7 +151,7 @@ export function EmailDetailSheet({
                 </div>
               </div>
             </div>
-            <h2 className="max-w-[18ch] text-[30px] font-bold leading-[1.08] tracking-tight text-foreground">
+            <h2 className="max-w-[18ch] text-[30px] font-black leading-[1.08] tracking-tight text-foreground">
               {email.subject}
             </h2>
             <div className="mt-7 flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.22em]">
@@ -225,7 +224,7 @@ export function EmailDetailSheet({
                     {(email.analysis?.summary ?? []).map((point, i) => (
                       <li key={i} className="flex gap-5">
                         <span className="mt-0.5 text-[11px] font-black text-primary">0{i + 1}</span>
-                        <p className="max-w-[34ch] text-[15px] leading-[1.45] text-foreground/80 font-medium">
+                        <p className="max-w-[34ch] text-[15px] leading-[1.45] text-foreground/80 font-bold">
                           {point}
                         </p>
                       </li>
@@ -277,7 +276,7 @@ export function EmailDetailSheet({
                   <PopoverContent side="top" className="z-[500] w-52 rounded-2xl border-border bg-white p-2 shadow-2xl">
                     <div className="flex flex-col gap-1">
                       { [1, 3, 24].map(h => (
-                        <Button key={h} variant="ghost" className="justify-start rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-primary/5" onClick={() => handleSnooze(h)}>
+                        <Button key={h} variant="ghost" className="justify-start rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/5" onClick={() => handleSnooze(h)}>
                           {h === 24 ? 'Tomorrow' : `${h} Hour${h > 1 ? 's' : ''}`}
                         </Button>
                       ))}
