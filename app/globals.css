@@ -28,14 +28,11 @@
      --font-kpi: 1.75rem;
      --font-table-header: 0.5625rem;
    
-     /* 
-        FIX: Use solid hex codes. 
-        Avoid RGBA for background/card to prevent 'ghosting' bleed-through.
-     */
+     /* Solid Opaque Backgrounds */
      --background: #f7f1eb; 
      --foreground: #201b18;
    
-     --card: #ffffff; /* Pure white cards pop against the cream background */
+     --card: #ffffff; 
      --card-foreground: #201b18;
    
      --popover: #ffffff;
@@ -50,7 +47,7 @@
      --muted: #f3e8dd;
      --muted-foreground: #6e6259;
    
-     --accent: rgba(245, 158, 114, 0.12); /* Subtle hover state */
+     --accent: rgba(245, 158, 114, 0.12);
      --accent-foreground: #201b18;
    
      --destructive: #d95d5d;
@@ -63,10 +60,21 @@
      --danger: #d95d5d;
      --info: #4da3d9;
    
+     --chart-1: #f59e72;
+     --chart-2: #4e9b6e;
+     --chart-3: #d89a3d;
+     --chart-4: #d95d5d;
+     --chart-5: #6e6259;
+   
      --sidebar: #fff8f2;
      --sidebar-foreground: #201b18;
+     --sidebar-primary: #f59e72;
+     --sidebar-primary-foreground: #ffffff;
+     --sidebar-accent: #f3e8dd;
+     --sidebar-accent-foreground: #201b18;
      --sidebar-border: #e8ddd2;
-     
+     --sidebar-ring: #f59e72;
+   
      --table-header-color: rgba(32, 27, 24, 0.45);
    }
    
@@ -76,7 +84,6 @@
    @layer base {
      * {
        border-color: var(--border);
-       /* Smoother focus rings for the editorial look */
        outline-color: color-mix(in oklab, var(--ring) 30%, transparent);
      }
    
@@ -90,33 +97,41 @@
        -webkit-font-smoothing: antialiased;
        -moz-osx-font-smoothing: grayscale;
        font-size: var(--font-body);
-       /* Ensure body doesn't allow transparency */
-       opacity: 1 !important; 
      }
    }
    
    @layer utilities {
-     /* 
-        CRITICAL FIX: Force the Sheet to be solid cream. 
-        This prevents the inbox from showing through the Detail Panel.
-     */
+     /* FIX: Solid background utility that doesn't block clicks */
      .bg-sheet-solid {
        background-color: #f7f1eb !important;
        opacity: 1 !important;
+       pointer-events: auto !important;
      }
    
      .text-body { font-size: var(--font-body); }
      .text-label-scale { font-size: var(--font-label); }
      .text-title-scale { font-size: var(--font-title); }
      .text-kpi-scale { font-size: var(--font-kpi); }
-     .text-table-header { font-size: var(--font-table-header); }
+     
+     .text-table-header { 
+       font-size: var(--font-table-header); 
+       letter-spacing: 0.2em;
+       text-transform: uppercase;
+       font-weight: 800;
+       color: var(--table-header-color);
+     }
    
      .gap-app { gap: var(--app-gap); }
      .p-card-ui { padding: var(--card-padding); }
      .px-row { padding-inline: var(--row-padding-x); }
      .py-row { padding-block: var(--row-padding-y); }
+   
      .rounded-card-ui { border-radius: var(--radius-card); }
      .h-header-app { height: var(--header-h); }
+     
+     .min-h-row {
+       min-height: calc(var(--row-padding-y) * 2 + 1.5em);
+     }
    }
    
    /* ----------------------------------------------------------------------------
@@ -134,21 +149,20 @@
      background: var(--card);
    }
    
-   .email-list-header-label {
-     font-size: var(--font-table-header);
-     letter-spacing: 0.2em;
-     text-transform: uppercase;
-     font-weight: 800; /* Heavier weight for editorial feel */
-     color: var(--table-header-color);
-     white-space: nowrap;
-   }
-   
    .email-row {
      transition: background 0.15s ease-out;
-     /* Ensure row itself isn't transparent */
      background-color: var(--card);
    }
    
    .email-row:hover {
      background: var(--accent);
+   }
+   
+   /* Scrollbar Hide Utility */
+   .scrollbar-hide::-webkit-scrollbar {
+     display: none;
+   }
+   .scrollbar-hide {
+     -ms-overflow-style: none;
+     scrollbar-width: none;
    }
