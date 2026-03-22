@@ -6,20 +6,20 @@ import { AppShell } from '@/components/app-shell';
 import { Header } from '@/components/header';
 import { EmailList } from '@/components/email-list';
 
-export default function FavoritesPage() {
+export default function ArchivedPage() {
   const { allEmails, toggleFavorite, markAsRead } = useEmails();
   const [activeTab, setActiveTab] = useState('all');
 
-  const favoriteEmails = (allEmails || []).filter(e => e.isFavorite);
+  const archivedEmails = (allEmails || []).filter(e => e.isActioned);
 
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-[#0B0D12]">
-        <Header title="Favorites" />
+        <Header title="Archived" />
         <main className="flex-1 overflow-hidden flex flex-col p-8 w-full">
           <div className="flex-1 overflow-hidden bg-[#0F1117] border border-white/5 rounded-[32px] flex flex-col shadow-2xl">
             <EmailList 
-              emails={favoriteEmails} 
+              emails={archivedEmails} 
               selectedEmail={null} 
               onSelectEmail={(e) => markAsRead(e.id)} 
               onToggleFavorite={toggleFavorite}
