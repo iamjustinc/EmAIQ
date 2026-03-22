@@ -9,7 +9,7 @@ import { KPICard } from '@/components/kpi-card';
 import { EmailList } from '@/components/email-list';
 import { EmailDetailSheet } from '@/components/email-detail-sheet';
 import { Email } from '@/lib/types';
-import { Mail, Zap, AlertCircle, Trash2 } from 'lucide-react';
+import { Mail, Zap, AlertCircle, Trash2, Sparkles } from 'lucide-react';
 
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
@@ -18,7 +18,7 @@ export default function InboxPage() {
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
-  const [searchQuery, setSearchQuery] = useState(''); // New state for search
+  const [searchQuery, setSearchQuery] = useState('');
   const [isDrafting, setIsDrafting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -40,11 +40,8 @@ export default function InboxPage() {
     emails?.find(e => e.id === selectedEmailId) || null, [emails, selectedEmailId]
   );
 
-  // Filter logic for both Tabs and Search
   const filteredEmails = useMemo(() => {
     let result = emails || [];
-
-    // Apply Search Filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(email => 
@@ -53,7 +50,6 @@ export default function InboxPage() {
         email.bodyPreview.toLowerCase().includes(query)
       );
     }
-
     return result;
   }, [emails, searchQuery]);
 
@@ -75,25 +71,8 @@ export default function InboxPage() {
   if (isLoading || !isMounted) {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
-        <div className="relative mb-8 animate-in fade-in zoom-in duration-700">
-          <Mail className="h-12 w-12 text-primary" />
-          <div className="absolute inset-0 h-12 w-12 animate-pulse blur-2xl bg-primary/30" />
-        </div>
-        <div className="h-[1px] w-48 overflow-hidden rounded-full bg-border">
-          <div className="h-full origin-left animate-outlook-load bg-primary" />
-        </div>
-        <p className="mt-6 animate-in slide-in-from-bottom-2 text-[11px] font-black uppercase tracking-[0.4em] text-foreground duration-1000">
-          Welcome {firstName}!
-        </p>
-        <p className="mt-2 text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground">Syncing Inbox</p>
-        <style jsx>{`
-          @keyframes outlook-load {
-            0% { transform: scaleX(0); opacity: 1; }
-            70% { transform: scaleX(0.8); opacity: 1; }
-            100% { transform: scaleX(1); opacity: 0; }
-          }
-          .animate-outlook-load { animation: outlook-load 2s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
-        `}</style>
+        <Mail className="h-12 w-12 text-primary animate-pulse" />
+        <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-foreground">Welcome {firstName}!</p>
       </div>
     );
   }
@@ -108,25 +87,37 @@ export default function InboxPage() {
         />
         
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
-          <div className="px-8 pb-6 pt-8">
-            <div className="grid grid-cols-1 gap-app md:grid-cols-4">
-              <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" variant="default" onClick={() => setActiveTab('all')} />
-              <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
-              <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" onClick={() => setActiveTab('noise')} />
-              <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" variant="default" onClick={() => setActiveTab('action')} />
+          {/* Point 2 Fix: Added massive padding and gap for KPI Cards */}
+          <div className="px-10 pb-8 pt-10">
+            <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+              <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" />
+              <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" />
+              <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" />
+              <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" />
             </div>
           </div>
 
-          <div className="flex-1 px-8 pb-8">
-            <div className="flex min-h-[500px] flex-col overflow-hidden rounded-card-ui border border-border bg-card shadow-2xl">
-              <EmailList 
-                emails={filteredEmails} 
-                selectedEmail={currentSelectedEmail} 
-                onSelectEmail={handleSelectEmail} 
-                onToggleFavorite={toggleFavorite}
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-              />
+          <div className="flex-1 px-10 pb-10">
+            <div className="flex min-h-[500px] flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
+              {/* Point 4: Empty State Handling */}
+              {filteredEmails.length === 0 ? (
+                <div className="flex flex-1 flex-col items-center justify-center p-20 text-center">
+                  <div className="mb-6 rounded-full bg-primary/5 p-6 animate-float">
+                    <Sparkles className="h-12 w-12 text-primary/40" />
+                  </div>
+                  <h3 className="text-xl font-black tracking-tight text-foreground">Inbox Zero</h3>
+                  <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest font-bold">You are all caught up for now.</p>
+                </div>
+              ) : (
+                <EmailList 
+                  emails={filteredEmails} 
+                  selectedEmail={currentSelectedEmail} 
+                  onSelectEmail={handleSelectEmail} 
+                  onToggleFavorite={toggleFavorite}
+                  activeTab={activeTab} 
+                  setActiveTab={setActiveTab} 
+                />
+              )}
             </div>
           </div>
         </main>

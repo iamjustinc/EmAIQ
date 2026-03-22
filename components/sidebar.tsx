@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useUser } from '@/lib/user-context';
+import { useUserStore } from '@/store/use-user-store';
 import {
   Inbox,
   BarChart3,
@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button';
 export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boolean }) {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const pathname = usePathname();
-  const { firstName } = useUser();
+  const { firstName } = useUserStore();
 
   const mainNav = [
     { name: 'Inbox', href: '/', icon: Inbox },
@@ -45,13 +45,13 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
         </div>
         {!isCollapsed && (
           <div className="flex items-center gap-1">
-            <span className="text-lg font-bold tracking-tight">EmAIQ</span>
+            <span className="text-lg font-black tracking-tight">EmAIQ</span>
             <Sparkles className="h-4 w-4 fill-primary text-primary" />
           </div>
         )}
       </div>
 
-      <nav className="scrollbar-hide flex flex-1 flex-col gap-app overflow-y-auto p-2 pt-4">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-4 scrollbar-hide">
         {mainNav.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -59,38 +59,34 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
               key={item.name}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 rounded-xl font-medium transition-all group',
-                'py-[var(--sidebar-item-py)] px-[var(--sidebar-item-px)] text-[length:var(--font-body)]',
+                'flex items-center gap-3 rounded-xl transition-all group py-3 px-4 text-[13px] font-bold tracking-tight',
                 isActive
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                  ? 'bg-foreground text-background shadow-md' 
+                  : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
               )}
             >
-              <item.icon className="h-5 w-5 shrink-0" />
+              <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "stroke-[2.5px]" : "stroke-[2px]")} />
               {!isCollapsed && <span>{item.name}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="mt-auto space-y-1 border-t border-sidebar-border p-2">
+      <div className="mt-auto border-t border-sidebar-border p-3 space-y-1">
         <Link
           href="/settings"
           className={cn(
-            'flex items-center gap-3 rounded-xl py-3 font-medium transition-all hover:bg-sidebar-accent group',
-            isCollapsed ? 'justify-center' : '',
-            'px-[var(--sidebar-item-px)]',
+            'flex items-center gap-3 rounded-xl py-3 px-4 transition-all hover:bg-sidebar-accent group',
+            isCollapsed && 'justify-center'
           )}
         >
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-[10px] font-black text-primary-foreground shadow-lg">
-            {firstName?.charAt(0).toUpperCase() || 'U'}
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-background text-[10px] font-black shadow-md">
+            {firstName?.charAt(0).toUpperCase() || 'A'}
           </div>
           {!isCollapsed && (
             <div className="flex min-w-0 flex-col">
-              <span className="truncate text-xs font-semibold leading-tight text-sidebar-foreground">
-                {firstName}
-              </span>
-              <span className="truncate text-[10px] leading-tight text-muted-foreground">View Profile</span>
+              <span className="truncate text-[12px] font-black leading-tight text-foreground">{firstName}</span>
+              <span className="truncate text-[10px] font-bold text-muted-foreground/60">View Profile</span>
             </div>
           )}
         </Link>
@@ -98,11 +94,8 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
         <Link
           href="/settings"
           className={cn(
-            'flex items-center gap-3 rounded-xl py-2 font-medium transition-all group',
-            'px-[var(--sidebar-item-px)]',
-            pathname === '/settings'
-              ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-              : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+            'flex items-center gap-3 rounded-xl py-3 px-4 text-[13px] font-bold transition-all group',
+            pathname === '/settings' ? 'bg-foreground text-background shadow-md' : 'text-muted-foreground hover:bg-sidebar-accent'
           )}
         >
           <Settings className="h-5 w-5 shrink-0" />
@@ -111,32 +104,11 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
 
         <Button
           variant="ghost"
-          size="sm"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="mt-2 w-full justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
+          className="mt-2 w-full justify-center text-muted-foreground/40 hover:text-foreground"
         >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
-        // Inside your Sidebar component...
-{mainNav.map((item) => {
-  const isActive = pathname === item.href;
-  return (
-    <Link
-      key={item.name}
-      href={item.href}
-      className={cn(
-        'flex items-center gap-3 rounded-xl transition-all group',
-        'py-3 px-4 text-[13px] font-bold tracking-tight',
-        isActive
-          ? 'bg-foreground text-background shadow-md' // Clearer, high-contrast active state
-          : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
-      )}
-    >
-      <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "stroke-[2.5px]" : "stroke-[2px]")} />
-      {!isCollapsed && <span>{item.name}</span>}
-    </Link>
-  );
-})}
       </div>
     </aside>
   );
