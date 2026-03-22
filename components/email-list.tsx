@@ -35,9 +35,9 @@ export function EmailList({
 
   return (
     <div className="flex-1 overflow-y-auto scrollbar-hide bg-[#0F1117] relative">
-      {/* Tabs */}
+      {/* 1. STICKY TABS WITH GLASS EFFECT */}
       {!hideTabs && (
-        <div className="flex items-center border-b border-white/5 px-6 sticky top-0 bg-[#0F1117] z-20">
+        <div className="flex items-center border-b border-white/5 px-6 sticky top-0 bg-[#0F1117]/80 backdrop-blur-md z-30">
           {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
             <button 
               key={tab} 
@@ -53,26 +53,25 @@ export function EmailList({
         </div>
       )}
 
-      {/* 1. TABLE HEADER: Fixed the gap and increased time width to accommodate label */}
+      {/* 2. STICKY TABLE HEADER WITH GLASS EFFECT */}
       <div className={cn(
-        "flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky bg-[#0F1117] z-10 border-b border-white/[0.02]",
+        "flex items-center gap-4 px-8 py-3 text-[9px] font-bold uppercase tracking-[0.2em] text-gray-600 sticky bg-[#0F1117]/90 backdrop-blur-sm z-20 border-b border-white/[0.05]",
         hideTabs ? "top-0" : "top-[53px]" 
       )}>
         <div className="w-16 shrink-0 text-center">PRI</div>
-        <div className="w-4 shrink-0 text-center" /> {/* Match unread dot width */}
+        <div className="w-4 shrink-0 text-center" /> 
         <div className="w-40 shrink-0">Sender</div>
         <div className="flex-1 min-w-0">Message Detail</div>
         <div className="w-32 shrink-0 text-center text-blue-400">AI SUGGESTION</div>
-        <div className="w-32 shrink-0 text-right">Received</div> {/* Increased w-20 -> w-32 */}
+        <div className="w-32 shrink-0 text-right">Received</div>
       </div>
 
-      <div className="divide-y divide-white/[0.02]">
+      <div className="divide-y divide-white/[0.02] relative z-10">
         {filteredEmails.map((email) => {
           const isSelected = selectedEmail?.id === email.id;
           const isUnread = !email.isRead;
           const isHighPriority = email.urgency.label === 'High';
 
-          // 2. SENDER LABEL LOGIC
           const isClient = email.category === 'Client';
           const labelStyles = isClient 
             ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" 
@@ -97,7 +96,6 @@ export function EmailList({
               )}
               onClick={() => onSelectEmail(email)}
             >
-              {/* URGENCY & STAR BUTTON */}
               <div className="w-16 shrink-0 flex justify-center items-center gap-2">
                 <div className="w-4 flex justify-center">
                   {isHighPriority ? (
@@ -125,19 +123,16 @@ export function EmailList({
                 </button>
               </div>
 
-              {/* UNREAD DOT */}
               <div className="w-4 shrink-0 flex justify-center">
                 {isUnread && <div className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />}
               </div>
 
-              {/* SENDER */}
               <div className="w-40 shrink-0">
                 <span className={cn("text-sm truncate block", isUnread ? "text-white font-bold" : "text-gray-400 font-medium")}>
                   {email.sender.name}
                 </span>
               </div>
 
-              {/* CONTENT */}
               <div className="flex-1 min-w-0 flex flex-col">
                 <span className={cn("text-[13px] truncate", isUnread ? "text-white font-medium" : "text-gray-300")}>
                   {email.subject}
@@ -147,7 +142,6 @@ export function EmailList({
                 </span>
               </div>
 
-              {/* AI SUGGESTION */}
               <div className="w-32 shrink-0 flex justify-center">
                 <div className={cn("flex items-center gap-2 px-3 py-1.5 rounded-full border text-[9px] font-bold uppercase", styles)}>
                   <Icon className="h-3 w-3" />
@@ -155,7 +149,6 @@ export function EmailList({
                 </div>
               </div>
 
-              {/* 3. TIME & CATEGORY TAG: Added the Client/Internal tag here */}
               <div className="w-32 shrink-0 flex items-center justify-end gap-3">
                 <span className={cn("px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-widest", labelStyles)}>
                     {email.category}
