@@ -131,7 +131,7 @@ export function AppearanceSettingsPanel() {
           <CollapsibleContent className="animate-in slide-in-from-top-1 data-[state=closed]:animate-out data-[state=closed]:fade-out-0">
             <div className="border-t border-border/60 p-card-ui pt-0">
               <p className="mb-4 text-xs text-muted-foreground">
-                Choose a preset. Each theme maps to semantic tokens — add new presets in{' '}
+                Choose a preset :D
                 <code className="rounded bg-muted px-1 py-0.5 text-[10px]">app/appearance-themes.css</code>.
               </p>
               <div className="grid gap-4 sm:grid-cols-2">

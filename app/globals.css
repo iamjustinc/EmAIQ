@@ -24,7 +24,6 @@
   --font-kpi: 1.75rem;
   --font-table-header: 0.5625rem;
 
-  /* Sunlit Creator / Light Base */
   --background: #f7f1eb;
   --foreground: #201b18;
   --card: #ffffff;
@@ -51,81 +50,90 @@
 }
 
 /* =============================================================================
-   2. MIDNIGHT INTELLIGENCE — OCEAN GRAY PALETTE (THE FIX)
+   2. MIDNIGHT INTELLIGENCE — HIGH CONTRAST & BUTTON FIX
    ============================================================================= */
 html[data-theme='midnight-intelligence'] {
   color-scheme: dark;
 
-  /* Surfaces: Ocean Gray */
-  --background: #1F2426;
-  --foreground: #E6E1DC;
-  --card: #2A3133;
-  --card-foreground: #E6E1DC;
-  --popover: #323A3D;
-  --popover-foreground: #E6E1DC;
-  --secondary: #2F383B;
-  --secondary-foreground: #E6E1DC;
-  --muted: #2A3133;
-  --muted-foreground: #B8B2AC;
+  /* Surfaces: Deep charcoal for contrast */
+  --background: #0d1112; 
+  --foreground: #ffffff; /* FORCED PURE WHITE TEXT */
+  --card: #1a1f21;
+  --card-foreground: #ffffff;
+  --popover: #1a1f21;
+  --popover-foreground: #ffffff;
+  --secondary: #242b2e;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1f21;
+  --muted-foreground: #ccd5d8; 
 
-  /* Brand Accents: Sunset Orange */
+  /* Accents */
   --primary: #F59E72;
-  --primary-foreground: #1F2426;
-  --accent: rgba(245, 158, 114, 0.18);
-  --accent-foreground: #E6E1DC;
+  --primary-foreground: #0d1112;
+  --accent: rgba(245, 158, 114, 0.2);
+  --accent-foreground: #ffffff;
 
-  /* Borders & Status */
-  --border: #3E474A;
-  --input: #3E474A;
+  /* Borders */
+  --border: #353f42;
+  --input: #0d1112;
   --ring: #F59E72;
-  --success: #6FAFAF;
-  --warning: #D98F99;
-  --danger: #D98F99;
-  --info: #6FA6C0;
-  --table-header-color: rgba(230, 225, 220, 0.55);
+  --table-header-color: rgba(255, 255, 255, 0.7);
 
-  --sidebar: #1F2426;
-  --sidebar-foreground: #E6E1DC;
-  --sidebar-border: #3E474A;
-
-  --email-unread-bg: #2F383B;
-  --email-selected-bg: rgba(245, 158, 114, 0.18);
-  --email-hover-bg: rgba(245, 158, 114, 0.10);
-
-  --midnight-btn-bg: #E6E1DC;
-  --midnight-btn-text: #1F2426;
-  --midnight-btn-border: #F59E72;
+  --sidebar: #0d1112;
+  --sidebar-foreground: #ffffff;
+  --sidebar-border: #353f42;
 }
 
-/* Hard-Fixes for Midnight Theme to prevent white leakage */
-html[data-theme='midnight-intelligence'] body,
-html[data-theme='midnight-intelligence'] .bg-background,
-html[data-theme='midnight-intelligence'] .bg-white,
-html[data-theme='midnight-intelligence'] .bg-card,
-html[data-theme='midnight-intelligence'] .rounded-card-ui,
-html[data-theme='midnight-intelligence'] [role='dialog'],
-html[data-theme='midnight-intelligence'] [data-slot='sheet-content'] {
-  background-color: var(--card) !important;
-  color: var(--foreground) !important;
-  border-color: var(--border) !important;
-}
+/* --- THE "KILL WHITE" HARD-FIXES --- */
+html[data-theme='midnight-intelligence'] {
+  
+  /* 1. Force all text to be readable */
+  h1, h2, h3, span, p, div, .text-foreground, .message-detail {
+    color: #ffffff !important;
+  }
 
-html[data-theme='midnight-intelligence'] .sticky.top-0,
-html[data-theme='midnight-intelligence'] .border-b,
-html[data-theme='midnight-intelligence'] [role='tablist'],
-html[data-theme='midnight-intelligence'] header {
-  background-color: var(--background) !important;
-  color: var(--foreground) !important;
-  border-color: var(--border) !important;
-}
+  /* 2. Fix the Intelligence Report Box text specifically */
+  [class*='text-slate'], [class*='text-gray'], .intelligence-report-content {
+    color: #e1e8eb !important;
+  }
 
-html[data-theme='midnight-intelligence'] .email-row {
-  background-color: var(--card) !important;
-  color: var(--foreground) !important;
+  /* 3. KILL WHITE BUTTONS (Later, Delegate, Search) */
+  button.bg-white, 
+  .bg-white, 
+  [data-slot='input'],
+  input[type="text"],
+  button[variant="outline"] {
+    background-color: #1a1f21 !important;
+    color: #F59E72 !important; /* Orange text on dark background */
+    border: 1px solid #F59E72 !important;
+  }
+
+  /* 4. Fix the Search Icon in the white bar */
+  [class*='search-icon'], svg {
+    color: #F59E72 !important;
+  }
+
+  /* 5. Respond Button remains solid Orange */
+  button[class*='bg-primary'], .bg-primary {
+    background-color: #F59E72 !important;
+    color: #0d1112 !important;
+  }
+
+  /* 6. Fix global surface leakage */
+  body, .bg-background, .bg-card, .rounded-card-ui, [role='dialog'], [data-slot='sheet-content'] {
+    background-color: var(--card) !important;
+    color: #ffffff !important;
+    border-color: var(--border) !important;
+  }
+
+  header, .sticky.top-0, .border-b, [role='tablist'] {
+    background-color: var(--background) !important;
+    border-color: var(--border) !important;
+  }
 }
 
 /* =============================================================================
-   3. SUNLIT CREATOR THEME
+   3. SUNLIT CREATOR THEME (UNCHANGED)
    ============================================================================= */
 html[data-theme='sunlit-creator'] {
   color-scheme: light;
