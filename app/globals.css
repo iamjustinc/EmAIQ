@@ -2,7 +2,7 @@
 @import 'tw-animate-css';
 
 /* =============================================================================
-   1. ROOT VARIABLES & LIGHT MODE BASE
+   1. ROOT VARIABLES & LIGHT MODE BASE (UNCHANGED)
    ============================================================================= */
 :root {
   --radius: 0.75rem;
@@ -50,14 +50,14 @@
 }
 
 /* =============================================================================
-   2. MIDNIGHT INTELLIGENCE — HIGH CONTRAST & BUTTON FIX
+   2. MIDNIGHT INTELLIGENCE — COMPONENT LEAKAGE KILLER
    ============================================================================= */
 html[data-theme='midnight-intelligence'] {
   color-scheme: dark;
 
-  /* Surfaces: Deep charcoal for contrast */
+  /* Surfaces */
   --background: #0d1112; 
-  --foreground: #ffffff; /* FORCED PURE WHITE TEXT */
+  --foreground: #ffffff; 
   --card: #1a1f21;
   --card-foreground: #ffffff;
   --popover: #1a1f21;
@@ -72,8 +72,6 @@ html[data-theme='midnight-intelligence'] {
   --primary-foreground: #0d1112;
   --accent: rgba(245, 158, 114, 0.2);
   --accent-foreground: #ffffff;
-
-  /* Borders */
   --border: #353f42;
   --input: #0d1112;
   --ring: #F59E72;
@@ -84,50 +82,67 @@ html[data-theme='midnight-intelligence'] {
   --sidebar-border: #353f42;
 }
 
-/* --- THE "KILL WHITE" HARD-FIXES --- */
+/* --- THE "FORCE DARK" ENGINE (Targets Hard-coded React hex colors) --- */
 html[data-theme='midnight-intelligence'] {
   
-  /* 1. Force all text to be readable */
-  h1, h2, h3, span, p, div, .text-foreground, .message-detail {
+  /* Kill KPI Card & Email Detail White Boxes */
+  [class*='bg-[#ECD7D1]'], 
+  [class*='bg-white'], 
+  .bg-white,
+  .hover\:bg-white:hover {
+    background-color: var(--card) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* Kill Email List & Tabs light-mode leakage */
+  [class*='bg-[#F4F7F7]'],
+  .bg-\[\#F4F7F7\],
+  .sticky.bg-white,
+  header {
+    background-color: var(--background) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* Force Invisible Text to Pure White */
+  [class*='text-[#2D3436]'], 
+  [class*='text-[#8C867E]'],
+  .text-\[\#2D3436\],
+  .text-4xl, 
+  h2, span, p {
     color: #ffffff !important;
   }
 
-  /* 2. Fix the Intelligence Report Box text specifically */
+  /* Fix secondary muted text in report boxes */
   [class*='text-slate'], [class*='text-gray'], .intelligence-report-content {
-    color: #e1e8eb !important;
+    color: #ccd5d8 !important;
   }
 
-  /* 3. KILL WHITE BUTTONS (Later, Delegate, Search) */
-  button.bg-white, 
-  .bg-white, 
+  /* Force "Later" and "Delegate" buttons to Dark/Orange */
+  button.bg-white,
+  button[variant="outline"],
   [data-slot='input'],
-  input[type="text"],
-  button[variant="outline"] {
-    background-color: #1a1f21 !important;
-    color: #F59E72 !important; /* Orange text on dark background */
-    border: 1px solid #F59E72 !important;
+  input {
+    background-color: var(--card) !important;
+    color: var(--primary) !important; 
+    border: 1px solid var(--primary) !important;
   }
 
-  /* 4. Fix the Search Icon in the white bar */
-  [class*='search-icon'], svg {
-    color: #F59E72 !important;
+  /* Turn the hard-coded dark Respond button into Orange */
+  button[class*='bg-[#2D3436]'],
+  .bg-\[\#2D3436\] {
+    background-color: var(--primary) !important;
+    color: var(--background) !important;
+    border: none !important;
   }
 
-  /* 5. Respond Button remains solid Orange */
-  button[class*='bg-primary'], .bg-primary {
-    background-color: #F59E72 !important;
-    color: #0d1112 !important;
-  }
-
-  /* 6. Fix global surface leakage */
+  /* Global Surface Logic */
   body, .bg-background, .bg-card, .rounded-card-ui, [role='dialog'], [data-slot='sheet-content'] {
     background-color: var(--card) !important;
     color: #ffffff !important;
     border-color: var(--border) !important;
   }
 
-  header, .sticky.top-0, .border-b, [role='tablist'] {
-    background-color: var(--background) !important;
+  .border-b, [role='tablist'] {
     border-color: var(--border) !important;
   }
 }
