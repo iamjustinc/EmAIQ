@@ -67,7 +67,7 @@ html[data-theme='creator-editorial'] {
 }
 
 /* -----------------------------------------------------------------------------
-   Theme: Sunlit Creator (Ocean Sunset Palette)
+   Theme: Sunlit Creator (Ocean Sunset Palette) — SOLID CONTRAST FIX
    ----------------------------------------------------------------------------- */
    html[data-theme='sunlit-creator'] {
       color-scheme: light;
@@ -77,11 +77,13 @@ html[data-theme='creator-editorial'] {
       --card-foreground: #2D3436;
       --popover: #FFFFFF;
       --popover-foreground: #2D3436;
-      --muted: #F6B3C4; /* Sunset Pink */
-      --muted-foreground: #636E72;
-      --primary: #99BED4; /* Sky Blue */
+      --muted: #F6B3C4; /* Sunset Pink - Solid */
+      --muted-foreground: #4A4A4A; /* Darker Greige for better reading */
+      --primary: #7FC6DA; /* Ocean Blue - Saturated */
       --primary-foreground: #FFFFFF;
-      --border: #A8D0D0; /* Seafoam / Soft Aqua */
+      --border: #A8D0D0; /* Seafoam */
       --sidebar: #ECD7D1; /* Blush Beige */
       --sidebar-border: #A8A29A; /* Warm Greige */
+      --accent: #E1F0F0; /* Solid light aqua for row hovers */
+      --accent-foreground: #2D3436;
     }
