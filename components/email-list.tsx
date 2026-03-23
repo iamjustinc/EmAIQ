@@ -30,6 +30,20 @@ export function EmailList({
 }: EmailListProps) {
   const pathname = usePathname()
 
+  // Helper to format the received time
+  const formatRelativeTime = (timestamp: string | number) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) return 'JUST NOW';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}M AGO`;
+    if (diffInSeconds < 86400) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
+    }
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric' }).toUpperCase();
+  };
+
   const filteredEmails = useMemo(() => {
     let list = emails ?? []
 
@@ -93,7 +107,6 @@ export function EmailList({
         </div>
       )}
 
-      {/* FIXED: Added dynamic top position and increased z-index to ensure it stays above rows */}
       <div 
         className={cn(
           "grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky z-40",
@@ -101,7 +114,10 @@ export function EmailList({
         )}
       >
         {['PRI', '', 'SENDER', 'MESSAGE DETAIL', 'AI SUGGESTION', 'RECEIVED'].map((h, i) => (
-          <div key={i} className="text-[9px] font-black tracking-[0.2em] text-[#8C867E] uppercase">{h}</div>
+          <div key={i} className={cn(
+            "text-[9px] font-black tracking-[0.2em] text-[#8C867E] uppercase",
+            h === 'RECEIVED' ? "text-right" : ""
+          )}>{h}</div>
         ))}
       </div>
 
@@ -155,7 +171,7 @@ export function EmailList({
                 </span>
               </div>
               <div className="text-[10px] font-black text-[#8C867E] text-right uppercase">
-                {email.timestamp}
+                {formatRelativeTime(email.timestamp)}
               </div>
             </div>
           ))
