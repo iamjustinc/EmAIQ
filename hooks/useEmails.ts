@@ -23,7 +23,7 @@ export function useEmails() {
       const initialData = (rawEmails as any[]).map(e => ({
         ...e,
         isActioned: e.isActioned || false,
-        isSent: e.isSent || false, // New property
+        isSent: e.isSent || false,
         isRead: e.isRead || false,
         isFavorite: e.isFavorite || false,
         snoozedUntil: null
@@ -44,8 +44,16 @@ export function useEmails() {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isRead: true } : e))
   }
 
+  // UPDATED: Standardized to ensure it hits your page filter correctly
   const archiveEmail = (id: string) => {
-    setEmails(prev => prev.map(e => e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e))
+    setEmails(prev => {
+      const updated = prev.map(e => e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e);
+      // Force an immediate save to localStorage to prevent navigation race conditions
+      if (typeof window !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      }
+      return updated;
+    })
   }
 
   const markAsSent = (id: string) => {
@@ -63,7 +71,8 @@ export function useEmails() {
 
   const inboxEmails = loading ? [] : emails
     .filter(e => {
-      if (e.isActioned || e.isSent) return false; // Hide both from Inbox
+      // Hide if actioned (archived) or sent
+      if (e.isActioned || e.isSent) return false; 
       if (e.snoozedUntil && e.snoozedUntil > Date.now()) return false;
       return true;
     })
