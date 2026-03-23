@@ -33,7 +33,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
                 'border-b-4 px-8 py-5 text-[10px] font-black tracking-[0.25em] transition-all',
                 activeTab.toUpperCase() === tab 
                   ? 'border-[#7FC6DA] text-[#7FC6DA]' 
-                  : 'border-transparent text-[#A8A29A] hover:text-[#7FC6DA]'
+                  : 'border-transparent text-[#8C867E] hover:text-[#7FC6DA]'
               )}
             >
               {tab}
@@ -44,7 +44,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
 
       <div className="grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky top-0 z-20">
         {['PRI', '', 'SENDER', 'MESSAGE DETAIL', 'AI SUGGESTION', 'RECEIVED'].map((h, i) => (
-          <div key={i} className="text-[9px] font-black tracking-[0.2em] text-[#A8A29A] uppercase">{h}</div>
+          <div key={i} className="text-[9px] font-black tracking-[0.2em] text-[#8C867E] uppercase">{h}</div>
         ))}
       </div>
 
@@ -54,30 +54,33 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
             key={email.id}
             onClick={() => onSelectEmail(email)}
             className={cn(
-              'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-4 py-4 cursor-pointer transition-all my-1 rounded-2xl',
-              selectedEmail?.id === email.id ? 'bg-white ring-2 ring-[#7FC6DA] shadow-lg scale-[1.01]' : 'hover:bg-white/80',
-              email.isRead ? 'opacity-60' : 'bg-white shadow-sm'
+              'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-4 py-4 cursor-pointer transition-all my-1 rounded-2xl border',
+              selectedEmail?.id === email.id 
+                ? 'bg-white border-[#7FC6DA] ring-2 ring-[#7FC6DA]/20 shadow-lg scale-[1.01] z-10' 
+                : email.isRead 
+                  ? 'bg-[#F4F7F7]/50 border-transparent' 
+                  : 'bg-white border-[#A8D0D0]/30 shadow-sm hover:border-[#7FC6DA]/50'
             )}
           >
             <div className="flex items-center gap-2">
                <button onClick={(e) => { e.stopPropagation(); onToggleFavorite(email.id); }} className="p-2">
-                <Star className={cn('h-4 w-4', email.isFavorite ? 'fill-[#7FC6DA] text-[#7FC6DA]' : 'text-[#A8A29A]/30')} />
+                <Star className={cn('h-4 w-4', email.isFavorite ? 'fill-[#7FC6DA] text-[#7FC6DA]' : 'text-[#A8A29A]/40')} />
               </button>
             </div>
             <div className="flex justify-center">{email.urgency.label === 'High' && <AlertCircle className="h-4 w-4 text-[#F6B3C4]" />}</div>
-            <div className={cn("text-[13px] font-black", email.isRead ? "text-[#A8A29A]" : "text-[#2D3436]")}>{email.sender.name}</div>
-            <div className={cn("text-[13px] truncate pr-8", email.isRead ? "text-[#A8A29A]" : "text-[#2D3436]/80")}>{email.subject}</div>
+            <div className={cn("text-[13px] font-black", email.isRead ? "text-[#8C867E]" : "text-[#2D3436]")}>{email.sender.name}</div>
+            <div className={cn("text-[13px] truncate pr-8 font-medium", email.isRead ? "text-[#8C867E]/70" : "text-[#2D3436]/90")}>{email.subject}</div>
             <div className="flex">
               <span className={cn(
                 "px-3 py-1 rounded-full text-[9px] font-black tracking-widest border-2",
                 email.suggestedAction === 'RESPOND' 
-                  ? "bg-[#F6B3C4] border-[#F6B3C4] text-white"  /* Solid Pink Respond */
-                  : "bg-[#7FC6DA] border-[#7FC6DA] text-white"  /* Solid Blue Delegate */
+                  ? "bg-[#F6B3C4] border-[#F6B3C4] text-white" 
+                  : "bg-[#7FC6DA] border-[#7FC6DA] text-white" 
               )}>
                 {email.suggestedAction}
               </span>
             </div>
-            <div className="text-[10px] font-black text-[#A8A29A] text-right uppercase">{email.timestamp}</div>
+            <div className="text-[10px] font-black text-[#8C867E] text-right uppercase">{email.timestamp}</div>
           </div>
         ))}
       </div>
