@@ -17,7 +17,7 @@
    Midnight-specific visual fixes (UPDATED)
    ----------------------------------------------------------------------------- */
 
-/* Force proper dark surfaces */
+/* Force proper dark surfaces - Resolves light-mode utility class overrides */
 [data-theme='midnight-intelligence'] .bg-white,
 [data-theme='midnight-intelligence'] .bg-card,
 [data-theme='midnight-intelligence'] .bg-background,
@@ -28,7 +28,7 @@
   border-color: var(--border) !important;
 }
 
-/* Fix strip behind tabs */
+/* Fix strip behind tabs and sticky headers */
 [data-theme='midnight-intelligence'] .border-b.bg-white,
 [data-theme='midnight-intelligence'] .sticky.top-0 {
   background-color: var(--background) !important;
@@ -47,7 +47,7 @@
   background-color: rgba(10, 12, 14, 0.42) !important;
 }
 
-/* FIX: email rows */
+/* FIX: email rows - Ensures proper dark list items */
 [data-theme='midnight-intelligence'] .email-row {
   background-color: var(--card) !important;
 }
@@ -56,14 +56,14 @@
   background-color: var(--email-hover-bg) !important;
 }
 
-/* FIX: headers */
+/* FIX: headers for email list */
 [data-theme='midnight-intelligence'] .email-list-header {
   background-color: var(--background) !important;
   border-color: var(--border) !important;
 }
 
 /* -----------------------------------------------------------------------------
-   Density & Font Scales
+   Density & Font Scales (UNCHANGED)
    ----------------------------------------------------------------------------- */
 html[data-density='compact'] { --app-gap: 0.75rem; --card-padding: 1rem; --row-padding-y: 0.375rem; --row-padding-x: 1rem; --radius-card: 1rem; --header-h: 3.5rem; }
 html[data-density='comfortable'] { --app-gap: 1rem; --card-padding: 1.25rem; --row-padding-y: 0.5rem; --row-padding-x: 1.25rem; --radius-card: 1.25rem; --header-h: 4rem; }
@@ -74,28 +74,28 @@ html[data-font-scale='medium'] { --font-body: 0.875rem; --font-label: 0.625rem; 
 html[data-font-scale='large'] { --font-body: 0.9375rem; --font-label: 0.6875rem; --font-title: 1.375rem; --font-kpi: 2rem; }
 
 /* -----------------------------------------------------------------------------
-   Theme: Midnight Intelligence (UPDATED — FIXED UI)
+   Theme: Midnight Intelligence (UPDATED — DARK-THEMED SUNLIT REFLECTION)
    ----------------------------------------------------------------------------- */
 html[data-theme='midnight-intelligence'] {
   color-scheme: dark;
 
-  /* CORE SURFACES (fixed layering) */
+  /* CORE SURFACES (Deep Ocean Reflection) */
   --background: #1F2426;
   --foreground: #E6E1DC;
 
   --card: #2A3133;
   --card-foreground: #E6E1DC;
 
-  --popover: #323A3D; /* sheet is now clearly different */
+  --popover: #323A3D; 
   --popover-foreground: #E6E1DC;
 
-  /* TEXT */
+  /* TEXT MAPPINGS */
   --muted: #2A3133;
   --muted-foreground: #B8B2AC;
 
   --table-header-color: rgba(230, 225, 220, 0.55);
 
-  /* BRAND */
+  /* BRAND ACCENTS (Sunset Reflection) */
   --primary: #F59E72;
   --primary-foreground: #1F2426;
 
@@ -115,13 +115,13 @@ html[data-theme='midnight-intelligence'] {
   --sidebar-border: #3E474A;
   --sidebar-foreground: #E6E1DC;
 
-  /* PALETTE COLORS */
+  /* PALETTE STATUS COLORS */
   --info: #6FA6C0;
   --success: #6FAFAF;
   --warning: #D98F99;
   --neutral: #7A746D;
 
-  /* EMAIL UI FIXES */
+  /* EMAIL UI SYSTEM */
   --email-unread-bg: #2F383B;
   --email-hover-bg: rgba(245, 158, 114, 0.10);
   --email-selected-bg: rgba(245, 158, 114, 0.18);
