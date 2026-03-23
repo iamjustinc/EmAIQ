@@ -10,7 +10,8 @@ import { KPICard } from '@/components/kpi-card';
 import { EmailList } from '@/components/email-list';
 import { EmailDetailSheet } from '@/components/email-detail-sheet';
 import { Email } from '@/lib/types';
-import { Mail, Zap, AlertCircle, Trash2, Sparkles } from 'lucide-react';
+import { Mail, Zap, AlertCircle, Trash2, Sparkles, Broom } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
@@ -38,7 +39,14 @@ export default function InboxPage() {
     }
   }, []);
 
-  // Determine page title based on route
+  // Action: Archive all emails categorized as 'noise'
+  const handleInstantCleanUp = useCallback(() => {
+    const noiseEmails = emails?.filter(
+      (e) => e.category?.toLowerCase() === 'noise' && e.status !== 'archived'
+    );
+    noiseEmails?.forEach((email) => archiveEmail(email.id));
+  }, [emails, archiveEmail]);
+
   const pageTitle = useMemo(() => {
     if (pathname === '/sent') return 'Sent';
     if (pathname === '/favorites') return 'Favorites';
@@ -107,7 +115,19 @@ export default function InboxPage() {
           </div>
 
           <div className="flex-1 px-10 pb-10">
-            <div className="flex min-h-[500px] flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
+            <div className="relative flex min-h-[500px] flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
+              {/* This Absolute Button overlays the far right of the tab row inside EmailList */}
+              <div className="absolute right-8 top-6 z-10">
+                <Button
+                  onClick={handleInstantCleanUp}
+                  variant="ghost"
+                  className="flex items-center gap-2 rounded-full bg-secondary/50 px-4 py-2 text-[10px] font-black uppercase tracking-tighter text-[#D95D5D] hover:bg-[#F6B3C4]/20 border border-[#F6B3C4]/10"
+                >
+                  <Broom className="h-3.5 w-3.5" />
+                  Instant Clean Up
+                </Button>
+              </div>
+
               <EmailList 
                 emails={filteredEmails} 
                 selectedEmail={currentSelectedEmail} 

@@ -17,7 +17,7 @@ import {
   Send,
   Star,
   Archive,
-  Clock, // Added Clock icon
+  Clock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -27,15 +27,15 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
   const { firstName } = useUserStore();
   
   const { allEmails } = useEmails(); 
+  // Tracks both manually archived and "Instant Cleaned" noise
   const archivedCount = allEmails.filter(e => e.isActioned).length;
-  // Calculate emails currently in snooze state
   const snoozedCount = allEmails.filter(e => e.snoozedUntil && Number(e.snoozedUntil) > Date.now()).length;
 
   const mainNav = [
     { name: 'Inbox', href: '/', icon: Inbox },
     { name: 'Sent', href: '/sent', icon: Send },
     { name: 'Favorites', href: '/favorites', icon: Star },
-    { name: 'Snoozed', href: '/snoozed', icon: Clock }, // Added Snoozed
+    { name: 'Snoozed', href: '/snoozed', icon: Clock },
     { name: 'Archived', href: '/archived', icon: Archive },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   ];
@@ -62,7 +62,6 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-4 scrollbar-hide">
         {mainNav.map((item) => {
           const isActive = pathname === item.href;
-          // Determine which count to show
           const displayCount = item.name === 'Archived' ? archivedCount : item.name === 'Snoozed' ? snoozedCount : 0;
           
           return (
@@ -80,13 +79,13 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
               {!isCollapsed && (
                 <div className="flex flex-1 items-center justify-between">
                   <span>{item.name}</span>
-                  {displayCount > 0 && (
+                  {(displayCount > 0 || (item.name === 'Archived' && archivedCount > 0)) && (
                     <span className={cn(
                       "rounded-full px-2 py-0.5 text-[10px] font-black",
                       isActive 
                         ? "bg-white/20 text-white" 
                         : item.name === 'Snoozed' 
-                          ? "bg-[#F6B3C4]/20 text-[#D95D5D]" // Pinkish for snooze
+                          ? "bg-[#F6B3C4]/20 text-[#D95D5D]" 
                           : "bg-[#7FC6DA]/20 text-[#7FC6DA]"
                     )}>
                       {displayCount}
@@ -108,7 +107,7 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
           )}
         >
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-background text-[10px] font-black shadow-md">
-            {firstName?.charAt(0).toUpperCase() || 'A'}
+            {firstName?.charAt(0).toUpperCase() || 'J'}
           </div>
           {!isCollapsed && (
             <div className="flex min-w-0 flex-col">
