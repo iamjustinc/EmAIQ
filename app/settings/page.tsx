@@ -22,6 +22,9 @@ import {
   KeyRound,
   BrainCircuit,
   Type,
+  BellRing,
+  Plus,
+  X,
 } from 'lucide-react';
 
 type SettingsView =
@@ -30,9 +33,11 @@ type SettingsView =
   | 'emailAccounts'
   | 'passwordSecurity'
   | 'appearance'
-  | 'aiConfig';
+  | 'aiConfig'
+  | 'priorityPreferences';
 
 const AI_SETTINGS_STORAGE_KEY = 'emaiq-ai-settings';
+const PRIORITY_SETTINGS_STORAGE_KEY = 'emaiq-priority-settings';
 
 export default function SettingsPage() {
   const { firstName, signOff, setProfile } = useUserStore();
@@ -45,6 +50,19 @@ export default function SettingsPage() {
 
   const [draftTone, setDraftTone] = useState([75]);
   const [autoSummarization, setAutoSummarization] = useState(true);
+
+  const [vipSenders, setVipSenders] = useState<string[]>([
+    'manager@company.com',
+    'vp-sales@company.com',
+  ]);
+  const [priorityTeams, setPriorityTeams] = useState<string[]>([
+    'Leadership',
+    'Finance',
+    'Customer Success',
+  ]);
+  const [boostManagerEmails, setBoostManagerEmails] = useState(true);
+  const [newVipSender, setNewVipSender] = useState('');
+  const [newPriorityTeam, setNewPriorityTeam] = useState('');
 
   useEffect(() => {
     setFirstNameDraft(firstName);
@@ -70,6 +88,28 @@ export default function SettingsPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const saved = window.localStorage.getItem(PRIORITY_SETTINGS_STORAGE_KEY);
+    if (!saved) return;
+
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed.vipSenders)) {
+        setVipSenders(parsed.vipSenders.filter(Boolean));
+      }
+      if (Array.isArray(parsed.priorityTeams)) {
+        setPriorityTeams(parsed.priorityTeams.filter(Boolean));
+      }
+      if (typeof parsed.boostManagerEmails === 'boolean') {
+        setBoostManagerEmails(parsed.boostManagerEmails);
+      }
+    } catch {
+      // ignore bad localStorage data
+    }
+  }, []);
+
   const headerTitle = useMemo(() => {
     const titles: Record<SettingsView, string> = {
       menu: 'Settings',
@@ -78,6 +118,7 @@ export default function SettingsPage() {
       passwordSecurity: 'Security',
       appearance: 'Appearance',
       aiConfig: 'AI Intelligence',
+      priorityPreferences: 'Priority Preferences',
     };
     return titles[view];
   }, [view]);
@@ -127,6 +168,52 @@ export default function SettingsPage() {
     }
 
     toast.success('AI preferences updated!');
+    setView('menu');
+  };
+
+  const handleAddVipSender = () => {
+    const value = newVipSender.trim();
+    if (!value) return;
+    if (vipSenders.includes(value)) {
+      toast.error('That sender is already added.');
+      return;
+    }
+    setVipSenders((prev) => [...prev, value]);
+    setNewVipSender('');
+  };
+
+  const handleRemoveVipSender = (value: string) => {
+    setVipSenders((prev) => prev.filter((item) => item !== value));
+  };
+
+  const handleAddPriorityTeam = () => {
+    const value = newPriorityTeam.trim();
+    if (!value) return;
+    if (priorityTeams.includes(value)) {
+      toast.error('That team is already added.');
+      return;
+    }
+    setPriorityTeams((prev) => [...prev, value]);
+    setNewPriorityTeam('');
+  };
+
+  const handleRemovePriorityTeam = (value: string) => {
+    setPriorityTeams((prev) => prev.filter((item) => item !== value));
+  };
+
+  const handlePrioritySave = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(
+        PRIORITY_SETTINGS_STORAGE_KEY,
+        JSON.stringify({
+          vipSenders,
+          priorityTeams,
+          boostManagerEmails,
+        }),
+      );
+    }
+
+    toast.success('Priority preferences updated!');
     setView('menu');
   };
 
@@ -192,6 +279,12 @@ export default function SettingsPage() {
                       icon: BrainCircuit,
                       desc: 'Signature, draft tone, and summarization',
                       target: 'aiConfig',
+                    },
+                    {
+                      label: 'Priority Preferences',
+                      icon: BellRing,
+                      desc: 'VIP senders, teams, and urgency boosts',
+                      target: 'priorityPreferences',
                     },
                   ].map((item) => (
                     <button
@@ -300,34 +393,34 @@ export default function SettingsPage() {
                     <Separator className="opacity-50" />
 
                     <div className="space-y-5">
-  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-primary">
-    <span>Conservative</span>
-    <span>Draft Tone</span>
-    <span>Aggressive</span>
-  </div>
+                      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+                        <span>Conservative</span>
+                        <span>Draft Tone</span>
+                        <span>Aggressive</span>
+                      </div>
 
-  <Slider
-    value={draftTone}
-    onValueChange={setDraftTone}
-    max={100}
-    step={1}
-    className="w-full py-4 [&_[role=slider]]:h-7 [&_[role=slider]]:w-7 [&_[role=slider]]:border-2 [&_[role=slider]]:border-[#A8D0D0] [&_[role=slider]]:bg-white [&_[role=slider]]:shadow-md [&>span:first-child]:h-2 [&>span:first-child]:bg-[#A8D0D0]/25 [&>span:first-child_span]:bg-[#7FC6DA]"
-  />
+                      <Slider
+                        value={draftTone}
+                        onValueChange={setDraftTone}
+                        max={100}
+                        step={1}
+                        className="w-full py-4 [&_[role=slider]]:h-7 [&_[role=slider]]:w-7 [&_[role=slider]]:border-2 [&_[role=slider]]:border-[#A8D0D0] [&_[role=slider]]:bg-white [&_[role=slider]]:shadow-md [&>span:first-child]:h-2 [&>span:first-child]:bg-[#A8D0D0]/25 [&>span:first-child_span]:bg-[#7FC6DA]"
+                      />
 
-  <div className="rounded-xl border border-border bg-muted/20 p-4">
-    <div className="flex items-center justify-between gap-4">
-      <div>
-        <p className="text-sm font-bold text-foreground">{toneLabel}</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {toneDescription}
-        </p>
-      </div>
-      <div className="shrink-0 rounded-full border border-border bg-background px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
-        {draftTone[0]}%
-      </div>
-    </div>
-  </div>
-</div>
+                      <div className="rounded-xl border border-border bg-muted/20 p-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-sm font-bold text-foreground">{toneLabel}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {toneDescription}
+                            </p>
+                          </div>
+                          <div className="shrink-0 rounded-full border border-border bg-background px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
+                            {draftTone[0]}%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     <Separator className="opacity-50" />
 
@@ -349,6 +442,142 @@ export default function SettingsPage() {
                       className="h-14 w-full rounded-2xl bg-primary text-[11px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]"
                     >
                       Save AI Preferences
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {view === 'priorityPreferences' && (
+              <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+                <div className="rounded-[2rem] border border-border bg-card p-8 shadow-xl">
+                  <div className="mb-8 flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <BellRing className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black tracking-tight">Priority Preferences</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Customize inbox prioritization beyond AI scoring.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-10">
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                          VIP Senders
+                        </Label>
+                        <p className="ml-1 mt-1 text-xs text-muted-foreground">
+                          Emails from these senders should receive a stronger urgency boost.
+                        </p>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Input
+                          value={newVipSender}
+                          onChange={(e) => setNewVipSender(e.target.value)}
+                          className="h-12 rounded-xl border-border bg-muted/30"
+                          placeholder="e.g. manager@company.com"
+                        />
+                        <Button
+                          type="button"
+                          onClick={handleAddVipSender}
+                          className="h-12 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest"
+                        >
+                          <Plus className="mr-1 h-4 w-4" />
+                          Add
+                        </Button>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {vipSenders.map((sender) => (
+                          <div
+                            key={sender}
+                            className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-[10px] font-bold text-foreground shadow-sm"
+                          >
+                            <span>{sender}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveVipSender(sender)}
+                              className="text-muted-foreground transition-colors hover:text-destructive"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator className="opacity-50" />
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                          Priority Teams / Departments
+                        </Label>
+                        <p className="ml-1 mt-1 text-xs text-muted-foreground">
+                          Boost urgency when an email is associated with these groups.
+                        </p>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Input
+                          value={newPriorityTeam}
+                          onChange={(e) => setNewPriorityTeam(e.target.value)}
+                          className="h-12 rounded-xl border-border bg-muted/30"
+                          placeholder="e.g. Finance or Leadership"
+                        />
+                        <Button
+                          type="button"
+                          onClick={handleAddPriorityTeam}
+                          className="h-12 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest"
+                        >
+                          <Plus className="mr-1 h-4 w-4" />
+                          Add
+                        </Button>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {priorityTeams.map((team) => (
+                          <div
+                            key={team}
+                            className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-[10px] font-bold text-foreground shadow-sm"
+                          >
+                            <span>{team}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemovePriorityTeam(team)}
+                              className="text-muted-foreground transition-colors hover:text-destructive"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator className="opacity-50" />
+
+                    <div className="flex items-center justify-between gap-6">
+                      <div>
+                        <h4 className="text-sm font-bold">Manager Role Boost</h4>
+                        <p className="text-xs text-muted-foreground">
+                          Prioritize emails that appear to come from manager-level roles.
+                        </p>
+                      </div>
+                      <Switch
+                        checked={boostManagerEmails}
+                        onCheckedChange={setBoostManagerEmails}
+                      />
+                    </div>
+
+                    <Button
+                      onClick={handlePrioritySave}
+                      className="h-14 w-full rounded-2xl bg-primary text-[11px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]"
+                    >
+                      Save Priority Preferences
                     </Button>
                   </div>
                 </div>
