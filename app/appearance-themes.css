@@ -1,133 +1,212 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './appearance-themes.css';
+
+:root {
+  --radius: 0.75rem;
+  --app-gap: 1rem;
+  --card-padding: 1.25rem;
+  --row-padding-y: 0.5rem;
+  --row-padding-x: 1.25rem;
+  --sidebar-item-py: 0.5rem;
+  --sidebar-item-px: 0.75rem;
+  --panel-padding: 1.75rem;
+  --button-height: 2.25rem;
+  --radius-card: 1.25rem;
+  --header-h: 4rem;
+  --kpi-icon-box: 2.75rem;
+
+  --font-body: 0.875rem;
+  --font-label: 0.625rem;
+  --font-title: 1.25rem;
+  --font-kpi: 1.75rem;
+  --font-table-header: 0.5625rem;
+
+  /* Default Light Mode (Sunlit Creator base) */
+  --background: #f7f1eb;
+  --foreground: #201b18;
+  --card: #ffffff;
+  --card-foreground: #201b18;
+  --popover: #ffffff;
+  --popover-foreground: #201b18;
+  --primary: #e48a5d;
+  --primary-foreground: #ffffff;
+  --secondary: #fff8f2;
+  --secondary-foreground: #201b18;
+  --muted: #f3e8dd;
+  --muted-foreground: #6e6259;
+  --accent: rgba(245, 158, 114, 0.12);
+  --accent-foreground: #201b18;
+  --destructive: #d95d5d;
+  --border: #e8ddd2;
+  --input: #e8ddd2;
+  --ring: #f59e72;
+  --success: #4e9b6e;
+  --warning: #d89a3d;
+  --danger: #d95d5d;
+  --info: #4da3d9;
+  --table-header-color: rgba(32, 27, 24, 0.55);
+}
+
 /* =============================================================================
-   EmailIQ appearance system — tokens per [data-theme], [data-density], [data-font-scale]
+   MIDNIGHT INTELLIGENCE — GLOBAL OVERRIDES
+   Ensures Ocean Gray palette and kills utility-class white leakage.
    ============================================================================= */
-
-/* GLOBAL OVERLAY FIX: 
-   This ensures Sidebars (Sheet), Popovers, and Dialogs are never transparent.
-*/
-[data-theme] .bg-background,
-[data-theme] [role="dialog"],
-[data-theme] .bg-popover,
-[data-theme] .bg-card {
-  background-color: var(--background) !important;
-  opacity: 1 !important;
-}
-
-/* -----------------------------------------------------------------------------
-   Midnight-specific visual fixes (UPDATED)
-   ----------------------------------------------------------------------------- */
-
-/* Force proper dark surfaces - Resolves light-mode utility class overrides */
-[data-theme='midnight-intelligence'] .bg-white,
-[data-theme='midnight-intelligence'] .bg-card,
-[data-theme='midnight-intelligence'] .bg-background,
-[data-theme='midnight-intelligence'] [role="tablist"],
-[data-theme='midnight-intelligence'] header {
-  background-color: var(--card) !important;
-  color: var(--foreground) !important;
-  border-color: var(--border) !important;
-}
-
-/* Fix strip behind tabs and sticky headers */
-[data-theme='midnight-intelligence'] .border-b.bg-white,
-[data-theme='midnight-intelligence'] .sticky.top-0 {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
-}
-
-/* FIX: make sheet (right panel) solid and layered */
-[data-theme='midnight-intelligence'] [data-slot='sheet-content'] {
-  background-color: var(--popover) !important;
-  color: var(--foreground) !important;
-  border-color: var(--border) !important;
-}
-
-/* FIX: overlay contrast (not too washed) */
-[data-theme='midnight-intelligence'] [data-slot='sheet-overlay'] {
-  background-color: rgba(10, 12, 14, 0.42) !important;
-}
-
-/* FIX: email rows - Ensures proper dark list items */
-[data-theme='midnight-intelligence'] .email-row {
-  background-color: var(--card) !important;
-}
-
-[data-theme='midnight-intelligence'] .email-row:hover {
-  background-color: var(--email-hover-bg) !important;
-}
-
-/* FIX: headers for email list */
-[data-theme='midnight-intelligence'] .email-list-header {
-  background-color: var(--background) !important;
-  border-color: var(--border) !important;
-}
-
-/* -----------------------------------------------------------------------------
-   Density & Font Scales (UNCHANGED)
-   ----------------------------------------------------------------------------- */
-html[data-density='compact'] { --app-gap: 0.75rem; --card-padding: 1rem; --row-padding-y: 0.375rem; --row-padding-x: 1rem; --radius-card: 1rem; --header-h: 3.5rem; }
-html[data-density='comfortable'] { --app-gap: 1rem; --card-padding: 1.25rem; --row-padding-y: 0.5rem; --row-padding-x: 1.25rem; --radius-card: 1.25rem; --header-h: 4rem; }
-html[data-density='spacious'] { --app-gap: 1.5rem; --card-padding: 1.75rem; --row-padding-y: 0.75rem; --row-padding-x: 1.5rem; --radius-card: 1.5rem; --header-h: 4.5rem; }
-
-html[data-font-scale='small'] { --font-body: 0.8125rem; --font-label: 0.5625rem; --font-title: 1.125rem; --font-kpi: 1.5rem; }
-html[data-font-scale='medium'] { --font-body: 0.875rem; --font-label: 0.625rem; --font-title: 1.25rem; --font-kpi: 1.75rem; }
-html[data-font-scale='large'] { --font-body: 0.9375rem; --font-label: 0.6875rem; --font-title: 1.375rem; --font-kpi: 2rem; }
-
-/* -----------------------------------------------------------------------------
-   Theme: Midnight Intelligence (UPDATED — DARK-THEMED SUNLIT REFLECTION)
-   ----------------------------------------------------------------------------- */
 html[data-theme='midnight-intelligence'] {
   color-scheme: dark;
 
-  /* CORE SURFACES (Deep Ocean Reflection) */
+  /* Base Surfaces: Ocean Gray Reflection */
   --background: #1F2426;
   --foreground: #E6E1DC;
-
   --card: #2A3133;
   --card-foreground: #E6E1DC;
-
-  --popover: #323A3D; 
+  --popover: #323A3D;
   --popover-foreground: #E6E1DC;
-
-  /* TEXT MAPPINGS */
+  --secondary: #2F383B;
+  --secondary-foreground: #E6E1DC;
   --muted: #2A3133;
   --muted-foreground: #B8B2AC;
 
-  --table-header-color: rgba(230, 225, 220, 0.55);
-
-  /* BRAND ACCENTS (Sunset Reflection) */
+  /* Brand Accents: Sunset Orange */
   --primary: #F59E72;
   --primary-foreground: #1F2426;
-
   --accent: rgba(245, 158, 114, 0.18);
   --accent-foreground: #E6E1DC;
 
-  --secondary: #2F383B;
-  --secondary-foreground: #E6E1DC;
-
-  /* BORDERS */
+  /* Borders & Status */
   --border: #3E474A;
   --input: #3E474A;
   --ring: #F59E72;
-
-  /* SIDEBAR */
-  --sidebar: #1F2426;
-  --sidebar-border: #3E474A;
-  --sidebar-foreground: #E6E1DC;
-
-  /* PALETTE STATUS COLORS */
-  --info: #6FA6C0;
   --success: #6FAFAF;
   --warning: #D98F99;
-  --neutral: #7A746D;
+  --danger: #D98F99;
+  --info: #6FA6C0;
+  --table-header-color: rgba(230, 225, 220, 0.55);
 
-  /* EMAIL UI SYSTEM */
+  /* Sidebar */
+  --sidebar: #1F2426;
+  --sidebar-foreground: #E6E1DC;
+  --sidebar-border: #3E474A;
+
+  /* Email UI States */
   --email-unread-bg: #2F383B;
-  --email-hover-bg: rgba(245, 158, 114, 0.10);
   --email-selected-bg: rgba(245, 158, 114, 0.18);
-  --email-dot: #F59E72;
+  --email-hover-bg: rgba(245, 158, 114, 0.10);
+
+  /* Midnight Button Mappings */
+  --midnight-btn-bg: #E6E1DC;
+  --midnight-btn-text: #1F2426;
+  --midnight-btn-border: #F59E72;
 }
 
+/* --- Midnight CSS Hard-Fixes --- */
+
+html[data-theme='midnight-intelligence'] body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Kill all white containers, search bars, and utility class leakage */
+html[data-theme='midnight-intelligence'] .bg-white,
+html[data-theme='midnight-intelligence'] .bg-background,
+html[data-theme='midnight-intelligence'] .bg-slate-50,
+html[data-theme='midnight-intelligence'] .bg-card,
+html[data-theme='midnight-intelligence'] .rounded-card-ui,
+html[data-theme='midnight-intelligence'] [role='dialog'],
+html[data-theme='midnight-intelligence'] [data-slot='sheet-content'] {
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* Fix sticky header / tabs / top navigation strips */
+html[data-theme='midnight-intelligence'] .sticky.top-0,
+html[data-theme='midnight-intelligence'] .border-b,
+html[data-theme='midnight-intelligence'] [role='tablist'],
+html[data-theme='midnight-intelligence'] header {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* Fix high-contrast buttons (Respond / AI Suggestion) */
+html[data-theme='midnight-intelligence'] .bg-sky-100,
+html[data-theme='midnight-intelligence'] button[class*='bg-primary/10'] {
+  background-color: rgba(111, 166, 192, 0.25) !important;
+  color: #7FC6DA !important;
+}
+
+/* Email Row Overrides */
+html[data-theme='midnight-intelligence'] .email-row {
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
+}
+
+html[data-theme='midnight-intelligence'] .email-row:hover {
+  background-color: var(--email-hover-bg) !important;
+}
+
+/* Overlay contrast */
+html[data-theme='midnight-intelligence'] [data-slot='sheet-overlay'] {
+  background-color: rgba(10, 12, 14, 0.45) !important;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .bg-sheet-solid {
+    background-color: var(--background) !important;
+  }
+  .text-table-header {
+    font-size: var(--font-table-header);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+  .shadow-action {
+    box-shadow:
+      0 10px 25px -5px rgba(0, 0, 0, 0.08),
+      0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.email-list-grid {
+  display: grid;
+  grid-template-columns: 72px 28px 220px minmax(320px, 1fr) 180px 120px;
+  align-items: center;
+}
+
+.email-row {
+  transition: background 0.18s ease;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
 
 /* -----------------------------------------------------------------------------
    Theme: Sunlit Creator (UNCHANGED)
