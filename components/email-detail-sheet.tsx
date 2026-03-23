@@ -84,7 +84,16 @@ export function EmailDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={(val) => { if (!val) { setMode('default'); onOpenChange(false); } }}>
-      <SheetContent side="right" className="w-[520px] max-w-[95vw] border-l-2 border-[#A8D0D0] bg-[#F4F7F7] p-0 shadow-2xl outline-none">
+      <SheetContent 
+        side="right" 
+        className="w-[520px] max-w-[95vw] border-l-2 border-[#A8D0D0] bg-[#F4F7F7] p-0 shadow-2xl outline-none"
+        onPointerDownOutside={(e) => {
+          // Prevent the sheet from closing if we click the popover portal
+          if ((e.target as HTMLElement).closest('[data-slot="popover-content"]')) {
+            e.preventDefault();
+          }
+        }}
+      >
         <div className="flex h-full flex-col overflow-hidden">
           {/* Header Section */}
           <div className="shrink-0 border-b-2 border-[#A8D0D0]/20 px-10 pb-8 pt-10 bg-white">
@@ -175,9 +184,10 @@ export function EmailDetailSheet({
                     <PopoverContent 
                       side="top" 
                       align="center" 
-                      className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[110]"
+                      className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[150]"
                       onOpenAutoFocus={(e) => e.preventDefault()}
                       onCloseAutoFocus={(e) => e.preventDefault()}
+                      onInteractOutside={(e) => e.preventDefault()}
                     >
                       {[1, 3, 24].map(h => (
                         <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#2D3436] hover:bg-[#7FC6DA]/10 hover:text-[#7FC6DA]" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
@@ -197,9 +207,10 @@ export function EmailDetailSheet({
                   <PopoverPrimitive.Portal>
                     <PopoverContent 
                       side="top" 
-                      className="w-56 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[110]"
+                      className="w-56 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[150]"
                       onOpenAutoFocus={(e) => e.preventDefault()}
                       onCloseAutoFocus={(e) => e.preventDefault()}
+                      onInteractOutside={(e) => e.preventDefault()}
                     >
                       <div className="px-3 py-2 text-[9px] font-black uppercase tracking-tighter text-[#8C867E] border-b-2 border-[#F4F7F7] mb-1 text-center">Assign To</div>
                       {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
