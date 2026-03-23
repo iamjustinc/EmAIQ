@@ -30,14 +30,13 @@ export function EmailList({
 }: EmailListProps) {
   const pathname = usePathname()
 
-  // SAFE FORMATTER: Shows calculated time OR the raw string if calculation fails
   const formatRelativeTime = (timestamp: any) => {
-    if (!timestamp) return '';
+    if (!timestamp) return '---';
     
     const date = new Date(timestamp);
-    
-    // Check if it's a valid date object first
-    if (!isNaN(date.getTime())) {
+    const isValidDate = !isNaN(date.getTime());
+
+    if (isValidDate) {
       const now = new Date();
       const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
       
@@ -49,7 +48,7 @@ export function EmailList({
       return date.toLocaleDateString([], { month: 'short', day: 'numeric' }).toUpperCase();
     }
 
-    // FAIL-SAFE: If it's not a standard date, just show the raw text (e.g., "28 mins ago")
+    // If it's just a string like "28 mins ago", show it as is
     return String(timestamp).toUpperCase();
   };
 
