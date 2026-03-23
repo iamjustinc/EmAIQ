@@ -89,7 +89,6 @@ export default function InboxPage() {
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
           <div className="px-10 pb-8 pt-10">
             <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
-              {/* BUTTON FIXES: Added onClick handlers to update the activeTab state */}
               <KPICard 
                 title="Unread" 
                 value={stats.unread} 
@@ -153,7 +152,8 @@ export default function InboxPage() {
           onOpenChange={setIsDetailsOpen} 
           onArchive={archiveEmail} 
           onSent={markAsSent} 
-          onSnooze={snoozeEmail} 
+          // FIX: Ensure snoozeEmail and markAsSent (for delegate) are correctly linked
+          onSnooze={(id, hours) => snoozeEmail(id, hours)} 
           isDrafting={isDrafting} 
           setIsDrafting={setIsDrafting} 
         />
