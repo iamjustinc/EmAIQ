@@ -14,14 +14,23 @@
 }
 
 /* FORCE DARK SURFACES:
-   Specific override for the Midnight theme to ensure list items and cards 
+   Specific override for the Midnight theme to ensure list items, headers, and cards 
    that use utility classes like 'bg-white' flip to the dark palette.
 */
-.dark[data-theme='midnight-intelligence'] .bg-white,
-.dark[data-theme='midnight-intelligence'] .bg-card,
-.dark[data-theme='midnight-intelligence'] .bg-background {
+[data-theme='midnight-intelligence'] .bg-white,
+[data-theme='midnight-intelligence'] .bg-card,
+[data-theme='midnight-intelligence'] .bg-background,
+[data-theme='midnight-intelligence'] [role="tablist"],
+[data-theme='midnight-intelligence'] header {
   background-color: var(--card) !important;
   color: var(--foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* Specific fix for the white strip behind tabs */
+[data-theme='midnight-intelligence'] .border-b.bg-white,
+[data-theme='midnight-intelligence'] .sticky.top-0 {
+  background-color: var(--background) !important;
   border-color: var(--border) !important;
 }
 
