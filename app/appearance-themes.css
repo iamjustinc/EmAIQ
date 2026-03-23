@@ -2,8 +2,7 @@
    EmailIQ appearance system — tokens per [data-theme], [data-density], [data-font-scale]
    ============================================================================= */
 
-/* 
-   GLOBAL OVERLAY FIX: 
+/* GLOBAL OVERLAY FIX: 
    This ensures Sidebars (Sheet), Popovers, and Dialogs are never transparent.
 */
 [data-theme] .bg-background,
@@ -12,6 +11,18 @@
 [data-theme] .bg-card {
   background-color: var(--background) !important;
   opacity: 1 !important;
+}
+
+/* FORCE DARK SURFACES:
+   Specific override for the Midnight theme to ensure list items and cards 
+   that use utility classes like 'bg-white' flip to the dark palette.
+*/
+.dark[data-theme='midnight-intelligence'] .bg-white,
+.dark[data-theme='midnight-intelligence'] .bg-card,
+.dark[data-theme='midnight-intelligence'] .bg-background {
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
 }
 
 /* -----------------------------------------------------------------------------
@@ -28,72 +39,52 @@ html[data-font-scale='large'] { --font-body: 0.9375rem; --font-label: 0.6875rem;
 /* -----------------------------------------------------------------------------
    Theme: Midnight Intelligence (Sunlit Dark Reflection)
    ----------------------------------------------------------------------------- */
-   html[data-theme='midnight-intelligence'] {
-      color-scheme: dark;
-      --background: #1F2426;         /* Deep ocean gray/black */
-      --foreground: #E6E1DC;         /* Primary off-white text */
-      --card: #2A3133;               /* Slightly lifted surface */
-      --card-foreground: #E6E1DC;
-      --popover: #323A3D;            /* Elevated surface for menus/sheets */
-      --popover-foreground: #E6E1DC;
-      --muted: #2A3133;               /* Muted surface */
-      --muted-foreground: #B8B2AC;    /* Secondary text */
-      --primary: #F59E72;            /* Primary sunset orange */
-      --primary-foreground: #1F2426;  /* Contrast text on orange */
-      --border: #3E474A;             /* Darker border/divider */
-      --sidebar: #1F2426;
-      --sidebar-border: #3E474A;
-      --sidebar-foreground: #E6E1DC;
-    
-      /* Accent Mappings from your Palette */
-      --accent: rgba(245, 158, 114, 0.18); /* Soft orange glow for hovers */
-      --accent-foreground: #E6E1DC;
-      
-      /* Status/Alert Colors mapped to your dark palette */
-      --info: #6FA6C0;               /* Sky blue dark version */
-      --success: #6FAFAF;            /* Seafoam dark version */
-      --warning: #D98F99;            /* Pink/Blush dark version */
-      --neutral: #7A746D;            /* Taupe dark version */
-    }
+html[data-theme='midnight-intelligence'] {
+  color-scheme: dark;
+  --background: #1F2426;         /* Deep ocean gray/black */
+  --foreground: #E6E1DC;         /* Primary off-white text */
+  --card: #2A3133;               /* Slightly lifted surface */
+  --card-foreground: #E6E1DC;
+  --popover: #323A3D;            /* Elevated surface for menus/sheets */
+  --popover-foreground: #E6E1DC;
+  --muted: #2A3133;               /* Muted surface */
+  --muted-foreground: #B8B2AC;    /* Secondary text */
+  --primary: #F59E72;            /* Primary sunset orange */
+  --primary-foreground: #1F2426;  /* Contrast text on orange */
+  --border: #3E474A;             /* Darker border/divider */
+  --sidebar: #1F2426;
+  --sidebar-border: #3E474A;
+  --sidebar-foreground: #E6E1DC;
 
-/* -----------------------------------------------------------------------------
-   Theme: Creator Editorial
-   ----------------------------------------------------------------------------- */
-html[data-theme='creator-editorial'] {
-  color-scheme: light;
-  --background: #f7f1eb;
-  --foreground: #201b18;
-  --card: #fffdf9;
-  --card-foreground: #201b18;
-  --popover: #ffffff;
-  --popover-foreground: #201b18;
-  --muted: #efe6dd;
-  --muted-foreground: #6e6259;
-  --primary: #e8865a;
-  --primary-foreground: #ffffff;
-  --border: #e8ddd2;
-  --sidebar: #f3ebe4;
-  --sidebar-border: #e8ddd2;
+  /* Accent Mappings from your Palette */
+  --accent: rgba(245, 158, 114, 0.18); /* Soft orange glow for hovers */
+  --accent-foreground: #E6E1DC;
+  
+  /* Status/Alert Colors mapped to your dark palette */
+  --info: #6FA6C0;               /* Sky blue dark version */
+  --success: #6FAFAF;            /* Seafoam dark version */
+  --warning: #D98F99;            /* Pink/Blush dark version */
+  --neutral: #7A746D;            /* Taupe dark version */
 }
 
 /* -----------------------------------------------------------------------------
    Theme: Sunlit Creator (Ocean Sunset Palette) — SOLID CONTRAST FIX
    ----------------------------------------------------------------------------- */
-   html[data-theme='sunlit-creator'] {
-      color-scheme: light;
-      --background: #F4F7F7; /* Foam White */
-      --foreground: #2D3436; /* Dark Charcoal */
-      --card: #FFFFFF;
-      --card-foreground: #2D3436;
-      --popover: #FFFFFF;
-      --popover-foreground: #2D3436;
-      --muted: #F6B3C4; /* Sunset Pink - Solid */
-      --muted-foreground: #4A4A4A; /* Darker Greige for better reading */
-      --primary: #7FC6DA; /* Ocean Blue - Saturated */
-      --primary-foreground: #FFFFFF;
-      --border: #A8D0D0; /* Seafoam */
-      --sidebar: #ECD7D1; /* Blush Beige */
-      --sidebar-border: #A8A29A; /* Warm Greige */
-      --accent: #E1F0F0; /* Solid light aqua for row hovers */
-      --accent-foreground: #2D3436;
-    }
+html[data-theme='sunlit-creator'] {
+  color-scheme: light;
+  --background: #F4F7F7; /* Foam White */
+  --foreground: #2D3436; /* Dark Charcoal */
+  --card: #FFFFFF;
+  --card-foreground: #2D3436;
+  --popover: #FFFFFF;
+  --popover-foreground: #2D3436;
+  --muted: #F6B3C4; /* Sunset Pink - Solid */
+  --muted-foreground: #4A4A4A; /* Darker Greige for better reading */
+  --primary: #7FC6DA; /* Ocean Blue - Saturated */
+  --primary-foreground: #FFFFFF;
+  --border: #A8D0D0; /* Seafoam */
+  --sidebar: #ECD7D1; /* Blush Beige */
+  --sidebar-border: #A8A29A; /* Warm Greige */
+  --accent: #E1F0F0; /* Solid light aqua for row hovers */
+  --accent-foreground: #2D3436;
+}

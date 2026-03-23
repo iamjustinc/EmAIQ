@@ -52,18 +52,24 @@ function parseStored(json: string | null): Partial<AppearanceState> {
 function applyToDocument(state: AppearanceState) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
+  
+  // Set data attributes for CSS variable targeting
   root.dataset.theme = state.themePreset;
   root.dataset.density = state.density;
   root.dataset.fontScale = state.fontScale;
 
-  // Only light themes remaining are Editorial and your new Sunlit
+  // Midnight Intelligence is NOT a light theme
   const lightThemes: ThemePresetId[] = [
     'creator-editorial',
     'sunlit-creator',
   ];
 
-  root.classList.toggle('dark', !lightThemes.includes(state.themePreset));
-  root.classList.toggle('light', lightThemes.includes(state.themePreset));
+  const isLight = lightThemes.includes(state.themePreset);
+
+  // Sync Tailwind .dark class and browser color scheme
+  root.classList.toggle('dark', !isLight);
+  root.classList.toggle('light', isLight);
+  root.style.colorScheme = isLight ? 'light' : 'dark';
 }
 
 function persist(state: AppearanceState) {
@@ -74,9 +80,7 @@ function persist(state: AppearanceState) {
   }
 }
 
-/** Global appearance / theme / density / font-scale provider. */
 export function AppearanceProvider({ children }: { children: React.ReactNode }) {
-  // Initialize with sunlit-creator as the hard default
   const [state, setState] = useState<AppearanceState>({
     ...DEFAULT_APPEARANCE,
     themePreset: 'sunlit-creator'
@@ -93,7 +97,6 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
       ...stored,
     };
 
-    // FORCE OVERRIDE: If the user was on the old default, move them to Sunlit
     if (next.themePreset === 'creator-editorial' || !next.themePreset) {
       next.themePreset = 'sunlit-creator';
     }
@@ -148,14 +151,8 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
 
 export function useAppearanceSettings(): AppearanceContextValue {
   const ctx = useContext(AppearanceContext);
-  if (!ctx) {
-    throw new Error('useAppearanceSettings must be used within AppearanceProvider');
-  }
+  if (!ctx) throw new Error('useAppearanceSettings must be used within AppearanceProvider');
   return ctx;
 }
 
 export { AppearanceProvider as AppearanceSettingsProvider };
-
-export function useAppearanceSettingsOptional(): AppearanceContextValue | null {
-  return useContext(AppearanceContext) ?? null;
-}
