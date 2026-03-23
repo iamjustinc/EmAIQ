@@ -42,7 +42,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
         </div>
       )}
 
-      <div className="grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky top-0 z-20">
+      <div className="grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky top-0 z-20">
         {['PRI', '', 'SENDER', 'MESSAGE DETAIL', 'AI SUGGESTION', 'RECEIVED'].map((h, i) => (
           <div key={i} className="text-[9px] font-black tracking-[0.2em] text-[#8C867E] uppercase">{h}</div>
         ))}
@@ -54,12 +54,12 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
             key={email.id}
             onClick={() => onSelectEmail(email)}
             className={cn(
-              'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-4 py-4 cursor-pointer transition-all my-1 rounded-2xl border',
+              'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-4 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2',
               selectedEmail?.id === email.id 
-                ? 'bg-white border-[#7FC6DA] ring-2 ring-[#7FC6DA]/20 shadow-lg scale-[1.01] z-10' 
+                ? 'bg-white border-[#7FC6DA] ring-4 ring-[#7FC6DA]/10 shadow-lg scale-[1.01] z-10' 
                 : email.isRead 
-                  ? 'bg-[#F4F7F7]/50 border-transparent' 
-                  : 'bg-white border-[#A8D0D0]/30 shadow-sm hover:border-[#7FC6DA]/50'
+                  ? 'bg-[#F4F7F7] border-transparent opacity-80' 
+                  : 'bg-white border-[#A8D0D0]/50 shadow-sm hover:border-[#7FC6DA]/50'
             )}
           >
             <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
             <div className={cn("text-[13px] truncate pr-8 font-medium", email.isRead ? "text-[#8C867E]/70" : "text-[#2D3436]/90")}>{email.subject}</div>
             <div className="flex">
               <span className={cn(
-                "px-3 py-1 rounded-full text-[9px] font-black tracking-widest border-2",
+                "px-3 py-1 rounded-full text-[9px] font-black tracking-widest border-2 shadow-sm",
                 email.suggestedAction === 'RESPOND' 
                   ? "bg-[#F6B3C4] border-[#F6B3C4] text-white" 
                   : "bg-[#7FC6DA] border-[#7FC6DA] text-white" 
