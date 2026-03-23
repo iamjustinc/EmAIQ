@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import './appearance-themes.css';
 
+/* =============================================================================
+   1. ROOT VARIABLES & LIGHT MODE BASE
+   ============================================================================= */
 :root {
   --radius: 0.75rem;
   --app-gap: 1rem;
@@ -22,6 +24,7 @@
   --font-kpi: 1.75rem;
   --font-table-header: 0.5625rem;
 
+  /* Sunlit Creator / Light Base */
   --background: #f7f1eb;
   --foreground: #201b18;
   --card: #ffffff;
@@ -44,113 +47,71 @@
   --warning: #d89a3d;
   --danger: #d95d5d;
   --info: #4da3d9;
-
   --table-header-color: rgba(32, 27, 24, 0.55);
 }
 
-/* =========================
-   MIDNIGHT THEME — FULL FIX
-   ========================= */
+/* =============================================================================
+   2. MIDNIGHT INTELLIGENCE — OCEAN GRAY PALETTE (THE FIX)
+   ============================================================================= */
 html[data-theme='midnight-intelligence'] {
   color-scheme: dark;
 
-  /* base surfaces */
-  --background: #07101f;
-  --foreground: #e8eef7;
+  /* Surfaces: Ocean Gray */
+  --background: #1F2426;
+  --foreground: #E6E1DC;
+  --card: #2A3133;
+  --card-foreground: #E6E1DC;
+  --popover: #323A3D;
+  --popover-foreground: #E6E1DC;
+  --secondary: #2F383B;
+  --secondary-foreground: #E6E1DC;
+  --muted: #2A3133;
+  --muted-foreground: #B8B2AC;
 
-  --card: #0c182b;
-  --card-foreground: #e8eef7;
+  /* Brand Accents: Sunset Orange */
+  --primary: #F59E72;
+  --primary-foreground: #1F2426;
+  --accent: rgba(245, 158, 114, 0.18);
+  --accent-foreground: #E6E1DC;
 
-  --popover: #10203a;
-  --popover-foreground: #e8eef7;
+  /* Borders & Status */
+  --border: #3E474A;
+  --input: #3E474A;
+  --ring: #F59E72;
+  --success: #6FAFAF;
+  --warning: #D98F99;
+  --danger: #D98F99;
+  --info: #6FA6C0;
+  --table-header-color: rgba(230, 225, 220, 0.55);
 
-  --secondary: #12233f;
-  --secondary-foreground: #d7e4f7;
+  --sidebar: #1F2426;
+  --sidebar-foreground: #E6E1DC;
+  --sidebar-border: #3E474A;
 
-  --muted: #13233b;
-  --muted-foreground: #8ea1bd;
+  --email-unread-bg: #2F383B;
+  --email-selected-bg: rgba(245, 158, 114, 0.18);
+  --email-hover-bg: rgba(245, 158, 114, 0.10);
 
-  --primary: #7fd3f7;
-  --primary-foreground: #07101f;
-
-  --accent: rgba(127, 211, 247, 0.12);
-  --accent-foreground: #e8eef7;
-
-  --destructive: #f28ea8;
-  --border: #1f3558;
-  --input: #1f3558;
-  --ring: #7fd3f7;
-
-  --success: #7fd3f7;
-  --warning: #f4b6c6;
-  --danger: #f28ea8;
-  --info: #7fd3f7;
-
-  --table-header-color: rgba(232, 238, 247, 0.56);
-
-  /* sidebar */
-  --sidebar: #07101f;
-  --sidebar-foreground: #e8eef7;
-  --sidebar-border: #1a2d4a;
-  --sidebar-accent: #0f1d33;
-  --sidebar-accent-foreground: #7fd3f7;
-
-  /* email states */
-  --email-unread-bg: #11213b;
-  --email-selected-bg: #142846;
-  --email-hover-bg: rgba(127, 211, 247, 0.08);
-
-  /* midnight button tones */
-  --midnight-btn-bg: #f6fbff;
-  --midnight-btn-text: #1a2433;
-  --midnight-btn-border: #8ad6f6;
-
-  --midnight-btn-muted-bg: #2d3940;
-  --midnight-btn-muted-text: #f4f8fb;
-  --midnight-btn-muted-border: #2d3940;
-
-  --midnight-btn-danger-bg: #30293c;
-  --midnight-btn-danger-text: #f07f8d;
-  --midnight-btn-danger-border: #f2a7bf;
+  --midnight-btn-bg: #E6E1DC;
+  --midnight-btn-text: #1F2426;
+  --midnight-btn-border: #F59E72;
 }
 
-/* midnight global surface corrections */
-html[data-theme='midnight-intelligence'] body {
-  background-color: var(--background);
-  color: var(--foreground);
-}
-
-html[data-theme='midnight-intelligence'] .bg-background {
-  background-color: var(--background) !important;
-  color: var(--foreground) !important;
-}
-
+/* Hard-Fixes for Midnight Theme to prevent white leakage */
+html[data-theme='midnight-intelligence'] body,
+html[data-theme='midnight-intelligence'] .bg-background,
+html[data-theme='midnight-intelligence'] .bg-white,
 html[data-theme='midnight-intelligence'] .bg-card,
-html[data-theme='midnight-intelligence'] [data-slot='sheet-content'],
-html[data-theme='midnight-intelligence'] [role='dialog'] {
-  background-color: var(--card) !important;
-  color: var(--card-foreground) !important;
-  border-color: var(--border) !important;
-}
-
-html[data-theme='midnight-intelligence'] .bg-popover {
-  background-color: var(--popover) !important;
-  color: var(--popover-foreground) !important;
-  border-color: var(--border) !important;
-}
-
-/* fix white KPI cards / top boxes */
 html[data-theme='midnight-intelligence'] .rounded-card-ui,
-html[data-theme='midnight-intelligence'] .shadow-action,
-html[data-theme='midnight-intelligence'] .bg-white {
+html[data-theme='midnight-intelligence'] [role='dialog'],
+html[data-theme='midnight-intelligence'] [data-slot='sheet-content'] {
   background-color: var(--card) !important;
   color: var(--foreground) !important;
   border-color: var(--border) !important;
 }
 
-/* fix sticky header / tabs / white strips */
 html[data-theme='midnight-intelligence'] .sticky.top-0,
-html[data-theme='midnight-intelligence'] .border-b.bg-white,
+html[data-theme='midnight-intelligence'] .border-b,
 html[data-theme='midnight-intelligence'] [role='tablist'],
 html[data-theme='midnight-intelligence'] header {
   background-color: var(--background) !important;
@@ -158,87 +119,38 @@ html[data-theme='midnight-intelligence'] header {
   border-color: var(--border) !important;
 }
 
-/* fix table header row */
-html[data-theme='midnight-intelligence'] .email-list-header {
-  background-color: var(--background) !important;
-  color: var(--foreground) !important;
-  border-color: var(--border) !important;
-}
-
-/* fix email rows */
 html[data-theme='midnight-intelligence'] .email-row {
   background-color: var(--card) !important;
   color: var(--foreground) !important;
 }
 
-html[data-theme='midnight-intelligence'] .email-row:hover {
-  background-color: var(--email-hover-bg) !important;
+/* =============================================================================
+   3. SUNLIT CREATOR THEME
+   ============================================================================= */
+html[data-theme='sunlit-creator'] {
+  color-scheme: light;
+  --background: #F4F7F7;
+  --foreground: #2D3436;
+  --card: #FFFFFF;
+  --card-foreground: #2D3436;
+  --popover: #FFFFFF;
+  --popover-foreground: #2D3436;
+  --muted: #F6B3C4;
+  --muted-foreground: #4A4A4A;
+  --primary: #7FC6DA;
+  --primary-foreground: #FFFFFF;
+  --border: #A8D0D0;
+  --sidebar: #ECD7D1;
+  --sidebar-border: #A8A29A;
+  --accent: #E1F0F0;
+  --accent-foreground: #2D3436;
 }
 
-/* stronger unread tone */
-html[data-theme='midnight-intelligence'] .email-row[class*='bg-\\[color\\:color-mix'] {
-  background-color: var(--email-unread-bg) !important;
-}
-
-/* fix intelligence report card inside sheet */
-html[data-theme='midnight-intelligence'] .rounded-\[2\.5rem\],
-html[data-theme='midnight-intelligence'] .rounded-\[2rem\] {
-  border-color: var(--border) !important;
-}
-
-/* midnight buttons: light cards on dark background */
-html[data-theme='midnight-intelligence'] button[class*='bg-primary'],
-html[data-theme='midnight-intelligence'] .bg-primary {
-  background-color: var(--midnight-btn-bg) !important;
-  color: var(--midnight-btn-text) !important;
-  border-color: var(--midnight-btn-border) !important;
-}
-
-/* keep text-primary accents blue */
-html[data-theme='midnight-intelligence'] .text-primary {
-  color: var(--primary) !important;
-}
-
-html[data-theme='midnight-intelligence'] .border-primary\/25,
-html[data-theme='midnight-intelligence'] .border-primary\/30 {
-  border-color: var(--midnight-btn-border) !important;
-}
-
-/* muted white action buttons */
-html[data-theme='midnight-intelligence'] button[class*='variant="outline"'],
-html[data-theme='midnight-intelligence'] .bg-muted\/10,
-html[data-theme='midnight-intelligence'] .bg-muted\/20,
-html[data-theme='midnight-intelligence'] .bg-muted\/30,
-html[data-theme='midnight-intelligence'] .bg-muted\/40 {
-  background-color: var(--midnight-btn-bg) !important;
-  color: var(--midnight-btn-text) !important;
-  border-color: var(--midnight-btn-border) !important;
-}
-
-/* archive button */
-html[data-theme='midnight-intelligence'] .text-destructive {
-  color: var(--midnight-btn-danger-text) !important;
-}
-
-html[data-theme='midnight-intelligence'] .border-destructive\/30 {
-  border-color: var(--midnight-btn-danger-border) !important;
-}
-
-html[data-theme='midnight-intelligence'] .bg-destructive\/5,
-html[data-theme='midnight-intelligence'] .bg-destructive\/10 {
-  background-color: var(--midnight-btn-danger-bg) !important;
-}
-
-/* overlay */
-html[data-theme='midnight-intelligence'] [data-slot='sheet-overlay'] {
-  background-color: rgba(2, 8, 18, 0.42) !important;
-}
-
+/* =============================================================================
+   4. LAYERS, UTILITIES & ANIMATIONS
+   ============================================================================= */
 @layer base {
-  * {
-    border-color: var(--border);
-  }
-
+  * { border-color: var(--border); }
   body {
     background-color: var(--background);
     color: var(--foreground);
@@ -247,21 +159,15 @@ html[data-theme='midnight-intelligence'] [data-slot='sheet-overlay'] {
 }
 
 @layer utilities {
-  .bg-sheet-solid {
-    background-color: var(--background) !important;
-  }
-
+  .bg-sheet-solid { background-color: var(--background) !important; }
   .text-table-header {
     font-size: var(--font-table-header);
     letter-spacing: 0.22em;
     text-transform: uppercase;
     font-weight: 800;
   }
-
   .shadow-action {
-    box-shadow:
-      0 10px 25px -5px rgba(0, 0, 0, 0.08),
-      0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -271,30 +177,13 @@ html[data-theme='midnight-intelligence'] [data-slot='sheet-overlay'] {
   align-items: center;
 }
 
-.email-row {
-  transition: background 0.18s ease;
-}
+.email-row { transition: background 0.18s ease; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-.email-row:hover {
-  background: var(--accent);
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Point 4 Animation */
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
+.animate-float { animation: float 4s ease-in-out infinite; }
