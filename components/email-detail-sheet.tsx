@@ -4,8 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Popover, PopoverContent, PopoverTrigger, PopoverAnchor } from '@/components/ui/popover'
-import * as PopoverPrimitive from "@radix-ui/react-popover"
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Archive,
   Reply,
@@ -171,15 +170,19 @@ export function EmailDetailSheet({
                       </div>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverPrimitive.Portal>
-                    <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[110]">
-                      {[1, 3, 24].map(h => (
-                        <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#2D3436] hover:bg-[#7FC6DA]/10 hover:text-[#7FC6DA]" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
-                          {h === 24 ? 'Tomorrow' : `${h} Hours`}
-                        </Button>
-                      ))}
-                    </PopoverContent>
-                  </PopoverPrimitive.Portal>
+                  <PopoverContent 
+                    side="top" 
+                    align="center" 
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                    onCloseAutoFocus={(e) => e.preventDefault()}
+                    className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[110]"
+                  >
+                    {[1, 3, 24].map(h => (
+                      <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#2D3436] hover:bg-[#7FC6DA]/10 hover:text-[#7FC6DA]" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
+                        {h === 24 ? 'Tomorrow' : `${h} Hours`}
+                      </Button>
+                    ))}
+                  </PopoverContent>
                 </Popover>
 
                 <Popover>
@@ -188,16 +191,19 @@ export function EmailDetailSheet({
                       Delegate
                     </Button>
                   </PopoverTrigger>
-                  <PopoverPrimitive.Portal>
-                    <PopoverContent side="top" className="w-56 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[110]">
-                      <div className="px-3 py-2 text-[9px] font-black uppercase tracking-tighter text-[#8C867E] border-b-2 border-[#F4F7F7] mb-1 text-center">Assign To</div>
-                      {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
-                        <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA]/10" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
-                          {team}
-                        </Button>
-                      ))}
-                    </PopoverContent>
-                  </PopoverPrimitive.Portal>
+                  <PopoverContent 
+                    side="top" 
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                    onCloseAutoFocus={(e) => e.preventDefault()}
+                    className="w-56 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[110]"
+                  >
+                    <div className="px-3 py-2 text-[9px] font-black uppercase tracking-tighter text-[#8C867E] border-b-2 border-[#F4F7F7] mb-1 text-center">Assign To</div>
+                    {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
+                      <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA]/10" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
+                        {team}
+                      </Button>
+                    ))}
+                  </PopoverContent>
                 </Popover>
 
                 <Button variant="outline" className="h-16 rounded-2xl border-2 border-[#F6B3C4] text-[#D95D5D] bg-[#F6B3C4]/15 uppercase text-[11px] font-black tracking-widest hover:bg-[#F6B3C4] hover:text-white transition-all shadow-sm" onClick={() => triggerSuccess('archive', () => onArchive(email.id))}>
