@@ -87,12 +87,6 @@ export function EmailDetailSheet({
       <SheetContent 
         side="right" 
         className="w-[520px] max-w-[95vw] border-l-2 border-[#A8D0D0] bg-[#F4F7F7] p-0 shadow-2xl outline-none"
-        onPointerDownOutside={(e) => {
-          // Prevent the sheet from closing if we click the popover portal
-          if ((e.target as HTMLElement).closest('[data-slot="popover-content"]')) {
-            e.preventDefault();
-          }
-        }}
       >
         <div className="flex h-full flex-col overflow-hidden">
           {/* Header Section */}
@@ -155,7 +149,7 @@ export function EmailDetailSheet({
                     <span>Original Message</span>
                     {showFullEmail ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </button>
-                  {showFullEmail && <div className="mt-3 rounded-[1.5rem] border-2 border-[#A8D0D0]/20 bg-white/80 p-6 text-[14px] leading-relaxed text-[#5D5D5D] italic">{email.body || email.bodyPreview}</div>}
+                  {showFullEmail && <div className="mt-3 rounded-[1.5rem] border-2 border-[#A8D0D0]/20 bg-white/80 p-6 text-[14px] font-medium leading-relaxed text-[#5D5D5D] italic">{email.body || email.bodyPreview}</div>}
                 </div>
               </div>
             )}
@@ -171,7 +165,8 @@ export function EmailDetailSheet({
                   </div>
                 </Button>
                 
-                <Popover>
+                {/* LATER POPOVER - modal={false} is key here */}
+                <Popover modal={false}>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-24 rounded-[2rem] border-2 border-[#A8D0D0] bg-[#F4F7F7] text-[#2D3436] hover:border-[#7FC6DA] shadow-sm">
                       <div className="flex flex-col items-center gap-2">
@@ -180,46 +175,37 @@ export function EmailDetailSheet({
                       </div>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverPrimitive.Portal>
-                    <PopoverContent 
-                      side="top" 
-                      align="center" 
-                      className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[150]"
-                      onOpenAutoFocus={(e) => e.preventDefault()}
-                      onCloseAutoFocus={(e) => e.preventDefault()}
-                      onInteractOutside={(e) => e.preventDefault()}
-                    >
-                      {[1, 3, 24].map(h => (
-                        <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#2D3436] hover:bg-[#7FC6DA]/10 hover:text-[#7FC6DA]" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
-                          {h === 24 ? 'Tomorrow' : `${h} Hours`}
-                        </Button>
-                      ))}
-                    </PopoverContent>
-                  </PopoverPrimitive.Portal>
+                  <PopoverContent 
+                    side="top" 
+                    align="center" 
+                    className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[300]"
+                  >
+                    {[1, 3, 24].map(h => (
+                      <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#2D3436] hover:bg-[#7FC6DA]/10 hover:text-[#7FC6DA]" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
+                        {h === 24 ? 'Tomorrow' : `${h} Hours`}
+                      </Button>
+                    ))}
+                  </PopoverContent>
                 </Popover>
 
-                <Popover>
+                {/* DELEGATE POPOVER - modal={false} is key here */}
+                <Popover modal={false}>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-16 rounded-2xl border-2 border-[#A8D0D0] bg-[#F4F7F7] text-[#2D3436] uppercase text-[11px] font-black tracking-widest hover:border-[#7FC6DA] shadow-sm">
                       Delegate
                     </Button>
                   </PopoverTrigger>
-                  <PopoverPrimitive.Portal>
-                    <PopoverContent 
-                      side="top" 
-                      className="w-56 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[150]"
-                      onOpenAutoFocus={(e) => e.preventDefault()}
-                      onCloseAutoFocus={(e) => e.preventDefault()}
-                      onInteractOutside={(e) => e.preventDefault()}
-                    >
-                      <div className="px-3 py-2 text-[9px] font-black uppercase tracking-tighter text-[#8C867E] border-b-2 border-[#F4F7F7] mb-1 text-center">Assign To</div>
-                      {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
-                        <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA]/10" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
-                          {team}
-                        </Button>
-                      ))}
-                    </PopoverContent>
-                  </PopoverPrimitive.Portal>
+                  <PopoverContent 
+                    side="top" 
+                    className="w-56 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[300]"
+                  >
+                    <div className="px-3 py-2 text-[9px] font-black uppercase tracking-tighter text-[#8C867E] border-b-2 border-[#F4F7F7] mb-1 text-center">Assign To</div>
+                    {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
+                      <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA]/10" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
+                        {team}
+                      </Button>
+                    ))}
+                  </PopoverContent>
                 </Popover>
 
                 <Button variant="outline" className="h-16 rounded-2xl border-2 border-[#F6B3C4] text-[#D95D5D] bg-[#F6B3C4]/15 uppercase text-[11px] font-black tracking-widest hover:bg-[#F6B3C4] hover:text-white transition-all shadow-sm" onClick={() => triggerSuccess('archive', () => onArchive(email.id))}>
