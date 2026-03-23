@@ -377,31 +377,31 @@ export default function SettingsPage() {
                   </div>
 
                   <form onSubmit={handleProfileSave} className="space-y-6">
-                    <div className="grid gap-6">
-                      <div className="space-y-2">
-                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
-                          Logged-In Email
-                        </Label>
-                        <div className="h-12 rounded-xl border border-border/70 bg-muted/50 px-4 flex items-center text-sm text-muted-foreground">
-                          {LOGGED_IN_EMAIL}
-                        </div>
-                        <p className="ml-1 text-[10px] text-muted-foreground">
-                          This email is currently connected to your account.
-                        </p>
-                      </div>
+                  <div className="grid gap-6">
+  <div className="space-y-2">
+    <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+      Preferred First Name
+    </Label>
+    <Input
+      value={firstNameDraft}
+      onChange={(e) => setFirstNameDraft(e.target.value)}
+      className="h-12 rounded-xl border-border bg-muted/30"
+      placeholder="e.g. Justin"
+    />
+  </div>
 
-                      <div className="space-y-2">
-                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
-                          Preferred First Name
-                        </Label>
-                        <Input
-                          value={firstNameDraft}
-                          onChange={(e) => setFirstNameDraft(e.target.value)}
-                          className="h-12 rounded-xl border-border bg-muted/30"
-                          placeholder="e.g. Justin"
-                        />
-                      </div>
-                    </div>
+  <div className="space-y-2">
+    <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+      Logged-In Email
+    </Label>
+    <div className="h-12 rounded-xl border border-border/80 bg-[#E7ECEC] px-4 flex items-center text-sm font-medium text-[#5F6B6B]">
+      {LOGGED_IN_EMAIL}
+    </div>
+    <p className="ml-1 text-[10px] text-muted-foreground">
+      This email is currently connected to your account.
+    </p>
+  </div>
+</div>
 
                     <Button
                       type="submit"
@@ -688,98 +688,101 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {showLogoutConfirm && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4 animate-in fade-in duration-200">
-            <div className="w-full max-w-md rounded-[2rem] border border-border bg-card p-8 shadow-2xl animate-in zoom-in-95 duration-200">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F6B3C4]/15 text-[#D95D5D]">
-                  <LogOut className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-black tracking-tight text-foreground">Log Out?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Are you sure you want to log out of this account?
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowLogoutConfirm(false)}
-                  className="h-12 flex-1 rounded-xl"
-                  disabled={isLoggingOut}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleConfirmLogout}
-                  className="h-12 flex-1 rounded-xl bg-[#D95D5D] text-white hover:bg-[#c94d4d]"
-                  disabled={isLoggingOut}
-                >
-                  {isLoggingOut ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Logging Out
-                    </>
-                  ) : (
-                    'Yes, Log Out'
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {showSwitchAccount && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4 animate-in fade-in duration-200">
-            <div className="w-full max-w-md rounded-[2rem] border border-border bg-card p-8 shadow-2xl animate-in zoom-in-95 duration-200">
-              <div className="mb-6 flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-lg font-black tracking-tight text-foreground">Switch Account</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Choose a sign-in method for another account.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowSwitchAccount(false)}
-                  className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
+  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4 animate-in fade-in duration-200">
+    <div className="w-full max-w-md rounded-[2rem] border border-border bg-card p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-black tracking-tight text-foreground">Switch Account</h3>
+          <p className="text-sm text-muted-foreground">
+            Choose a sign-in method for another account.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowSwitchAccount(false)}
+          className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
 
-              <div className="space-y-3">
-                <button
-                  type="button"
-                  className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
-                >
-                  <Chrome className="h-5 w-5" />
-                  Continue with Google
-                </button>
+      <div className="space-y-3">
+        <button
+          type="button"
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
+        >
+          <Chrome className="h-5 w-5" />
+          Continue with Google
+        </button>
 
-                <button
-                  type="button"
-                  className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
-                >
-                  <Mail className="h-5 w-5" />
-                  Continue with Outlook
-                </button>
+        <button
+          type="button"
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
+        >
+          <Mail className="h-5 w-5" />
+          Continue with Outlook
+        </button>
 
-                <button
-                  type="button"
-                  className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
-                >
-                  <KeyRound className="h-5 w-5" />
-                  Continue with Email
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <button
+          type="button"
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
+        >
+          <KeyRound className="h-5 w-5" />
+          Continue with Email
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{showSwitchAccount && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/45 px-4 backdrop-blur-sm">
+    <div className="relative w-full max-w-md rounded-[2rem] border border-[#D7E6E6] bg-white p-8 shadow-[0_25px_80px_rgba(0,0,0,0.18)]">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-black tracking-tight text-[#2D3436]">Switch Account</h3>
+          <p className="text-sm text-[#6B7280]">
+            Choose a sign-in method for another account.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowSwitchAccount(false)}
+          className="rounded-full p-2 text-[#6B7280] transition-colors hover:bg-[#F3F4F6] hover:text-[#2D3436]"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        <button
+          type="button"
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-[#D7E6E6] bg-white text-sm font-bold text-[#2D3436] transition-colors hover:bg-[#F8FAFA]"
+        >
+          <Chrome className="h-5 w-5" />
+          Continue with Google
+        </button>
+
+        <button
+          type="button"
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-[#D7E6E6] bg-white text-sm font-bold text-[#2D3436] transition-colors hover:bg-[#F8FAFA]"
+        >
+          <Mail className="h-5 w-5" />
+          Continue with Outlook
+        </button>
+
+        <button
+          type="button"
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-[#D7E6E6] bg-white text-sm font-bold text-[#2D3436] transition-colors hover:bg-[#F8FAFA]"
+        >
+          <KeyRound className="h-5 w-5" />
+          Continue with Email
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       </div>
     </AppShell>
   );
