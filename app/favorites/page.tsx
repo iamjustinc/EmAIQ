@@ -16,7 +16,6 @@ export default function FavoritesPage() {
   const [activeTab, setActiveTab] = useState('all');
 
   const favoriteEmails = (allEmails || []).filter(e => e.isFavorite);
-
   const currentSelectedEmail = favoriteEmails.find(e => e.id === selectedEmailId) || null;
 
   const handleSelectEmail = (email: Email) => {
@@ -30,8 +29,8 @@ export default function FavoritesPage() {
     <AppShell>
       <div className="flex h-full flex-col bg-background">
         <Header title="Favorites" hideSearch />
-        <main className="flex w-full flex-1 flex-col overflow-hidden p-8">
-          <div className="flex flex-1 flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
+        <main className="flex w-full flex-1 flex-col overflow-hidden px-10 pb-10 pt-6">
+          <div className="relative flex flex-1 flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
             <EmailList 
               emails={favoriteEmails} 
               selectedEmail={currentSelectedEmail} 

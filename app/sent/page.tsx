@@ -15,9 +15,7 @@ export default function SentPage() {
   const [isDrafting, setIsDrafting] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
 
-  // Updated logic: Check both status and isSent boolean
   const sentEmails = (allEmails || []).filter(e => e.status === 'sent' || e.isSent);
-
   const currentSelectedEmail = sentEmails.find(e => e.id === selectedEmailId) || null;
 
   const handleSelectEmail = (email: Email) => {
@@ -31,8 +29,8 @@ export default function SentPage() {
     <AppShell>
       <div className="flex h-full flex-col bg-background">
         <Header title="Sent" hideSearch />
-        <main className="flex w-full flex-1 flex-col overflow-hidden p-8">
-          <div className="flex flex-1 flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
+        <main className="flex w-full flex-1 flex-col overflow-hidden px-10 pb-10 pt-6">
+          <div className="relative flex flex-1 flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
             <EmailList 
               emails={sentEmails} 
               selectedEmail={currentSelectedEmail} 

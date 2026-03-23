@@ -93,13 +93,19 @@ export function EmailList({
         </div>
       )}
 
-      <div className="grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky top-[62px] z-20">
+      {/* FIXED: Added dynamic top position and increased z-index to ensure it stays above rows */}
+      <div 
+        className={cn(
+          "grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky z-40",
+          hideTabs ? "top-0" : "top-[62px]"
+        )}
+      >
         {['PRI', '', 'SENDER', 'MESSAGE DETAIL', 'AI SUGGESTION', 'RECEIVED'].map((h, i) => (
           <div key={i} className="text-[9px] font-black tracking-[0.2em] text-[#8C867E] uppercase">{h}</div>
         ))}
       </div>
 
-      <div className="divide-y divide-[#A8D0D0]/20 px-2">
+      <div className="divide-y divide-[#A8D0D0]/20 px-2 relative z-10">
         {filteredEmails.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-[#8C867E]">
             <p className="text-[10px] font-black uppercase tracking-widest opacity-50">Folder is empty</p>
@@ -112,7 +118,7 @@ export function EmailList({
               className={cn(
                 'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-4 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2',
                 selectedEmail?.id === email.id 
-                  ? 'bg-white border-[#7FC6DA] ring-4 ring-[#7FC6DA]/10 shadow-lg scale-[1.01] z-10' 
+                  ? 'bg-white border-[#7FC6DA] ring-4 ring-[#7FC6DA]/10 shadow-lg scale-[1.01] z-30' 
                   : email.isRead 
                     ? 'bg-[#F4F7F7] border-transparent opacity-80' 
                     : 'bg-white border-[#A8D0D0]/50 shadow-sm hover:border-[#7FC6DA]/50'
