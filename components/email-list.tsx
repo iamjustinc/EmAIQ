@@ -20,14 +20,15 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
 
     // 1. Filter by Page Route
     if (pathname === '/sent') {
-      list = list.filter(e => e.status === 'sent')
+      list = list.filter(e => e.status === 'sent' || e.isSent)
     } else if (pathname === '/favorites') {
       list = list.filter(e => e.isFavorite)
     } else if (pathname === '/archived') {
-      list = list.filter(e => e.status === 'archived')
+      // FIX: Check for isActioned instead of status
+      list = list.filter(e => e.isActioned === true)
     } else {
-      // Default Inbox: Hide archived and sent
-      list = list.filter(e => e.status !== 'archived' && e.status !== 'sent')
+      // Default Inbox: Hide archived (isActioned) and sent
+      list = list.filter(e => !e.isActioned && e.status !== 'sent' && !e.isSent)
     }
 
     // 2. Filter by Top Tabs (All, Action, Noise)
