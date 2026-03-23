@@ -199,7 +199,11 @@ export function EmailDetailSheet({
                     <span>{isSent ? 'Thread History' : 'Original Message'}</span>
                     {showFullEmail ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </button>
-                  {showFullEmail && <div className="mt-3 rounded-[1.5rem] border-2 border-[#A8D0D0]/20 bg-white/80 p-6 text-[14px] font-medium leading-relaxed text-[#5D5D5D] italic">{email.body || email.body}</div>}
+                  {showFullEmail && (
+  <div className="mt-3 rounded-[1.5rem] border-2 border-[#A8D0D0]/20 bg-white/80 p-6 text-[14px] font-medium leading-relaxed text-[#5D5D5D] italic whitespace-pre-wrap">
+    {email.body || email.bodyPreview}
+  </div>
+)}
                 </div>
               </div>
             )}

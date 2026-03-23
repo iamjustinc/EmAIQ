@@ -30,26 +30,20 @@ export function EmailList({
 }: EmailListProps) {
   const pathname = usePathname()
 
-  const formatRelativeTime = (timestamp: any) => {
-    if (!timestamp) return '---';
-    
-    const date = new Date(timestamp);
-    const isValidDate = !isNaN(date.getTime());
-
-    if (isValidDate) {
-      const now = new Date();
-      const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-      
-      if (diffInSeconds < 60) return 'JUST NOW';
-      if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}M AGO`;
-      if (diffInSeconds < 86400) {
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
-      }
-      return date.toLocaleDateString([], { month: 'short', day: 'numeric' }).toUpperCase();
-    }
-
-    // If it's just a string like "28 mins ago", show it as is
-    return String(timestamp).toUpperCase();
+  const formatRelativeTime = (email: any) => {
+    const rawTimestamp = email.timestamp || email.receivedAt;
+    if (!rawTimestamp) return '---';
+  
+    const date = new Date(rawTimestamp);
+    if (isNaN(date.getTime())) return String(rawTimestamp).toUpperCase();
+  
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
+    if (diffInSeconds < 60) return 'JUST NOW';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}M AGO`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}H AGO`;
+    return `${Math.floor(diffInSeconds / 86400)}D AGO`;
   };
 
   const filteredEmails = useMemo(() => {
@@ -171,15 +165,15 @@ export function EmailList({
               <div className="flex">
                 <span className={cn(
                   "px-3 py-1 rounded-full text-[9px] font-black tracking-widest border-2 shadow-sm",
-                  email.suggestedAction === 'RESPOND' 
+                  email.suggestedAction?.toUpperCase() === 'RESPOND' 
                     ? "bg-[#F6B3C4] border-[#F6B3C4] text-white" 
                     : "bg-[#7FC6DA] border-[#7FC6DA] text-white" 
                 )}>
                   {email.suggestedAction}
                 </span>
               </div>
-              <div className="text-[10px] font-black text-[#8C867E] text-right uppercase">
-                {formatRelativeTime(email.timestamp)}
+              <div className="text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
+                {formatRelativeTime(email)}
               </div>
             </div>
           ))
