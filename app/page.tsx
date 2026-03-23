@@ -10,8 +10,7 @@ import { KPICard } from '@/components/kpi-card';
 import { EmailList } from '@/components/email-list';
 import { EmailDetailSheet } from '@/components/email-detail-sheet';
 import { Email } from '@/lib/types';
-import { Mail, Zap, AlertCircle, Trash2, Sparkles, Broom } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Mail, Zap, AlertCircle, Trash2 } from 'lucide-react';
 
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
@@ -39,10 +38,10 @@ export default function InboxPage() {
     }
   }, []);
 
-  // Action: Archive all emails categorized as 'noise'
+  // Action: Archive all emails categorized as 'noise' or with Low urgency
   const handleInstantCleanUp = useCallback(() => {
     const noiseEmails = emails?.filter(
-      (e) => e.category?.toLowerCase() === 'noise' && e.status !== 'archived'
+      (e) => (e.category?.toLowerCase() === 'noise' || e.urgency.label === 'Low') && !e.isActioned
     );
     noiseEmails?.forEach((email) => archiveEmail(email.id));
   }, [emails, archiveEmail]);
@@ -80,8 +79,8 @@ export default function InboxPage() {
 
   const stats = useMemo(() => {
     const safeEmails = emails || [];
-    const unread = safeEmails.filter((e) => !e.isRead && e.status !== 'archived').length;
-    const urgentCount = safeEmails.filter((e) => e.urgency.label === 'High' && e.status !== 'archived').length;
+    const unread = safeEmails.filter((e) => !e.isRead && !e.isActioned).length;
+    const urgentCount = safeEmails.filter((e) => e.urgency.label === 'High' && !e.isActioned).length;
     const focusHours = (urgentCount * 0.25).toFixed(1);
     return { unread, urgent: urgentCount, focusTime: `${focusHours}h` };
   }, [emails]);
@@ -116,25 +115,14 @@ export default function InboxPage() {
 
           <div className="flex-1 px-10 pb-10">
             <div className="relative flex min-h-[500px] flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
-              {/* This Absolute Button overlays the far right of the tab row inside EmailList */}
-              <div className="absolute right-8 top-6 z-10">
-                <Button
-                  onClick={handleInstantCleanUp}
-                  variant="ghost"
-                  className="flex items-center gap-2 rounded-full bg-secondary/50 px-4 py-2 text-[10px] font-black uppercase tracking-tighter text-[#D95D5D] hover:bg-[#F6B3C4]/20 border border-[#F6B3C4]/10"
-                >
-                  <Broom className="h-3.5 w-3.5" />
-                  Instant Clean Up
-                </Button>
-              </div>
-
               <EmailList 
                 emails={filteredEmails} 
                 selectedEmail={currentSelectedEmail} 
                 onSelectEmail={handleSelectEmail} 
                 onToggleFavorite={toggleFavorite}
                 activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
+                setActiveTab={setActiveTab}
+                onInstantCleanUp={handleInstantCleanUp}
               />
             </div>
           </div>

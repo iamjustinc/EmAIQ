@@ -14,7 +14,7 @@ interface EmailListProps {
   onToggleFavorite: (id: string) => void; 
   activeTab: string; 
   setActiveTab: (tab: string) => void;
-  onInstantCleanUp?: () => void; // Added for the Broom action
+  onInstantCleanUp?: () => void;
   hideTabs?: boolean;
 }
 
@@ -33,7 +33,6 @@ export function EmailList({
   const filteredEmails = useMemo(() => {
     let list = emails ?? []
 
-    // 1. Filter by Page Route
     if (pathname === '/sent') {
       list = list.filter(e => e.status === 'sent' || e.isSent)
     } else if (pathname === '/favorites') {
@@ -51,7 +50,6 @@ export function EmailList({
       )
     }
 
-    // 2. Filter by Top Tabs
     if (hideTabs) return list
     const tab = activeTab.toLowerCase()
     if (tab === 'action') return list.filter(e => e.urgency.label === 'High')
@@ -81,14 +79,13 @@ export function EmailList({
             ))}
           </div>
 
-          {/* Instant Clean Up Button on the far right */}
           <Button
             onClick={(e) => {
               e.stopPropagation();
               onInstantCleanUp?.();
             }}
             variant="ghost"
-            className="flex items-center gap-2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-tighter text-[#D95D5D] hover:bg-[#F6B3C4]/10 border-2 border-[#F6B3C4]/20 mr-2 h-9"
+            className="flex items-center gap-2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-tighter text-[#D95D5D] hover:bg-[#F6B3C4]/10 border-2 border-[#F6B3C4]/20 h-9"
           >
             <Broom className="h-3.5 w-3.5" />
             Instant Clean Up
@@ -96,7 +93,6 @@ export function EmailList({
         </div>
       )}
 
-      {/* Column Headers */}
       <div className="grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky top-[62px] z-20">
         {['PRI', '', 'SENDER', 'MESSAGE DETAIL', 'AI SUGGESTION', 'RECEIVED'].map((h, i) => (
           <div key={i} className="text-[9px] font-black tracking-[0.2em] text-[#8C867E] uppercase">{h}</div>
