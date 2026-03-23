@@ -30,9 +30,17 @@ export function EmailList({
 }: EmailListProps) {
   const pathname = usePathname()
 
-  // Helper to format the received time
-  const formatRelativeTime = (timestamp: string | number) => {
+  // FIXED: Logic to handle both "28 mins ago" strings AND actual Date objects
+  const formatRelativeTime = (timestamp: any) => {
+    if (!timestamp) return '';
+    
     const date = new Date(timestamp);
+    
+    // If the data is already a friendly string (like "28 mins ago"), just return it
+    if (isNaN(date.getTime())) {
+      return String(timestamp).toUpperCase();
+    }
+
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
     
