@@ -26,25 +26,35 @@ html[data-font-scale='medium'] { --font-body: 0.875rem; --font-label: 0.625rem; 
 html[data-font-scale='large'] { --font-body: 0.9375rem; --font-label: 0.6875rem; --font-title: 1.375rem; --font-kpi: 2rem; }
 
 /* -----------------------------------------------------------------------------
-   Theme: Midnight Intelligence
+   Theme: Midnight Intelligence (Sunlit Dark Reflection)
    ----------------------------------------------------------------------------- */
-html[data-theme='midnight-intelligence'] {
-  color-scheme: dark;
-  --background: #070b14;
-  --foreground: #f5f7fb;
-  --card: #0d1320;
-  --card-foreground: #f5f7fb;
-  --popover: #0d1320;
-  --popover-foreground: #f5f7fb;
-  --muted: #161f31;
-  --muted-foreground: #8b98b8;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --border: #1f2a3d;
-  --sidebar: #0d1320;
-  --sidebar-border: #1f2a3d;
-  --sidebar-foreground: #f5f7fb;
-}
+   html[data-theme='midnight-intelligence'] {
+      color-scheme: dark;
+      --background: #1F2426;         /* Deep ocean gray/black */
+      --foreground: #E6E1DC;         /* Primary off-white text */
+      --card: #2A3133;               /* Slightly lifted surface */
+      --card-foreground: #E6E1DC;
+      --popover: #323A3D;            /* Elevated surface for menus/sheets */
+      --popover-foreground: #E6E1DC;
+      --muted: #2A3133;               /* Muted surface */
+      --muted-foreground: #B8B2AC;    /* Secondary text */
+      --primary: #F59E72;            /* Primary sunset orange */
+      --primary-foreground: #1F2426;  /* Contrast text on orange */
+      --border: #3E474A;             /* Darker border/divider */
+      --sidebar: #1F2426;
+      --sidebar-border: #3E474A;
+      --sidebar-foreground: #E6E1DC;
+    
+      /* Accent Mappings from your Palette */
+      --accent: rgba(245, 158, 114, 0.18); /* Soft orange glow for hovers */
+      --accent-foreground: #E6E1DC;
+      
+      /* Status/Alert Colors mapped to your dark palette */
+      --info: #6FA6C0;               /* Sky blue dark version */
+      --success: #6FAFAF;            /* Seafoam dark version */
+      --warning: #D98F99;            /* Pink/Blush dark version */
+      --neutral: #7A746D;            /* Taupe dark version */
+    }
 
 /* -----------------------------------------------------------------------------
    Theme: Creator Editorial

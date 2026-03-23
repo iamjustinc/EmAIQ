@@ -13,8 +13,8 @@ export const THEME_PRESETS: ThemePresetMeta[] = [
     id: 'midnight-intelligence',
     name: 'Midnight Intelligence',
     shortLabel: 'Midnight',
-    description: 'Premium dark SaaS — Linear × Superhuman focus.',
-    swatches: ['#070B14', '#0D1320', '#3B82F6', '#F5F7FB'],
+    description: 'Premium dark SaaS — Sunlit Creator Dark Reflection.',
+    swatches: ['#1F2426', '#2A3133', '#F59E72', '#E6E1DC'], // [Bg, Surface, Accent, Text]
   },
   {
     id: 'creator-editorial',
@@ -31,7 +31,3 @@ export const THEME_PRESETS: ThemePresetMeta[] = [
     swatches: ['#F4F7F7', '#F6B3C4', '#99BED4', '#2D3436'],
   },
 ];
-
-export function getThemeMeta(id: ThemePresetId): ThemePresetMeta {
-  return THEME_PRESETS.find((t) => t.id === id) ?? THEME_PRESETS[2];
-}
