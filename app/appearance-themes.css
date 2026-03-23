@@ -13,10 +13,11 @@
   opacity: 1 !important;
 }
 
-/* FORCE DARK SURFACES:
-   Specific override for the Midnight theme to ensure list items, headers, and cards 
-   that use utility classes like 'bg-white' flip to the dark palette.
-*/
+/* -----------------------------------------------------------------------------
+   Midnight-specific visual fixes (UPDATED)
+   ----------------------------------------------------------------------------- */
+
+/* Force proper dark surfaces */
 [data-theme='midnight-intelligence'] .bg-white,
 [data-theme='midnight-intelligence'] .bg-card,
 [data-theme='midnight-intelligence'] .bg-background,
@@ -27,9 +28,36 @@
   border-color: var(--border) !important;
 }
 
-/* Specific fix for the white strip behind tabs */
+/* Fix strip behind tabs */
 [data-theme='midnight-intelligence'] .border-b.bg-white,
 [data-theme='midnight-intelligence'] .sticky.top-0 {
+  background-color: var(--background) !important;
+  border-color: var(--border) !important;
+}
+
+/* FIX: make sheet (right panel) solid and layered */
+[data-theme='midnight-intelligence'] [data-slot='sheet-content'] {
+  background-color: var(--popover) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* FIX: overlay contrast (not too washed) */
+[data-theme='midnight-intelligence'] [data-slot='sheet-overlay'] {
+  background-color: rgba(10, 12, 14, 0.42) !important;
+}
+
+/* FIX: email rows */
+[data-theme='midnight-intelligence'] .email-row {
+  background-color: var(--card) !important;
+}
+
+[data-theme='midnight-intelligence'] .email-row:hover {
+  background-color: var(--email-hover-bg) !important;
+}
+
+/* FIX: headers */
+[data-theme='midnight-intelligence'] .email-list-header {
   background-color: var(--background) !important;
   border-color: var(--border) !important;
 }
@@ -46,38 +74,62 @@ html[data-font-scale='medium'] { --font-body: 0.875rem; --font-label: 0.625rem; 
 html[data-font-scale='large'] { --font-body: 0.9375rem; --font-label: 0.6875rem; --font-title: 1.375rem; --font-kpi: 2rem; }
 
 /* -----------------------------------------------------------------------------
-   Theme: Midnight Intelligence (Sunlit Dark Reflection)
+   Theme: Midnight Intelligence (UPDATED — FIXED UI)
    ----------------------------------------------------------------------------- */
 html[data-theme='midnight-intelligence'] {
   color-scheme: dark;
-  --background: #1F2426;         /* Deep ocean gray/black */
-  --foreground: #E6E1DC;         /* Primary off-white text */
-  --card: #2A3133;               /* Slightly lifted surface */
+
+  /* CORE SURFACES (fixed layering) */
+  --background: #1F2426;
+  --foreground: #E6E1DC;
+
+  --card: #2A3133;
   --card-foreground: #E6E1DC;
-  --popover: #323A3D;            /* Elevated surface for menus/sheets */
+
+  --popover: #323A3D; /* sheet is now clearly different */
   --popover-foreground: #E6E1DC;
-  --muted: #2A3133;               /* Muted surface */
-  --muted-foreground: #B8B2AC;    /* Secondary text */
-  --primary: #F59E72;            /* Primary sunset orange */
-  --primary-foreground: #1F2426;  /* Contrast text on orange */
-  --border: #3E474A;             /* Darker border/divider */
+
+  /* TEXT */
+  --muted: #2A3133;
+  --muted-foreground: #B8B2AC;
+
+  --table-header-color: rgba(230, 225, 220, 0.55);
+
+  /* BRAND */
+  --primary: #F59E72;
+  --primary-foreground: #1F2426;
+
+  --accent: rgba(245, 158, 114, 0.18);
+  --accent-foreground: #E6E1DC;
+
+  --secondary: #2F383B;
+  --secondary-foreground: #E6E1DC;
+
+  /* BORDERS */
+  --border: #3E474A;
+  --input: #3E474A;
+  --ring: #F59E72;
+
+  /* SIDEBAR */
   --sidebar: #1F2426;
   --sidebar-border: #3E474A;
   --sidebar-foreground: #E6E1DC;
 
-  /* Accent Mappings from your Palette */
-  --accent: rgba(245, 158, 114, 0.18); /* Soft orange glow for hovers */
-  --accent-foreground: #E6E1DC;
-  
-  /* Status/Alert Colors mapped to your dark palette */
-  --info: #6FA6C0;               /* Sky blue dark version */
-  --success: #6FAFAF;            /* Seafoam dark version */
-  --warning: #D98F99;            /* Pink/Blush dark version */
-  --neutral: #7A746D;            /* Taupe dark version */
+  /* PALETTE COLORS */
+  --info: #6FA6C0;
+  --success: #6FAFAF;
+  --warning: #D98F99;
+  --neutral: #7A746D;
+
+  /* EMAIL UI FIXES */
+  --email-unread-bg: #2F383B;
+  --email-hover-bg: rgba(245, 158, 114, 0.10);
+  --email-selected-bg: rgba(245, 158, 114, 0.18);
+  --email-dot: #F59E72;
 }
 
 /* -----------------------------------------------------------------------------
-   Theme: Sunlit Creator (Ocean Sunset Palette) — SOLID CONTRAST FIX
+   Theme: Sunlit Creator (UNCHANGED)
    ----------------------------------------------------------------------------- */
 html[data-theme='sunlit-creator'] {
   color-scheme: light;
