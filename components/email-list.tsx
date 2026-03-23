@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo } from 'react'
-import { Star, AlertCircle, Broom } from 'lucide-react'
+import { Star, AlertCircle, Eraser } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { Email } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -87,7 +87,7 @@ export function EmailList({
             variant="ghost"
             className="flex items-center gap-2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-tighter text-[#D95D5D] hover:bg-[#F6B3C4]/10 border-2 border-[#F6B3C4]/20 h-9"
           >
-            <Broom className="h-3.5 w-3.5" />
+            <Eraser className="h-3.5 w-3.5" />
             Instant Clean Up
           </Button>
         </div>

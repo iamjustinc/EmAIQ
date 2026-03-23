@@ -38,7 +38,6 @@ export default function InboxPage() {
     }
   }, []);
 
-  // Action: Archive all emails categorized as 'noise' or with Low urgency
   const handleInstantCleanUp = useCallback(() => {
     const noiseEmails = emails?.filter(
       (e) => (e.category?.toLowerCase() === 'noise' || e.urgency.label === 'Low') && !e.isActioned
