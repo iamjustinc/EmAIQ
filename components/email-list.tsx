@@ -30,21 +30,33 @@ export function EmailList({
 }: EmailListProps) {
   const pathname = usePathname()
 
-  const formatRelativeTime = (email: any) => {
-    const rawTimestamp = email.timestamp || email.receivedAt;
-    if (!rawTimestamp) return '---';
-  
-    const date = new Date(rawTimestamp);
-    if (isNaN(date.getTime())) return String(rawTimestamp).toUpperCase();
-  
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  
-    if (diffInSeconds < 60) return 'JUST NOW';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}M AGO`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}H AGO`;
-    return `${Math.floor(diffInSeconds / 86400)}D AGO`;
-  };
+  const formatFallbackRelativeTime = (index: number) => {
+    const fallbackMinutes = [2, 8, 14, 22, 31, 43, 58, 76, 95, 118, 144, 173, 205, 242, 286, 335, 389, 448, 512, 581]
+    const mins = fallbackMinutes[index] ?? (581 + (index - fallbackMinutes.length + 1) * 90)
+
+    if (mins < 60) return `${mins}M AGO`
+    if (mins < 1440) return `${Math.floor(mins / 60)}H AGO`
+    return `${Math.floor(mins / 1440)}D AGO`
+  }
+
+  const formatRelativeTime = (email: any, index: number) => {
+    const rawTimestamp = email.timestamp || email.receivedAt
+    if (!rawTimestamp) return formatFallbackRelativeTime(index)
+
+    const date = new Date(rawTimestamp)
+    if (isNaN(date.getTime())) return formatFallbackRelativeTime(index)
+
+    const now = new Date()
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+    // If the mock timestamp is in the future, use a realistic staggered fallback
+    if (diffInSeconds <= 0) return formatFallbackRelativeTime(index)
+
+    if (diffInSeconds < 60) return 'JUST NOW'
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}M AGO`
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}H AGO`
+    return `${Math.floor(diffInSeconds / 86400)}D AGO`
+  }
 
   const filteredEmails = useMemo(() => {
     let list = emails ?? []
@@ -129,7 +141,7 @@ export function EmailList({
             <p className="text-[10px] font-black uppercase tracking-widest opacity-50">Folder is empty</p>
           </div>
         ) : (
-          filteredEmails.map((email) => (
+          filteredEmails.map((email, index) => (
             <div
               key={email.id}
               onClick={() => onSelectEmail(email)}
@@ -143,7 +155,7 @@ export function EmailList({
               )}
             >
               <div className="flex items-center gap-2">
-                 <button 
+                <button 
                   onClick={(e) => { 
                     e.stopPropagation(); 
                     onToggleFavorite(email.id); 
@@ -173,7 +185,7 @@ export function EmailList({
                 </span>
               </div>
               <div className="text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
-                {formatRelativeTime(email)}
+                {formatRelativeTime(email, index)}
               </div>
             </div>
           ))
