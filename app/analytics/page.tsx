@@ -2,35 +2,25 @@
 
 import { AppShell } from '@/components/app-shell';
 import { Header } from '@/components/header';
-import { InsightCard } from '@/components/insight-card';
 import { CircularGauge } from '@/components/circular-gauge';
-import { analyticsData, aiInsights } from '@/lib/mock-data';
+import { analyticsData } from '@/lib/mock-data';
 import {
   PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
-import { 
-  Brain, Clock, Zap, TrendingUp, TrendingDown, Minus, AlertCircle, User,
-} from 'lucide-react';
+import { Brain, Clock, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// --- BRAND COLORS (Matches your EmailDetailSheet) ---
 const COLORS = {
   teal: '#7FC6DA',
   pink: '#F6B3C4',
-  danger: '#D95D5D',
   dark: '#2D3436',
   gray: '#A8A29A',
-  bg: '#F4F7F7'
+  bg: '#F4F7F7',
+  softTeal: '#A8D0D0'
 };
 
-const CHART_FILLS = [
-  COLORS.teal,
-  COLORS.pink,
-  COLORS.dark,
-  COLORS.gray,
-  '#A8D0D0', // Accent teal
-];
+const CHART_FILLS = [COLORS.teal, COLORS.pink, COLORS.dark, COLORS.softTeal, COLORS.gray];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -63,17 +53,15 @@ function StatCard({ icon: Icon, label, value, sublabel, iconColor = 'text-[#7FC6
   );
 }
 
-// ... SenderRow and TopicTag remain the same logic, but ensure colors use COLORS object ...
-
 export default function AnalyticsPage() {
-  const { summaryStats, topSenders, topicTags, urgentByDay, hourlyLoad } = analyticsData;
+  const { summaryStats, urgentByDay, hourlyLoad, categoryBreakdown, focusScore } = analyticsData;
 
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-[#F4F7F7]">
         <Header title="Analytics" hideSearch />
-        
         <div className="flex-1 overflow-auto p-8 space-y-8">
+          
           {/* Summary Strip */}
           <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
             <StatCard icon={Brain} label="Focus Score" value={`${summaryStats.focusScore}%`} sublabel="Actionable" iconColor="text-[#2D3436]" />
@@ -92,10 +80,11 @@ export default function AnalyticsPage() {
                 <BarChart data={urgentByDay}>
                   <CartesianGrid strokeDasharray="8 8" stroke="#F0F4F4" vertical={false} />
                   <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontWeight: 900, fontSize: 10}} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} />
-                  <Tooltip content={<CustomTooltip />} cursor={{fill: '#7FC6DA', opacity: 0.05}} />
-                  <Bar dataKey="nonUrgent" name="Normal" stackId="a" fill={COLORS.dark} radius={[0, 0, 0, 0]} barSize={40} />
-                  <Bar dataKey="urgent" name="Urgent" stackId="a" fill={COLORS.pink} radius={[10, 10, 0, 0]} barSize={40} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
+                  <Bar dataKey="nonUrgent" name="Normal" stackId="a" fill={COLORS.dark} barSize={40} />
+                  <Bar dataKey="urgent" name="Urgent" stackId="a" fill={COLORS.teal} radius={[10, 10, 0, 0]} barSize={40} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -113,46 +102,12 @@ export default function AnalyticsPage() {
                   </defs>
                   <CartesianGrid strokeDasharray="8 8" stroke="#F0F4F4" vertical={false} />
                   <XAxis dataKey="hour" axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
                   <Tooltip content={<CustomTooltip />} />
                   <Area type="monotone" dataKey="emails" stroke={COLORS.teal} strokeWidth={4} fill="url(#loadGradient)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </div>
-
-          {/* Topics & Category Breakdown */}
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-             <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
-                <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Email Category Breakdown</h3>
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie data={analyticsData.categoryBreakdown} innerRadius={70} outerRadius={100} paddingAngle={8} dataKey="value">
-                      {analyticsData.categoryBreakdown.map((_, index) => (
-                        <Cell key={index} fill={CHART_FILLS[index % CHART_FILLS.length]} stroke="none" />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
-             </div>
-
-             <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
-               <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Focus Score Trend</h3>
-               <ResponsiveContainer width="100%" height={280}>
-                <AreaChart data={analyticsData.focusScore}>
-                  <defs>
-                    <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={COLORS.pink} stopOpacity={0.4} />
-                      <stop offset="95%" stopColor={COLORS.pink} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <Area type="stepAfter" dataKey="score" stroke={COLORS.pink} strokeWidth={4} fill="url(#scoreGradient)" />
-                  <XAxis dataKey="day" hide />
-                  <YAxis hide domain={[0, 100]} />
-                  <Tooltip content={<CustomTooltip />} />
-                </AreaChart>
-               </ResponsiveContainer>
-             </div>
           </div>
         </div>
       </div>
