@@ -67,21 +67,21 @@ html[data-theme='creator-editorial'] {
 }
 
 /* -----------------------------------------------------------------------------
-   Theme: Sunlit Creator (Updated to Ocean/Pink Palette)
+   Theme: Sunlit Creator (Ocean Sunset Palette)
    ----------------------------------------------------------------------------- */
-   html[data-theme='sunlit-creator'] {
-      color-scheme: light;
-      --background: #f8fbff; /* Very faint blue-white */
-      --foreground: #2d3436;
-      --card: #ffffff;
-      --card-foreground: #2d3436;
-      --popover: #ffffff;
-      --popover-foreground: #2d3436;
-      --muted: #fce4ec; /* Soft pink from the reference */
-      --muted-foreground: #636e72;
-      --primary: #a9d6e5; /* The light blue from the top swatch */
-      --primary-foreground: #ffffff;
-      --border: #b2dfdb; /* Seafoam teal for borders */
-      --sidebar: #f0f7f9;
-      --sidebar-border: #d1e9f0;
-    }
+html[data-theme='sunlit-creator'] {
+  color-scheme: light;
+  --background: #f4f7f7; /* Foam White */
+  --foreground: #2d3436;
+  --card: #ffffff;
+  --card-foreground: #2d3436;
+  --popover: #ffffff;
+  --popover-foreground: #2d3436;
+  --muted: #f6b3c4; /* Sunset Pink */
+  --muted-foreground: #636e72;
+  --primary: #99bed4; /* Sky Blue */
+  --primary-foreground: #ffffff;
+  --border: #a8d0d0; /* Seafoam / Soft Aqua */
+  --sidebar: #ecd7d1; /* Blush Beige */
+  --sidebar-border: #a8a29a; /* Warm Greige */
+}

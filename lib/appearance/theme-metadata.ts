@@ -27,11 +27,11 @@ export const THEME_PRESETS: ThemePresetMeta[] = [
     id: 'sunlit-creator',
     name: 'Sunlit Creator',
     shortLabel: 'Sunlit',
-    description: 'Aqua teals and sunset golds from the coast.',
-    swatches: ['#FFF9F5', '#FFFFFF', '#4DB6AC', '#2D242E'],
+    description: 'Sky blues, sunset pinks, and soft seafoam.',
+    swatches: ['#F4F7F7', '#FFFFFF', '#99BED4', '#2D3436'],
   },
 ];
 
 export function getThemeMeta(id: ThemePresetId): ThemePresetMeta {
-  return THEME_PRESETS.find((t) => t.id === id) ?? THEME_PRESETS[2]; // Defaults to Sunlit if not found
+  return THEME_PRESETS.find((t) => t.id === id) ?? THEME_PRESETS[2]; // Defaults to Sunlit
 }
