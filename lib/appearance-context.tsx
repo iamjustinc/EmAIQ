@@ -64,10 +64,7 @@ function applyToDocument(state: AppearanceState) {
   root.dataset.fontScale = state.fontScale;
 
   const lightThemes: ThemePresetId[] = [
-    'creator-editorial',
     'sunlit-creator',
-    'ocean-air',
-    'sunset-ocean',
   ];
 
   const isLight = lightThemes.includes(state.themePreset);

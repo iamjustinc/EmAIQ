@@ -20,7 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="en"
       suppressHydrationWarning
-      className="dark"
+      className="light"
       data-theme="midnight-intelligence"
       data-density="comfortable"
       data-font-scale="medium"

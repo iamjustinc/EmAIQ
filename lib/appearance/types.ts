@@ -6,11 +6,7 @@
 
 export type ThemePresetId =
   | 'midnight-intelligence'
-  | 'creator-editorial'
   | 'sunlit-creator'
-  | 'eco-signal'
-  | 'ocean-air'
-  | 'sunset-ocean';
 
 export type DensityMode = 'compact' | 'comfortable' | 'spacious';
 
@@ -23,7 +19,7 @@ export interface AppearanceState {
 }
 
 export const DEFAULT_APPEARANCE: AppearanceState = {
-  themePreset: 'creator-editorial',
+  themePreset: 'sunlit-creator',
   density: 'comfortable',
   fontScale: 'medium',
 };

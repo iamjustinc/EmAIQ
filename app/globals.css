@@ -48,23 +48,197 @@
   --table-header-color: rgba(32, 27, 24, 0.55);
 }
 
-/* Fix for Point 2: Midnight Theme Contrast */
+/* =========================
+   MIDNIGHT THEME — FULL FIX
+   ========================= */
 html[data-theme='midnight-intelligence'] {
   color-scheme: dark;
-  --background: #05080f;
-  --foreground: #f8fafc;
-  --card: #0d1320;
-  --card-foreground: #f8fafc;
-  --border: #1e293b;
-  --muted: #0f172a;
-  --muted-foreground: #64748b;
-  --primary: #3b82f6;
-  --sidebar-accent: #1e293b;
-  --sidebar-accent-foreground: #3b82f6;
+
+  /* base surfaces */
+  --background: #07101f;
+  --foreground: #e8eef7;
+
+  --card: #0c182b;
+  --card-foreground: #e8eef7;
+
+  --popover: #10203a;
+  --popover-foreground: #e8eef7;
+
+  --secondary: #12233f;
+  --secondary-foreground: #d7e4f7;
+
+  --muted: #13233b;
+  --muted-foreground: #8ea1bd;
+
+  --primary: #7fd3f7;
+  --primary-foreground: #07101f;
+
+  --accent: rgba(127, 211, 247, 0.12);
+  --accent-foreground: #e8eef7;
+
+  --destructive: #f28ea8;
+  --border: #1f3558;
+  --input: #1f3558;
+  --ring: #7fd3f7;
+
+  --success: #7fd3f7;
+  --warning: #f4b6c6;
+  --danger: #f28ea8;
+  --info: #7fd3f7;
+
+  --table-header-color: rgba(232, 238, 247, 0.56);
+
+  /* sidebar */
+  --sidebar: #07101f;
+  --sidebar-foreground: #e8eef7;
+  --sidebar-border: #1a2d4a;
+  --sidebar-accent: #0f1d33;
+  --sidebar-accent-foreground: #7fd3f7;
+
+  /* email states */
+  --email-unread-bg: #11213b;
+  --email-selected-bg: #142846;
+  --email-hover-bg: rgba(127, 211, 247, 0.08);
+
+  /* midnight button tones */
+  --midnight-btn-bg: #f6fbff;
+  --midnight-btn-text: #1a2433;
+  --midnight-btn-border: #8ad6f6;
+
+  --midnight-btn-muted-bg: #2d3940;
+  --midnight-btn-muted-text: #f4f8fb;
+  --midnight-btn-muted-border: #2d3940;
+
+  --midnight-btn-danger-bg: #30293c;
+  --midnight-btn-danger-text: #f07f8d;
+  --midnight-btn-danger-border: #f2a7bf;
+}
+
+/* midnight global surface corrections */
+html[data-theme='midnight-intelligence'] body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+html[data-theme='midnight-intelligence'] .bg-background {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+html[data-theme='midnight-intelligence'] .bg-card,
+html[data-theme='midnight-intelligence'] [data-slot='sheet-content'],
+html[data-theme='midnight-intelligence'] [role='dialog'] {
+  background-color: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme='midnight-intelligence'] .bg-popover {
+  background-color: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* fix white KPI cards / top boxes */
+html[data-theme='midnight-intelligence'] .rounded-card-ui,
+html[data-theme='midnight-intelligence'] .shadow-action,
+html[data-theme='midnight-intelligence'] .bg-white {
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* fix sticky header / tabs / white strips */
+html[data-theme='midnight-intelligence'] .sticky.top-0,
+html[data-theme='midnight-intelligence'] .border-b.bg-white,
+html[data-theme='midnight-intelligence'] [role='tablist'],
+html[data-theme='midnight-intelligence'] header {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* fix table header row */
+html[data-theme='midnight-intelligence'] .email-list-header {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* fix email rows */
+html[data-theme='midnight-intelligence'] .email-row {
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
+}
+
+html[data-theme='midnight-intelligence'] .email-row:hover {
+  background-color: var(--email-hover-bg) !important;
+}
+
+/* stronger unread tone */
+html[data-theme='midnight-intelligence'] .email-row[class*='bg-\\[color\\:color-mix'] {
+  background-color: var(--email-unread-bg) !important;
+}
+
+/* fix intelligence report card inside sheet */
+html[data-theme='midnight-intelligence'] .rounded-\[2\.5rem\],
+html[data-theme='midnight-intelligence'] .rounded-\[2rem\] {
+  border-color: var(--border) !important;
+}
+
+/* midnight buttons: light cards on dark background */
+html[data-theme='midnight-intelligence'] button[class*='bg-primary'],
+html[data-theme='midnight-intelligence'] .bg-primary {
+  background-color: var(--midnight-btn-bg) !important;
+  color: var(--midnight-btn-text) !important;
+  border-color: var(--midnight-btn-border) !important;
+}
+
+/* keep text-primary accents blue */
+html[data-theme='midnight-intelligence'] .text-primary {
+  color: var(--primary) !important;
+}
+
+html[data-theme='midnight-intelligence'] .border-primary\/25,
+html[data-theme='midnight-intelligence'] .border-primary\/30 {
+  border-color: var(--midnight-btn-border) !important;
+}
+
+/* muted white action buttons */
+html[data-theme='midnight-intelligence'] button[class*='variant="outline"'],
+html[data-theme='midnight-intelligence'] .bg-muted\/10,
+html[data-theme='midnight-intelligence'] .bg-muted\/20,
+html[data-theme='midnight-intelligence'] .bg-muted\/30,
+html[data-theme='midnight-intelligence'] .bg-muted\/40 {
+  background-color: var(--midnight-btn-bg) !important;
+  color: var(--midnight-btn-text) !important;
+  border-color: var(--midnight-btn-border) !important;
+}
+
+/* archive button */
+html[data-theme='midnight-intelligence'] .text-destructive {
+  color: var(--midnight-btn-danger-text) !important;
+}
+
+html[data-theme='midnight-intelligence'] .border-destructive\/30 {
+  border-color: var(--midnight-btn-danger-border) !important;
+}
+
+html[data-theme='midnight-intelligence'] .bg-destructive\/5,
+html[data-theme='midnight-intelligence'] .bg-destructive\/10 {
+  background-color: var(--midnight-btn-danger-bg) !important;
+}
+
+/* overlay */
+html[data-theme='midnight-intelligence'] [data-slot='sheet-overlay'] {
+  background-color: rgba(2, 8, 18, 0.42) !important;
 }
 
 @layer base {
-  * { border-color: var(--border); }
+  * {
+    border-color: var(--border);
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
@@ -73,15 +247,21 @@ html[data-theme='midnight-intelligence'] {
 }
 
 @layer utilities {
-  .bg-sheet-solid { background-color: var(--background) !important; }
+  .bg-sheet-solid {
+    background-color: var(--background) !important;
+  }
+
   .text-table-header {
     font-size: var(--font-table-header);
     letter-spacing: 0.22em;
     text-transform: uppercase;
     font-weight: 800;
   }
+
   .shadow-action {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 10px 25px -5px rgba(0, 0, 0, 0.08),
+      0 8px 10px -6px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -91,11 +271,22 @@ html[data-theme='midnight-intelligence'] {
   align-items: center;
 }
 
-.email-row { transition: background 0.18s ease; }
-.email-row:hover { background: var(--accent); }
+.email-row {
+  transition: background 0.18s ease;
+}
 
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.email-row:hover {
+  background: var(--accent);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 /* Point 4 Animation */
 @keyframes float {
@@ -103,4 +294,7 @@ html[data-theme='midnight-intelligence'] {
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
-.animate-float { animation: float 4s ease-in-out infinite; }
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
