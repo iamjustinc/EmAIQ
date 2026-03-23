@@ -25,6 +25,10 @@ import {
   BellRing,
   Plus,
   X,
+  LogOut,
+  Mail,
+  Chrome,
+  Loader2,
 } from 'lucide-react';
 
 type SettingsView =
@@ -36,8 +40,9 @@ type SettingsView =
   | 'aiConfig'
   | 'priorityPreferences';
 
-const AI_SETTINGS_STORAGE_KEY = 'emaiq-ai-settings';
-const PRIORITY_SETTINGS_STORAGE_KEY = 'emaiq-priority-settings';
+  const AI_SETTINGS_STORAGE_KEY = 'emaiq-ai-settings';
+  const PRIORITY_SETTINGS_STORAGE_KEY = 'emaiq-priority-settings';
+  const LOGGED_IN_EMAIL = 'jason@emaiq.app';
 
 export default function SettingsPage() {
   const { firstName, signOff, setProfile } = useUserStore();
@@ -63,6 +68,9 @@ export default function SettingsPage() {
   const [boostManagerEmails, setBoostManagerEmails] = useState(true);
   const [newVipSender, setNewVipSender] = useState('');
   const [newPriorityTeam, setNewPriorityTeam] = useState('');
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showSwitchAccount, setShowSwitchAccount] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     setFirstNameDraft(firstName);
@@ -151,8 +159,8 @@ export default function SettingsPage() {
 
   const handleProfileSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setProfile(firstNameDraft, signOffDraft);
-    toast.success('Profile and sign-off updated!');
+    setProfile(firstNameDraft, signOff);
+    toast.success('Profile updated!');
     setView('menu');
   };
 
@@ -217,6 +225,24 @@ export default function SettingsPage() {
     setView('menu');
   };
 
+  const handleConfirmLogout = async () => {
+    setIsLoggingOut(true);
+
+    setTimeout(() => {
+      try {
+        if (typeof window !== 'undefined') {
+          window.localStorage.removeItem(AI_SETTINGS_STORAGE_KEY);
+          window.localStorage.removeItem(PRIORITY_SETTINGS_STORAGE_KEY);
+        }
+        toast.success('Logged out successfully.');
+        setShowLogoutConfirm(false);
+        window.location.reload();
+      } finally {
+        setIsLoggingOut(false);
+      }
+    }, 900);
+  };
+
   return (
     <AppShell>
       <div className="flex h-full flex-col bg-background">
@@ -234,7 +260,7 @@ export default function SettingsPage() {
               </button>
             )}
 
-            {view === 'menu' && (
+{view === 'menu' && (
               <div className="space-y-6 animate-in fade-in duration-500">
                 <div className="group relative overflow-hidden rounded-[2rem] border border-border bg-card p-8 shadow-2xl transition-all hover:border-primary/20">
                   <div className="relative z-10 flex items-center gap-6">
@@ -246,7 +272,7 @@ export default function SettingsPage() {
                         {firstName}
                       </h3>
                       <p className="truncate text-sm text-muted-foreground">
-                        Sign-off: {signOff}
+                        Logged in as {LOGGED_IN_EMAIL}
                       </p>
                     </div>
                     <Button
@@ -303,10 +329,44 @@ export default function SettingsPage() {
                     </button>
                   ))}
                 </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowSwitchAccount(true)}
+                    className="group flex items-center gap-4 rounded-[1.5rem] border border-border bg-card p-5 text-left transition-all hover:bg-muted/50 active:scale-[0.98]"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+                      <Mail className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-bold text-foreground">Switch Account</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Sign in with Google, Outlook, or email
+                      </p>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowLogoutConfirm(true)}
+                    className="group flex items-center gap-4 rounded-[1.5rem] border border-[#F6B3C4]/40 bg-card p-5 text-left transition-all hover:bg-[#F6B3C4]/10 active:scale-[0.98]"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F6B3C4]/15 text-[#D95D5D]">
+                      <LogOut className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-bold text-[#D95D5D]">Log Out</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Sign out of your current account
+                      </p>
+                    </div>
+                  </button>
+                </div>
               </div>
             )}
 
-            {view === 'profile' && (
+{view === 'profile' && (
               <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
                 <div className="rounded-[2rem] border border-border bg-card p-8 shadow-xl">
                   <div className="mb-8 flex items-center gap-4">
@@ -320,6 +380,18 @@ export default function SettingsPage() {
                     <div className="grid gap-6">
                       <div className="space-y-2">
                         <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                          Logged-In Email
+                        </Label>
+                        <div className="h-12 rounded-xl border border-border/70 bg-muted/50 px-4 flex items-center text-sm text-muted-foreground">
+                          {LOGGED_IN_EMAIL}
+                        </div>
+                        <p className="ml-1 text-[10px] text-muted-foreground">
+                          This email is currently connected to your account.
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
                           Preferred First Name
                         </Label>
                         <Input
@@ -329,21 +401,8 @@ export default function SettingsPage() {
                           placeholder="e.g. Justin"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
-                          Email Sign-Off Phrase
-                        </Label>
-                        <Input
-                          value={signOffDraft}
-                          onChange={(e) => setSignOffDraft(e.target.value)}
-                          className="h-12 rounded-xl border-border bg-muted/30"
-                          placeholder="e.g. Best, Cheers, Sincerely"
-                        />
-                        <p className="ml-1 text-[10px] text-muted-foreground">
-                          This will be used by AI when generating email drafts.
-                        </p>
-                      </div>
                     </div>
+
                     <Button
                       type="submit"
                       className="h-14 w-full rounded-2xl bg-primary text-[11px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]"
@@ -625,9 +684,102 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {view === 'appearance' && <AppearanceSettingsPanel />}
+{view === 'appearance' && <AppearanceSettingsPanel />}
           </div>
         </div>
+
+        {showLogoutConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4 animate-in fade-in duration-200">
+            <div className="w-full max-w-md rounded-[2rem] border border-border bg-card p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+              <div className="mb-6 flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F6B3C4]/15 text-[#D95D5D]">
+                  <LogOut className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black tracking-tight text-foreground">Log Out?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Are you sure you want to log out of this account?
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="h-12 flex-1 rounded-xl"
+                  disabled={isLoggingOut}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleConfirmLogout}
+                  className="h-12 flex-1 rounded-xl bg-[#D95D5D] text-white hover:bg-[#c94d4d]"
+                  disabled={isLoggingOut}
+                >
+                  {isLoggingOut ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Logging Out
+                    </>
+                  ) : (
+                    'Yes, Log Out'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showSwitchAccount && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4 animate-in fade-in duration-200">
+            <div className="w-full max-w-md rounded-[2rem] border border-border bg-card p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-black tracking-tight text-foreground">Switch Account</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Choose a sign-in method for another account.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSwitchAccount(false)}
+                  className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
+                >
+                  <Chrome className="h-5 w-5" />
+                  Continue with Google
+                </button>
+
+                <button
+                  type="button"
+                  className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
+                >
+                  <Mail className="h-5 w-5" />
+                  Continue with Outlook
+                </button>
+
+                <button
+                  type="button"
+                  className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
+                >
+                  <KeyRound className="h-5 w-5" />
+                  Continue with Email
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AppShell>
   );
