@@ -56,7 +56,7 @@ function applyToDocument(state: AppearanceState) {
   root.dataset.density = state.density;
   root.dataset.fontScale = state.fontScale;
 
-  // Updated list to match your new selectable themes
+  // Only light themes remaining are Editorial and your new Sunlit
   const lightThemes: ThemePresetId[] = [
     'creator-editorial',
     'sunlit-creator',
@@ -74,8 +74,9 @@ function persist(state: AppearanceState) {
   }
 }
 
+/** Global appearance / theme / density / font-scale provider. */
 export function AppearanceProvider({ children }: { children: React.ReactNode }) {
-  // Hardcoded default to sunlit-creator for first-time loads
+  // Initialize with sunlit-creator as the hard default
   const [state, setState] = useState<AppearanceState>({
     ...DEFAULT_APPEARANCE,
     themePreset: 'sunlit-creator'
@@ -89,9 +90,13 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
 
     const next: AppearanceState = {
       ...DEFAULT_APPEARANCE,
-      themePreset: 'sunlit-creator', // Ensure Sunlit is the fall-back default
       ...stored,
     };
+
+    // FORCE OVERRIDE: If the user was on the old default, move them to Sunlit
+    if (next.themePreset === 'creator-editorial' || !next.themePreset) {
+      next.themePreset = 'sunlit-creator';
+    }
 
     setState(next);
     applyToDocument(next);
@@ -117,7 +122,12 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const resetAppearance = useCallback(() => {
-    setState({ ...DEFAULT_APPEARANCE, themePreset: 'sunlit-creator' });
+    const fresh: AppearanceState = { 
+      ...DEFAULT_APPEARANCE, 
+      themePreset: 'sunlit-creator' 
+    };
+    setState(fresh);
+    applyToDocument(fresh);
   }, []);
 
   const value = useMemo(
