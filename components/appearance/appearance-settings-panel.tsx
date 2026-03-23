@@ -130,9 +130,9 @@ export function AppearanceSettingsPanel() {
           </CollapsibleTrigger>
           <CollapsibleContent className="animate-in slide-in-from-top-1 data-[state=closed]:animate-out data-[state=closed]:fade-out-0">
             <div className="border-t border-border/60 p-card-ui pt-0">
-              <p className="mb-4 text-xs text-muted-foreground">
-                Choose a preset :D 
-              </p>
+            <p className="mb-4 ml-4 text-xs text-muted-foreground">
+  Choose a preset :D
+</p>
               <div className="grid gap-4 sm:grid-cols-2">
                 {THEME_PRESETS.map((meta) => (
                   <ThemePreviewCard
@@ -160,7 +160,7 @@ export function AppearanceSettingsPanel() {
           </div>
         </div>
         <SegmentedControl
-          label="Density mode"
+          label="  Density mode"
           value={density}
           onChange={setDensity}
           options={DENSITY_OPTIONS}
@@ -179,7 +179,7 @@ export function AppearanceSettingsPanel() {
           </div>
         </div>
         <SegmentedControl
-          label="Type scale"
+          label="  Type scale"
           value={fontScale}
           onChange={setFontScale}
           options={FONT_OPTIONS}
