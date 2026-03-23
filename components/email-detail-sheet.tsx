@@ -5,9 +5,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import * as PopoverPrimitive from "@radix-ui/react-popover"
 import {
-  Archive,
   Reply,
   Clock,
   Zap,
@@ -34,7 +32,7 @@ export function EmailDetailSheet({
 }: EmailDetailSheetProps) {
   const [mode, setMode] = useState<Mode>('default')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [isGenerating, setIsGenerating] = useState(false) // New state for AI animation
+  const [isGenerating, setIsGenerating] = useState(false) 
   const [showFullEmail, setShowFullEmail] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [successAction, setSuccessAction] = useState<string | null>(null)
@@ -67,13 +65,13 @@ export function EmailDetailSheet({
     setMode('reply')
     setIsDrafting(true)
     setIsGenerating(true)
-    setReplyText('') // Start empty to show animation
+    setReplyText('') 
     
-    // Simulate AI Generation time
+    // Increased delay to 1.5 seconds for a more realistic "thinking" feel
     setTimeout(() => {
       setReplyText(generatedDraft)
       setIsGenerating(false)
-    }, 800)
+    }, 1500)
   }
 
   if (!email) return null
@@ -124,21 +122,22 @@ export function EmailDetailSheet({
               <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#7FC6DA]" /></div>
             ) : mode === 'reply' ? (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <div className="rounded-[2rem] border-2 border-[#A8D0D0] bg-white p-8 shadow-sm min-h-[300px] flex flex-col">
+                <div className="rounded-[2rem] border-2 border-[#A8D0D0] bg-white p-8 shadow-sm min-h-[320px] flex flex-col transition-all">
                   <div className="mb-4 flex items-center gap-2 text-[#7FC6DA] font-black uppercase text-[9px] tracking-widest">
                     <Reply className="h-3.5 w-3.5" /> 
-                    {isGenerating ? 'AI is drafting...' : 'Drafting Response'}
+                    {isGenerating ? 'AI Intelligence is drafting...' : 'Drafting Response'}
                   </div>
                   
                   {isGenerating ? (
-                    <div className="flex flex-1 items-center justify-center">
-                      <Loader2 className="h-6 w-6 animate-spin text-[#7FC6DA]/40" />
+                    <div className="flex flex-1 flex-col items-center justify-center gap-4 animate-pulse">
+                      <Loader2 className="h-6 w-6 animate-spin text-[#7FC6DA]/60" />
+                      <span className="text-[10px] font-black text-[#7FC6DA]/40 uppercase tracking-tighter">Analyzing context...</span>
                     </div>
                   ) : (
                     <Textarea
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      className="flex-1 border-none bg-transparent p-0 text-[15px] font-medium leading-relaxed text-[#2D3436] focus-visible:ring-0 resize-none animate-in fade-in duration-500"
+                      className="flex-1 border-none bg-transparent p-0 text-[15px] font-medium leading-relaxed text-[#2D3436] focus-visible:ring-0 resize-none animate-in fade-in duration-700"
                       placeholder="Type your message..."
                       autoFocus
                     />
@@ -154,7 +153,7 @@ export function EmailDetailSheet({
                     </div>
                     <Button 
                       variant="outline" 
-                      className="h-8 rounded-lg border-2 border-[#7FC6DA] bg-white px-3 text-[9px] font-black uppercase tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA] hover:text-white transition-all" 
+                      className="h-8 rounded-lg border-2 border-[#7FC6DA] bg-white px-3 text-[9px] font-black uppercase tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA] hover:text-white transition-all shadow-sm active:scale-95" 
                       onClick={handleUseAIDraft}
                     >
                       Use AI Draft
