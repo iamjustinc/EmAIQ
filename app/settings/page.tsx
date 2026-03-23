@@ -29,6 +29,7 @@ import {
   Mail,
   Chrome,
   Loader2,
+  Database,
 } from 'lucide-react';
 
 type SettingsView =
@@ -36,6 +37,7 @@ type SettingsView =
   | 'profile'
   | 'emailAccounts'
   | 'passwordSecurity'
+  | 'privacyData'
   | 'appearance'
   | 'aiConfig'
   | 'priorityPreferences';
@@ -124,6 +126,7 @@ export default function SettingsPage() {
       profile: 'Edit Profile',
       emailAccounts: 'Email Accounts',
       passwordSecurity: 'Security',
+      privacyData: 'Privacy & Data',
       appearance: 'Appearance',
       aiConfig: 'AI Intelligence',
       priorityPreferences: 'Priority Preferences',
@@ -287,12 +290,18 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="grid gap-4">
-                  {[
+                {[
                     {
-                      label: 'Security & Privacy',
+                      label: 'Security',
                       icon: Shield,
-                      desc: 'Passwords and passcodes',
+                      desc: 'Sign-in method, sessions, and password access',
                       target: 'passwordSecurity',
+                    },
+                    {
+                      label: 'Privacy & Data',
+                      icon: Database,
+                      desc: 'AI data usage, personalization, and reset controls',
+                      target: 'privacyData',
                     },
                     {
                       label: 'Appearance',
@@ -643,46 +652,179 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {view === 'passwordSecurity' && (
+{view === 'passwordSecurity' && (
               <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
                 <div className="rounded-[2rem] border border-border bg-card p-8 shadow-xl">
                   <div className="mb-8 flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
-                      <KeyRound className="h-5 w-5" />
+                      <Shield className="h-5 w-5" />
                     </div>
-                    <h3 className="text-lg font-black tracking-tight">Access Control</h3>
+                    <div>
+                      <h3 className="text-lg font-black tracking-tight">Security</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Manage sign-in access and session security.
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="grid gap-4">
-                      <div className="space-y-2">
-                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
-                          New Password
-                        </Label>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          className="h-12 rounded-xl border-border bg-muted/30"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
-                          Confirm Password
-                        </Label>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          className="h-12 rounded-xl border-border bg-muted/30"
-                        />
+                  <div className="space-y-8">
+                    <div className="space-y-3">
+                      <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                        Sign-In Method
+                      </Label>
+                      <div className="rounded-xl border border-border bg-muted/20 p-4">
+                        <p className="text-sm font-bold text-foreground">Outlook</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Your password is managed through Outlook or Microsoft.
+                        </p>
                       </div>
                     </div>
-                    <Button className="h-12 w-full rounded-xl bg-primary text-[10px] font-bold uppercase tracking-widest">
-                      Update Access
-                    </Button>
+
+                    <Separator className="opacity-50" />
+
+                    <div className="space-y-3">
+                      <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                        Current Session
+                      </Label>
+                      <div className="rounded-xl border border-border bg-muted/20 p-4">
+                        <p className="text-sm font-bold text-foreground">{LOGGED_IN_EMAIL}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          This session is currently active on this device.
+                        </p>
+                      </div>
+                    </div>
+
+                    <Separator className="opacity-50" />
+
+                    <div className="space-y-3">
+                      <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                        Password Access
+                      </Label>
+                      <div className="rounded-xl border border-border bg-[#EAF0F6] p-4">
+                        <p className="text-sm font-bold text-foreground">
+                          Password changes are not managed here
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Because this account uses Outlook sign-in, password updates should be made through your email provider.
+                        </p>
+                      </div>
+                    </div>
+
+                    <Separator className="opacity-50" />
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setShowSwitchAccount(true)}
+                        className="h-12 rounded-xl text-[10px] font-bold uppercase tracking-widest"
+                      >
+                        Switch Account
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setShowLogoutConfirm(true)}
+                        className="h-12 rounded-xl border-[#F6B3C4]/60 text-[#D95D5D] hover:bg-[#F6B3C4]/10 text-[10px] font-bold uppercase tracking-widest"
+                      >
+                        Log Out
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
+
+            {view === 'privacyData' && (
+              <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+                <div className="rounded-[2rem] border border-border bg-card p-8 shadow-xl">
+                  <div className="mb-8 flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Database className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black tracking-tight">Privacy & Data</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Review how EmAIQ uses personalization and inbox data.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="space-y-3">
+                      <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                        AI Data Usage
+                      </Label>
+                      <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-3">
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-sm font-bold text-foreground">Email-based prioritization</p>
+                            <p className="text-xs text-muted-foreground">
+                              EmAIQ may use inbox context to personalize urgency and ranking.
+                            </p>
+                          </div>
+                          <Switch checked />
+                        </div>
+
+                        <Separator className="opacity-40" />
+
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-sm font-bold text-foreground">AI summaries and drafts</p>
+                            <p className="text-xs text-muted-foreground">
+                              EmAIQ may use email content to generate summaries and draft responses.
+                            </p>
+                          </div>
+                          <Switch checked />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator className="opacity-50" />
+
+                    <div className="space-y-3">
+                      <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                        Personalization Memory
+                      </Label>
+                      <div className="rounded-xl border border-border bg-muted/20 p-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-sm font-bold text-foreground">Remember my preferences</p>
+                            <p className="text-xs text-muted-foreground">
+                              Save AI tone, urgency preferences, and personalization choices for this account.
+                            </p>
+                          </div>
+                          <Switch checked />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator className="opacity-50" />
+
+                    <div className="space-y-3">
+                      <Label className="ml-1 text-[10px] font-black uppercase tracking-widest opacity-50">
+                        Reset Controls
+                      </Label>
+                      <div className="rounded-xl border border-[#F6B3C4]/40 bg-[#FFF7F8] p-4">
+                        <p className="text-sm font-bold text-foreground">Clear personalization data</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Reset saved AI preferences, urgency customization, and learned personalization signals.
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="mt-4 h-10 rounded-xl border-[#F6B3C4]/60 text-[#D95D5D] hover:bg-[#F6B3C4]/10 text-[10px] font-bold uppercase tracking-widest"
+                        >
+                          Reset Privacy Data
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {view === 'appearance' && <AppearanceSettingsPanel />}
 
 {view === 'appearance' && <AppearanceSettingsPanel />}
           </div>
