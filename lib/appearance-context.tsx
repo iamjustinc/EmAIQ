@@ -31,18 +31,23 @@ const AppearanceContext = createContext<AppearanceContextValue | undefined>(unde
 
 function parseStored(json: string | null): Partial<AppearanceState> {
   if (!json) return {};
+
   try {
     const raw = JSON.parse(json) as Record<string, unknown>;
     const out: Partial<AppearanceState> = {};
+
     if (typeof raw.themePreset === 'string' && isThemePresetId(raw.themePreset)) {
       out.themePreset = raw.themePreset;
     }
+
     if (typeof raw.density === 'string' && isDensityMode(raw.density)) {
       out.density = raw.density;
     }
+
     if (typeof raw.fontScale === 'string' && isFontScaleMode(raw.fontScale)) {
       out.fontScale = raw.fontScale;
     }
+
     return out;
   } catch {
     return {};
@@ -51,22 +56,22 @@ function parseStored(json: string | null): Partial<AppearanceState> {
 
 function applyToDocument(state: AppearanceState) {
   if (typeof document === 'undefined') return;
+
   const root = document.documentElement;
-  
-  // Set data attributes for CSS variable targeting
+
   root.dataset.theme = state.themePreset;
   root.dataset.density = state.density;
   root.dataset.fontScale = state.fontScale;
 
-  // Midnight Intelligence is NOT a light theme
   const lightThemes: ThemePresetId[] = [
     'creator-editorial',
     'sunlit-creator',
+    'ocean-air',
+    'sunset-ocean',
   ];
 
   const isLight = lightThemes.includes(state.themePreset);
 
-  // Sync Tailwind .dark class and browser color scheme
   root.classList.toggle('dark', !isLight);
   root.classList.toggle('light', isLight);
   root.style.colorScheme = isLight ? 'light' : 'dark';
@@ -81,10 +86,7 @@ function persist(state: AppearanceState) {
 }
 
 export function AppearanceProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AppearanceState>({
-    ...DEFAULT_APPEARANCE,
-    themePreset: 'sunlit-creator'
-  });
+  const [state, setState] = useState<AppearanceState>(DEFAULT_APPEARANCE);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -96,10 +98,6 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
       ...DEFAULT_APPEARANCE,
       ...stored,
     };
-
-    if (next.themePreset === 'creator-editorial' || !next.themePreset) {
-      next.themePreset = 'sunlit-creator';
-    }
 
     setState(next);
     applyToDocument(next);
@@ -125,9 +123,8 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const resetAppearance = useCallback(() => {
-    const fresh: AppearanceState = { 
-      ...DEFAULT_APPEARANCE, 
-      themePreset: 'sunlit-creator' 
+    const fresh: AppearanceState = {
+      ...DEFAULT_APPEARANCE,
     };
     setState(fresh);
     applyToDocument(fresh);
@@ -145,13 +142,17 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
   );
 
   return (
-    <AppearanceContext.Provider value={value}>{children}</AppearanceContext.Provider>
+    <AppearanceContext.Provider value={value}>
+      {children}
+    </AppearanceContext.Provider>
   );
 }
 
 export function useAppearanceSettings(): AppearanceContextValue {
   const ctx = useContext(AppearanceContext);
-  if (!ctx) throw new Error('useAppearanceSettings must be used within AppearanceProvider');
+  if (!ctx) {
+    throw new Error('useAppearanceSettings must be used within AppearanceProvider');
+  }
   return ctx;
 }
 

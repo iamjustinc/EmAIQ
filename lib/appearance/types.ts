@@ -34,10 +34,7 @@ export function isThemePresetId(v: string): v is ThemePresetId {
   return (
     v === 'midnight-intelligence' ||
     v === 'creator-editorial' ||
-    v === 'sunlit-creator' ||
-    v === 'eco-signal' ||
-    v === 'ocean-air' ||
-    v === 'sunset-ocean'
+    v === 'sunlit-creator'
   );
 }
 

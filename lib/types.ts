@@ -1,34 +1,50 @@
-export interface Email {
-  id: string;
-  sender: {
-    name: string;
-    email: string;
-    avatarUrl?: string;
-  };
-  subject: string;
-  bodyPreview: string;
-  body?: string;
-  receivedAt: string; 
-  category: 'Client' | 'Internal' | 'Recruiting' | 'Finance' | 'Logistics' | 'Newsletter';
-  urgency: {
-    label: 'High' | 'Medium' | 'Low';
-    score: number;
-  };
-  analysis: {
-    summary: string[];
-    sentiment: 'Urgent' | 'Formal' | 'Casual' | 'Frustrated';
-    detectedDeadline?: string | null;
-  };
-  suggestedAction: 'Respond' | 'Review Later' | 'Delegate' | 'Archive';
-  isRead: boolean;
-  isActioned: boolean;
-  isFavorite: boolean;
-  /** Optional workflow flags used by `useEmails` */
-  isSent?: boolean;
-  snoozedUntil?: string | null;
+/**
+ * Appearance / theme system — extend with new presets by:
+ * 1. Add id here and to `ThemePresetMeta` in theme-metadata.ts
+ * 2. Add matching `[data-theme="your-id"] { ... }` block in appearance-themes.css
+ */
+
+export type ThemePresetId =
+  | 'midnight-intelligence'
+  | 'creator-editorial'
+  | 'sunlit-creator'
+  | 'eco-signal'
+  | 'ocean-air'
+  | 'sunset-ocean';
+
+export type DensityMode = 'compact' | 'comfortable' | 'spacious';
+
+export type FontScaleMode = 'small' | 'medium' | 'large';
+
+export interface AppearanceState {
+  themePreset: ThemePresetId;
+  density: DensityMode;
+  fontScale: FontScaleMode;
 }
 
-export type Category = Email['category'];
-export type UrgencyLabel = Email['urgency']['label'];
-export type SuggestedAction = Email['suggestedAction'];
-export type Sentiment = Email['analysis']['sentiment'];
+export const DEFAULT_APPEARANCE: AppearanceState = {
+  themePreset: 'creator-editorial',
+  density: 'comfortable',
+  fontScale: 'medium',
+};
+
+export const STORAGE_KEY = 'emaiq-appearance';
+
+export function isThemePresetId(v: string): v is ThemePresetId {
+  return (
+    v === 'midnight-intelligence' ||
+    v === 'creator-editorial' ||
+    v === 'sunlit-creator' ||
+    v === 'eco-signal' ||
+    v === 'ocean-air' ||
+    v === 'sunset-ocean'
+  );
+}
+
+export function isDensityMode(v: string): v is DensityMode {
+  return v === 'compact' || v === 'comfortable' || v === 'spacious';
+}
+
+export function isFontScaleMode(v: string): v is FontScaleMode {
+  return v === 'small' || v === 'medium' || v === 'large';
+}
