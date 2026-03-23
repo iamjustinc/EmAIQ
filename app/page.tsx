@@ -87,19 +87,44 @@ export default function InboxPage() {
         />
         
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
-          {/* Point 2 Fix: Added massive padding and gap for KPI Cards */}
           <div className="px-10 pb-8 pt-10">
             <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
-              <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" />
-              <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" />
-              <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" />
-              <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" />
+              {/* BUTTON FIXES: Added onClick handlers to update the activeTab state */}
+              <KPICard 
+                title="Unread" 
+                value={stats.unread} 
+                icon={Mail} 
+                subtitle="Messages" 
+                onClick={() => setActiveTab('all')} 
+              />
+              <KPICard 
+                title="Urgent" 
+                value={stats.urgent} 
+                icon={AlertCircle} 
+                subtitle="Actions" 
+                variant="danger" 
+                onClick={() => setActiveTab('action')} 
+              />
+              <KPICard 
+                title="Noise" 
+                value="21%" 
+                icon={Trash2} 
+                subtitle="Auto-filtered" 
+                variant="warning" 
+                onClick={() => setActiveTab('noise')} 
+              />
+              <KPICard 
+                title="Focus Time" 
+                value={stats.focusTime} 
+                icon={Zap} 
+                subtitle="Remaining" 
+                onClick={() => setActiveTab('all')} 
+              />
             </div>
           </div>
 
           <div className="flex-1 px-10 pb-10">
             <div className="flex min-h-[500px] flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
-              {/* Point 4: Empty State Handling */}
               {filteredEmails.length === 0 ? (
                 <div className="flex flex-1 flex-col items-center justify-center p-20 text-center">
                   <div className="mb-6 rounded-full bg-primary/5 p-6 animate-float">
