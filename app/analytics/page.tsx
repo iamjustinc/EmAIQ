@@ -5,7 +5,7 @@ import { Header } from '@/components/header';
 import { CircularGauge } from '@/components/circular-gauge';
 import { analyticsData } from '@/lib/mock-data';
 import {
-  PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis,
+  BarChart, Bar, AreaChart, Area, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
 import { Brain, Clock, Zap } from 'lucide-react';
@@ -17,10 +17,7 @@ const COLORS = {
   dark: '#2D3436',
   gray: '#A8A29A',
   bg: '#F4F7F7',
-  softTeal: '#A8D0D0'
 };
-
-const CHART_FILLS = [COLORS.teal, COLORS.pink, COLORS.dark, COLORS.softTeal, COLORS.gray];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -38,6 +35,24 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+function SenderRow({ rank, name, emails, score }: any) {
+  return (
+    <div className="flex items-center justify-between py-3 border-b border-[#F0F4F4] last:border-0">
+      <div className="flex items-center gap-4">
+        <span className="text-[10px] font-black text-[#A8A29A]">#{rank}</span>
+        <div>
+          <p className="text-xs font-bold text-[#2D3436]">{name}</p>
+          <p className="text-[10px] text-[#8C867E]">{emails} emails</p>
+        </div>
+      </div>
+      <div className="text-right">
+        <p className="text-xs font-black text-[#2D3436]">{score}</p>
+        <p className="text-[8px] font-bold uppercase tracking-tighter text-[#A8A29A]">score</p>
+      </div>
+    </div>
+  );
+}
+
 function StatCard({ icon: Icon, label, value, sublabel, iconColor = 'text-[#7FC6DA]' }: any) {
   return (
     <div className="flex items-center gap-4 rounded-[2rem] border-2 border-[#A8D0D0]/20 bg-white p-6 shadow-sm">
@@ -54,7 +69,7 @@ function StatCard({ icon: Icon, label, value, sublabel, iconColor = 'text-[#7FC6
 }
 
 export default function AnalyticsPage() {
-  const { summaryStats, urgentByDay, hourlyLoad, categoryBreakdown, focusScore } = analyticsData;
+  const { summaryStats, urgentByDay, hourlyLoad, focusScore, topSenders } = analyticsData;
 
   return (
     <AppShell>
@@ -62,7 +77,7 @@ export default function AnalyticsPage() {
         <Header title="Analytics" hideSearch />
         <div className="flex-1 overflow-auto p-8 space-y-8">
           
-          {/* Summary Strip */}
+          {/* Summary Stats */}
           <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
             <StatCard icon={Brain} label="Focus Score" value={`${summaryStats.focusScore}%`} sublabel="Actionable" iconColor="text-[#2D3436]" />
             <div className="flex items-center justify-center rounded-[2rem] border-2 border-[#A8D0D0]/20 bg-white p-4 shadow-sm">
@@ -82,7 +97,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontWeight: 900, fontSize: 10}} />
                   <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
+                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '20px', fontSize: '10px' }} />
                   <Bar dataKey="nonUrgent" name="Normal" stackId="a" fill={COLORS.dark} barSize={40} />
                   <Bar dataKey="urgent" name="Urgent" stackId="a" fill={COLORS.teal} radius={[10, 10, 0, 0]} barSize={40} />
                 </BarChart>
@@ -105,6 +120,38 @@ export default function AnalyticsPage() {
                   <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
                   <Tooltip content={<CustomTooltip />} />
                   <Area type="monotone" dataKey="emails" stroke={COLORS.teal} strokeWidth={4} fill="url(#loadGradient)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {/* Top Senders List */}
+            <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
+              <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Top Senders by Interruption</h3>
+              <div className="space-y-1">
+                {topSenders.map((sender, i) => (
+                  <SenderRow key={i} rank={i + 1} {...sender} />
+                ))}
+              </div>
+            </div>
+
+            {/* Focus Score Trend (Step Chart) */}
+            <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
+              <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Focus Score Trend</h3>
+              <ResponsiveContainer width="100%" height={280}>
+                <AreaChart data={focusScore}>
+                  <defs>
+                    <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={COLORS.pink} stopOpacity={0.4} />
+                      <stop offset="95%" stopColor={COLORS.pink} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="8 8" stroke="#F0F4F4" vertical={false} />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
+                  <Area type="stepAfter" dataKey="score" name="Focus Score" stroke={COLORS.pink} strokeWidth={4} fill="url(#scoreGradient)" />
+                  <Tooltip content={<CustomTooltip />} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

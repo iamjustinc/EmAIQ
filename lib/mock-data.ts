@@ -1,165 +1,37 @@
-'use client';
-
-import { AppShell } from '@/components/app-shell';
-import { Header } from '@/components/header';
-import { InsightCard } from '@/components/insight-card';
-import { CircularGauge } from '@/components/circular-gauge';
-import { analyticsData, aiInsights } from '@/lib/mock-data';
-import {
-  PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area, XAxis, YAxis,
-  CartesianGrid, Tooltip, ResponsiveContainer, Legend,
-} from 'recharts';
-import { 
-  Brain, Clock, Zap, TrendingUp, TrendingDown, Minus, AlertCircle, User,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-const COLORS = {
-  teal: '#7FC6DA',
-  pink: '#F6B3C4',
-  danger: '#D95D5D',
-  dark: '#2D3436',
-  gray: '#A8A29A',
-  bg: '#F4F7F7',
-  softTeal: '#A8D0D0'
+export const analyticsData = {
+  summaryStats: {
+    focusScore: 81,
+    actionableRate: 68,
+    avgTriageTime: 2.3,
+    timeSaved: 47
+  },
+  urgentByDay: [
+    { day: 'Mon', urgent: 12, nonUrgent: 35 },
+    { day: 'Tue', urgent: 18, nonUrgent: 42 },
+    { day: 'Wed', urgent: 8, nonUrgent: 33 },
+    { day: 'Thu', urgent: 15, nonUrgent: 45 },
+    { day: 'Fri', urgent: 10, nonUrgent: 40 },
+    { day: 'Sat', urgent: 4, nonUrgent: 12 },
+    { day: 'Sun', urgent: 2, nonUrgent: 8 },
+  ],
+  hourlyLoad: [
+    { hour: '6AM', emails: 5 }, { hour: '8AM', emails: 25 },
+    { hour: '10AM', emails: 82 }, { hour: '12PM', emails: 45 },
+    { hour: '2PM', emails: 70 }, { hour: '4PM', emails: 55 },
+    { hour: '6PM', emails: 20 }, { hour: '8PM', emails: 5 },
+  ],
+  focusScore: [
+    { day: 'Mon', score: 65 }, { day: 'Tue', score: 60 },
+    { day: 'Wed', score: 75 }, { day: 'Thu', score: 70 },
+    { day: 'Fri', score: 72 }, { day: 'Sat', score: 85 },
+    { day: 'Sun', score: 85 },
+  ],
+  topSenders: [
+    { name: 'Sarah Chen', emails: 24, score: 85 },
+    { name: 'Marketing Team', emails: 42, score: 72 },
+    { name: 'Slack Notifications', emails: 85, score: 68 },
+    { name: 'Marcus Johnson', emails: 15, score: 62 },
+    { name: 'HR Team', emails: 10, score: 45 },
+    { name: 'LinkedIn', emails: 33, score: 28 },
+  ]
 };
-
-const CHART_FILLS = [
-  COLORS.teal,
-  COLORS.pink,
-  COLORS.dark,
-  COLORS.softTeal,
-  COLORS.gray,
-  '#C5D8D1', 
-];
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="rounded-2xl border-2 border-[#A8D0D0]/30 bg-white p-3 shadow-xl">
-        <p className="text-[10px] font-black uppercase tracking-widest text-[#8C867E] mb-1">{label}</p>
-        {payload.map((entry: any, index: number) => (
-          <p key={index} className="text-sm font-bold text-[#2D3436]">
-            {entry.name}: <span style={{ color: entry.fill || entry.stroke }}>{entry.value}</span>
-          </p>
-        ))}
-      </div>
-    );
-  }
-  return null;
-};
-
-function StatCard({ icon: Icon, label, value, sublabel, iconColor = 'text-[#7FC6DA]' }: any) {
-  return (
-    <div className="flex items-center gap-4 rounded-[2rem] border-2 border-[#A8D0D0]/20 bg-white p-6 shadow-sm">
-      <div className={cn('rounded-2xl p-3', iconColor.replace('text-', 'bg-').replace('[', '[').replace(']', ']/10'))}>
-        <Icon className={cn('h-6 w-6', iconColor)} />
-      </div>
-      <div>
-        <p className="text-[10px] font-black uppercase tracking-widest text-[#8C867E]">{label}</p>
-        <p className="text-2xl font-black text-[#2D3436]">{value}</p>
-        {sublabel && <p className="text-[10px] font-bold text-[#7FC6DA]">{sublabel}</p>}
-      </div>
-    </div>
-  );
-}
-
-export default function AnalyticsPage() {
-  const { summaryStats, urgentByDay, hourlyLoad, categoryBreakdown, focusScore } = analyticsData;
-
-  return (
-    <AppShell>
-      <div className="flex h-full flex-col bg-[#F4F7F7]">
-        <Header title="Analytics" hideSearch />
-        
-        <div className="flex-1 overflow-auto p-8 space-y-8">
-          {/* Summary Strip */}
-          <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-            <StatCard icon={Brain} label="Focus Score" value={`${summaryStats.focusScore}%`} sublabel="Actionable" iconColor="text-[#2D3436]" />
-            <div className="flex items-center justify-center rounded-[2rem] border-2 border-[#A8D0D0]/20 bg-white p-4 shadow-sm">
-              <CircularGauge value={summaryStats.actionableRate} size={90} strokeWidth={10} label="Rate" color={COLORS.teal} />
-            </div>
-            <StatCard icon={Clock} label="Avg Triage" value={`${summaryStats.avgTriageTime}m`} sublabel="Per email" iconColor="text-[#7FC6DA]" />
-            <StatCard icon={Zap} label="Time Saved" value={`${summaryStats.timeSaved}m`} sublabel="This week" iconColor="text-[#F6B3C4]" />
-          </div>
-
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {/* Urgent Bar Chart - Updated Colors (Teal & Dark) */}
-            <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
-              <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Urgent vs Non-Urgent</h3>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={urgentByDay}>
-                  <CartesianGrid strokeDasharray="8 8" stroke="#F0F4F4" vertical={false} />
-                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontWeight: 900, fontSize: 10}} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
-                  <Tooltip content={<CustomTooltip />} cursor={{fill: '#7FC6DA', opacity: 0.05}} />
-                  <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '20px', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase' }} />
-                  <Bar dataKey="nonUrgent" name="Normal" stackId="a" fill={COLORS.dark} radius={[0, 0, 0, 0]} barSize={40} />
-                  <Bar dataKey="urgent" name="Urgent" stackId="a" fill={COLORS.teal} radius={[10, 10, 0, 0]} barSize={40} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Inbox Load Area Chart */}
-            <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
-              <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Inbox Load by Hour</h3>
-              <ResponsiveContainer width="100%" height={280}>
-                <AreaChart data={hourlyLoad}>
-                  <defs>
-                    <linearGradient id="loadGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={COLORS.teal} stopOpacity={0.4} />
-                      <stop offset="95%" stopColor={COLORS.teal} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="8 8" stroke="#F0F4F4" vertical={false} />
-                  <XAxis dataKey="hour" axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="emails" stroke={COLORS.teal} strokeWidth={4} fill="url(#loadGradient)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {/* Donut Chart with Added Legend */}
-             <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
-                <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Email Category Breakdown</h3>
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie data={categoryBreakdown} innerRadius={70} outerRadius={100} paddingAngle={8} dataKey="value" nameKey="name">
-                      {categoryBreakdown.map((_, index) => (
-                        <Cell key={index} fill={CHART_FILLS[index % CHART_FILLS.length]} stroke="none" />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend layout="vertical" align="right" verticalAlign="middle" iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em' }} />
-                  </PieChart>
-                </ResponsiveContainer>
-             </div>
-
-             {/* Focus Score Trend */}
-             <div className="rounded-[2.5rem] border-2 border-[#A8D0D0]/30 bg-white p-8 shadow-sm">
-               <h3 className="mb-6 text-[11px] font-black uppercase tracking-[0.2em] text-[#2D3436]">Focus Score Trend</h3>
-               <ResponsiveContainer width="100%" height={280}>
-                <AreaChart data={focusScore}>
-                  <defs>
-                    <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={COLORS.pink} stopOpacity={0.4} />
-                      <stop offset="95%" stopColor={COLORS.pink} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="8 8" stroke="#F0F4F4" vertical={false} />
-                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#8C867E', fontSize: 10}} width={30} />
-                  <Area type="stepAfter" dataKey="score" name="Focus Score" stroke={COLORS.pink} strokeWidth={4} fill="url(#scoreGradient)" />
-                  <Tooltip content={<CustomTooltip />} />
-                </AreaChart>
-               </ResponsiveContainer>
-             </div>
-          </div>
-        </div>
-      </div>
-    </AppShell>
-  );
-}
