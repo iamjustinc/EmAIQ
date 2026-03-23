@@ -15,8 +15,8 @@ export default function ArchivedPage() {
   const [isDrafting, setIsDrafting] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
 
-  // Filter for archived emails
-  const archivedEmails = (allEmails || []).filter(e => e.status === 'archived' || e.isArchived);
+  // FIXED: Your hook uses 'isActioned' to archive. We filter for that here.
+  const archivedEmails = (allEmails || []).filter(e => e.isActioned === true);
 
   const currentSelectedEmail = archivedEmails.find(e => e.id === selectedEmailId) || null;
 
