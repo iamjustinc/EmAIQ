@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useUserStore } from '@/store/use-user-store';
+import { useEmails } from '@/hooks/useEmails'; // ADD THIS
 import {
   Inbox,
   BarChart3,
@@ -23,12 +24,16 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const pathname = usePathname();
   const { firstName } = useUserStore();
+  
+  // Get the actual email data to show the count
+  const { allEmails } = useEmails(); 
+  const archivedCount = allEmails.filter(e => e.isActioned).length;
 
   const mainNav = [
     { name: 'Inbox', href: '/', icon: Inbox },
     { name: 'Sent', href: '/sent', icon: Send },
     { name: 'Favorites', href: '/favorites', icon: Star },
-    { name: 'Archived', href: '/archived', icon: Archive },
+    { name: 'Archived', href: '/archived', icon: Archive, count: archivedCount }, // ADD COUNT HERE
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   ];
 
@@ -66,12 +71,25 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
               )}
             >
               <item.icon className={cn("h-5 w-5 shrink-0", isActive ? "stroke-[2.5px]" : "stroke-[2px]")} />
-              {!isCollapsed && <span>{item.name}</span>}
+              {!isCollapsed && (
+                <div className="flex flex-1 items-center justify-between">
+                  <span>{item.name}</span>
+                  {item.name === 'Archived' && archivedCount > 0 && (
+                    <span className={cn(
+                      "rounded-full px-2 py-0.5 text-[10px] font-black",
+                      isActive ? "bg-white/20 text-white" : "bg-[#7FC6DA]/20 text-[#7FC6DA]"
+                    )}>
+                      {archivedCount}
+                    </span>
+                  )}
+                </div>
+              )}
             </Link>
           );
         })}
       </nav>
 
+      {/* Rest of the sidebar remains exactly the same... */}
       <div className="mt-auto border-t border-sidebar-border p-3 space-y-1">
         <Link
           href="/settings"
