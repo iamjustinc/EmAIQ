@@ -34,6 +34,7 @@ export function EmailDetailSheet({
 }: EmailDetailSheetProps) {
   const [mode, setMode] = useState<Mode>('default')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false) // New state for AI animation
   const [showFullEmail, setShowFullEmail] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [successAction, setSuccessAction] = useState<string | null>(null)
@@ -61,6 +62,19 @@ export function EmailDetailSheet({
     if (lines.length === 0) return `Hi ${senderFirstName},\n\nThanks for your email.${signature}`
     return `Hi ${senderFirstName},\n\nI understand that ${lines[0].toLowerCase()}\n\nI’ll take care of it.${signature}`
   }, [email, globalFirstName, globalSignOff]) 
+
+  const handleUseAIDraft = () => {
+    setMode('reply')
+    setIsDrafting(true)
+    setIsGenerating(true)
+    setReplyText('') // Start empty to show animation
+    
+    // Simulate AI Generation time
+    setTimeout(() => {
+      setReplyText(generatedDraft)
+      setIsGenerating(false)
+    }, 800)
+  }
 
   if (!email) return null
 
@@ -110,17 +124,25 @@ export function EmailDetailSheet({
               <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#7FC6DA]" /></div>
             ) : mode === 'reply' ? (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <div className="rounded-[2rem] border-2 border-[#A8D0D0] bg-white p-8 shadow-sm">
+                <div className="rounded-[2rem] border-2 border-[#A8D0D0] bg-white p-8 shadow-sm min-h-[300px] flex flex-col">
                   <div className="mb-4 flex items-center gap-2 text-[#7FC6DA] font-black uppercase text-[9px] tracking-widest">
-                    <Reply className="h-3.5 w-3.5" /> Drafting Response
+                    <Reply className="h-3.5 w-3.5" /> 
+                    {isGenerating ? 'AI is drafting...' : 'Drafting Response'}
                   </div>
-                  <Textarea
-                    value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    className="min-h-[250px] border-none bg-transparent p-0 text-[15px] font-medium leading-relaxed text-[#2D3436] focus-visible:ring-0 resize-none"
-                    placeholder="Type your message..."
-                    autoFocus
-                  />
+                  
+                  {isGenerating ? (
+                    <div className="flex flex-1 items-center justify-center">
+                      <Loader2 className="h-6 w-6 animate-spin text-[#7FC6DA]/40" />
+                    </div>
+                  ) : (
+                    <Textarea
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      className="flex-1 border-none bg-transparent p-0 text-[15px] font-medium leading-relaxed text-[#2D3436] focus-visible:ring-0 resize-none animate-in fade-in duration-500"
+                      placeholder="Type your message..."
+                      autoFocus
+                    />
+                  )}
                 </div>
               </div>
             ) : (
@@ -130,7 +152,11 @@ export function EmailDetailSheet({
                     <div className="flex items-center gap-2 text-[#7FC6DA] font-black uppercase text-[9px] tracking-widest">
                       <Zap className="h-3.5 w-3.5 fill-[#7FC6DA]" /> Intelligence Report
                     </div>
-                    <Button variant="outline" className="h-8 rounded-lg border-2 border-[#7FC6DA] bg-white px-3 text-[9px] font-black uppercase tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA] hover:text-white transition-all" onClick={() => { setReplyText(generatedDraft); setMode('reply'); setIsDrafting(true); }}>
+                    <Button 
+                      variant="outline" 
+                      className="h-8 rounded-lg border-2 border-[#7FC6DA] bg-white px-3 text-[9px] font-black uppercase tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA] hover:text-white transition-all" 
+                      onClick={handleUseAIDraft}
+                    >
                       Use AI Draft
                     </Button>
                   </div>
@@ -165,7 +191,6 @@ export function EmailDetailSheet({
                   </div>
                 </Button>
                 
-                {/* LATER POPOVER - modal={false} is key here */}
                 <Popover modal={false}>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-24 rounded-[2rem] border-2 border-[#A8D0D0] bg-[#F4F7F7] text-[#2D3436] hover:border-[#7FC6DA] shadow-sm">
@@ -188,7 +213,6 @@ export function EmailDetailSheet({
                   </PopoverContent>
                 </Popover>
 
-                {/* DELEGATE POPOVER - modal={false} is key here */}
                 <Popover modal={false}>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-16 rounded-2xl border-2 border-[#A8D0D0] bg-[#F4F7F7] text-[#2D3436] uppercase text-[11px] font-black tracking-widest hover:border-[#7FC6DA] shadow-sm">
