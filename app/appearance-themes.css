@@ -67,43 +67,21 @@ html[data-theme='creator-editorial'] {
 }
 
 /* -----------------------------------------------------------------------------
-   Theme: Sunlit Creator
+   Theme: Sunlit Creator (Updated with Sunset Palette)
    ----------------------------------------------------------------------------- */
 html[data-theme='sunlit-creator'] {
   color-scheme: light;
-  --background: #f4efeb;
-  --foreground: #1f1722;
+  --background: #fff9f5; /* Soft sunset glow background */
+  --foreground: #2d242e;
   --card: #ffffff;
-  --card-foreground: #1f1722;
+  --card-foreground: #2d242e;
   --popover: #ffffff;
-  --popover-foreground: #1f1722;
-  --muted: #ebe4df;
-  --muted-foreground: #6c6570;
-  --primary: #ea8c42;
+  --popover-foreground: #2d242e;
+  --muted: #fce4ec; /* Soft pink muted background */
+  --muted-foreground: #8d6e63;
+  --primary: #4db6ac; /* Aqua Teal from the ocean ref */
   --primary-foreground: #ffffff;
-  --border: #e7ddd7;
-  --sidebar: #efe8e3;
-  --sidebar-border: #e7ddd7;
-}
-
-
-
-/* -----------------------------------------------------------------------------
-   Theme: Sunset Ocean
-   ----------------------------------------------------------------------------- */
-html[data-theme='sunset-ocean'] {
-  color-scheme: light;
-  --background: #fff4f1;
-  --foreground: #2a2326;
-  --card: #ffffff;
-  --card-foreground: #2a2326;
-  --popover: #ffffff;
-  --popover-foreground: #2a2326;
-  --muted: #f9ece9;
-  --muted-foreground: #7d6a6f;
-  --primary: #3c9c97;
-  --primary-foreground: #ffffff;
-  --border: #ebcfc9;
-  --sidebar: #fdf1ee;
-  --sidebar-border: #ebcfc9;
+  --border: #ffe082; /* Golden sand border */
+  --sidebar: #fff8f0;
+  --sidebar-border: #ffd54f; /* Yellow sunset accent */
 }

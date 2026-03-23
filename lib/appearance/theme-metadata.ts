@@ -27,32 +27,11 @@ export const THEME_PRESETS: ThemePresetMeta[] = [
     id: 'sunlit-creator',
     name: 'Sunlit Creator',
     shortLabel: 'Sunlit',
-    description: 'Bright, high-energy warm light mode.',
-    swatches: ['#F4EFEB', '#FBF8F5', '#F4A261', '#1F1722'],
-  },
-  {
-    id: 'eco-signal',
-    name: 'Eco Signal',
-    shortLabel: 'Eco',
-    description: 'Deep forest greens with amber highlights.',
-    swatches: ['#173222', '#1F3B29', '#E29A2D', '#F8F1E7'],
-  },
-  {
-    id: 'ocean-air',
-    name: 'Ocean Air',
-    shortLabel: 'Ocean',
-    description: 'Cool coastal blues and crisp whites.',
-    swatches: ['#EEF6FA', '#F7FBFD', '#4DA3D9', '#183247'],
-  },
-  {
-    id: 'sunset-ocean',
-    name: 'Sunset Ocean',
-    shortLabel: 'Sunset',
-    description: 'Warm coastal blush with ocean teal contrast.',
-    swatches: ['#FFF4F1', '#FFF8F6', '#3C9C97', '#2A2326'],
+    description: 'Aqua teals and sunset golds from the coast.',
+    swatches: ['#FFF9F5', '#FFFFFF', '#4DB6AC', '#2D242E'],
   },
 ];
 
 export function getThemeMeta(id: ThemePresetId): ThemePresetMeta {
-  return THEME_PRESETS.find((t) => t.id === id) ?? THEME_PRESETS[0];
+  return THEME_PRESETS.find((t) => t.id === id) ?? THEME_PRESETS[2]; // Defaults to Sunlit if not found
 }

@@ -56,11 +56,10 @@ function applyToDocument(state: AppearanceState) {
   root.dataset.density = state.density;
   root.dataset.fontScale = state.fontScale;
 
+  // Updated list to match your new selectable themes
   const lightThemes: ThemePresetId[] = [
     'creator-editorial',
     'sunlit-creator',
-    'ocean-air',
-    'sunset-ocean',
   ];
 
   root.classList.toggle('dark', !lightThemes.includes(state.themePreset));
@@ -75,9 +74,12 @@ function persist(state: AppearanceState) {
   }
 }
 
-/** Global appearance / theme / density / font-scale provider. */
 export function AppearanceProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AppearanceState>(DEFAULT_APPEARANCE);
+  // Hardcoded default to sunlit-creator for first-time loads
+  const [state, setState] = useState<AppearanceState>({
+    ...DEFAULT_APPEARANCE,
+    themePreset: 'sunlit-creator'
+  });
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -87,6 +89,7 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
 
     const next: AppearanceState = {
       ...DEFAULT_APPEARANCE,
+      themePreset: 'sunlit-creator', // Ensure Sunlit is the fall-back default
       ...stored,
     };
 
@@ -114,7 +117,7 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const resetAppearance = useCallback(() => {
-    setState(DEFAULT_APPEARANCE);
+    setState({ ...DEFAULT_APPEARANCE, themePreset: 'sunlit-creator' });
   }, []);
 
   const value = useMemo(
@@ -141,10 +144,8 @@ export function useAppearanceSettings(): AppearanceContextValue {
   return ctx;
 }
 
-/** Alias for documentation / future naming consistency */
 export { AppearanceProvider as AppearanceSettingsProvider };
 
-/** Safe optional hook for components that may render outside provider (should not happen). */
 export function useAppearanceSettingsOptional(): AppearanceContextValue | null {
   return useContext(AppearanceContext) ?? null;
 }
