@@ -300,34 +300,34 @@ export default function SettingsPage() {
                     <Separator className="opacity-50" />
 
                     <div className="space-y-5">
-                      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-primary">
-                        <span>Conservative</span>
-                        <span>Draft Tone</span>
-                        <span>Aggressive</span>
-                      </div>
+  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+    <span>Conservative</span>
+    <span>Draft Tone</span>
+    <span>Aggressive</span>
+  </div>
 
-                      <Slider
-                        value={draftTone}
-                        onValueChange={setDraftTone}
-                        max={100}
-                        step={1}
-                        className="py-2"
-                      />
+  <Slider
+    value={draftTone}
+    onValueChange={setDraftTone}
+    max={100}
+    step={1}
+    className="w-full py-4 [&_[role=slider]]:h-7 [&_[role=slider]]:w-7 [&_[role=slider]]:border-2 [&_[role=slider]]:border-[#A8D0D0] [&_[role=slider]]:bg-white [&_[role=slider]]:shadow-md [&>span:first-child]:h-2 [&>span:first-child]:bg-[#A8D0D0]/25 [&>span:first-child_span]:bg-[#7FC6DA]"
+  />
 
-                      <div className="rounded-xl border border-border bg-muted/20 p-4">
-                        <div className="flex items-center justify-between gap-4">
-                          <div>
-                            <p className="text-sm font-bold text-foreground">{toneLabel}</p>
-                            <p className="mt-1 text-xs text-muted-foreground">
-                              {toneDescription}
-                            </p>
-                          </div>
-                          <div className="shrink-0 rounded-full border border-border bg-background px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
-                            {draftTone[0]}%
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+  <div className="rounded-xl border border-border bg-muted/20 p-4">
+    <div className="flex items-center justify-between gap-4">
+      <div>
+        <p className="text-sm font-bold text-foreground">{toneLabel}</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          {toneDescription}
+        </p>
+      </div>
+      <div className="shrink-0 rounded-full border border-border bg-background px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary">
+        {draftTone[0]}%
+      </div>
+    </div>
+  </div>
+</div>
 
                     <Separator className="opacity-50" />
 
