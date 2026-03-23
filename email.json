@@ -8,7 +8,6 @@
     },
     "subject": "Need final deck before 2 PM client review",
     "bodyPreview": "Can you send the revised deck with the updated pricing slide before 2 PM today?",
-    "receivedAt": "2026-03-23T23:38:00-04:00",
     "category": "Client",
     "urgency": {
       "label": "High",
@@ -26,7 +25,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi Alex,\n\nThe client review was moved up and we need the final version of the deck before 2:00 PM today. Please make sure the updated pricing slide is included and double-check the Q2 figures on slide 8 before you send it over.\n\nIf possible, send me the final PDF and editable deck so I can forward both versions to leadership.\n\nThanks,\nMaya"
+    "body": "Hi Alex,\n\nThe client review was moved up and we need the final version of the deck before 2:00 PM today. Please make sure the updated pricing slide is included and double-check the Q2 figures on slide 8 before you send it over.\n\nIf possible, send me the final PDF and editable deck so I can forward both versions to leadership.\n\nThanks,\nMaya",
+    "timestamp": "2026-03-23T23:38:00-04:00"
   },
   {
     "id": "eml_002",
@@ -37,7 +37,6 @@
     },
     "subject": "Tomorrow's standup agenda",
     "bodyPreview": "Please add blockers and ownership updates before EOD.",
-    "receivedAt": "2026-03-23T23:31:00-04:00",
     "category": "Internal",
     "urgency": {
       "label": "Medium",
@@ -55,7 +54,8 @@
     "suggestedAction": "Review Later",
     "isRead": false,
     "isActioned": false,
-    "body": "Hey Alex,\n\nFor tomorrow's standup, can you add your current blockers and any ownership updates before EOD today? A short bullet list is totally fine.\n\nI'm especially looking for anything that could affect the implementation timeline or customer handoff this week.\n\nThanks,\nJordan"
+    "body": "Hey Alex,\n\nFor tomorrow's standup, can you add your current blockers and any ownership updates before EOD today? A short bullet list is totally fine.\n\nI'm especially looking for anything that could affect the implementation timeline or customer handoff this week.\n\nThanks,\nJordan",
+    "timestamp": "2026-03-23T23:31:00-04:00"
   },
   {
     "id": "eml_003",
@@ -66,7 +66,6 @@
     },
     "subject": "Interview confirmation for Monday",
     "bodyPreview": "Please confirm your availability and bring a copy of your resume.",
-    "receivedAt": "2026-03-23T23:23:00-04:00",
     "category": "Recruiting",
     "urgency": {
       "label": "High",
@@ -84,7 +83,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hello Alex,\n\nThis is a reminder that your interview is scheduled for Monday at 10:00 AM. Please reply to confirm your availability. The panel will include one product lead and two solutions engineering team members.\n\nPlease also bring an updated copy of your resume and be prepared to discuss recent client-facing work.\n\nBest,\nTalent Team"
+    "body": "Hello Alex,\n\nThis is a reminder that your interview is scheduled for Monday at 10:00 AM. Please reply to confirm your availability. The panel will include one product lead and two solutions engineering team members.\n\nPlease also bring an updated copy of your resume and be prepared to discuss recent client-facing work.\n\nBest,\nTalent Team",
+    "timestamp": "2026-03-23T23:23:00-04:00"
   },
   {
     "id": "eml_004",
@@ -95,7 +95,6 @@
     },
     "subject": "Expense report missing receipt",
     "bodyPreview": "Your March reimbursement is on hold until the hotel receipt is uploaded.",
-    "receivedAt": "2026-03-23T23:14:00-04:00",
     "category": "Finance",
     "urgency": {
       "label": "Medium",
@@ -113,7 +112,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hello Alex,\n\nYour March reimbursement request is currently on hold because the hotel receipt has not been uploaded to the expense system. Once the receipt is attached, we can resume processing.\n\nPlease upload the missing receipt by Friday to ensure payment is included in this cycle.\n\nRegards,\nFinance Ops"
+    "body": "Hello Alex,\n\nYour March reimbursement request is currently on hold because the hotel receipt has not been uploaded to the expense system. Once the receipt is attached, we can resume processing.\n\nPlease upload the missing receipt by Friday to ensure payment is included in this cycle.\n\nRegards,\nFinance Ops",
+    "timestamp": "2026-03-23T23:14:00-04:00"
   },
   {
     "id": "eml_005",
@@ -124,7 +124,6 @@
     },
     "subject": "Quick clarification on implementation timeline",
     "bodyPreview": "Are we still targeting a 6-week rollout for phase one?",
-    "receivedAt": "2026-03-23T23:02:00-04:00",
     "category": "Client",
     "urgency": {
       "label": "High",
@@ -142,7 +141,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi Alex,\n\nQuick clarification before we send our stakeholder update: are we still targeting a 6-week rollout for phase one, or did that change after yesterday's review?\n\nIf the timeline shifted, could you send the latest milestone breakdown as well so we stay aligned internally?\n\nThanks,\nPriya"
+    "body": "Hi Alex,\n\nQuick clarification before we send our stakeholder update: are we still targeting a 6-week rollout for phase one, or did that change after yesterday's review?\n\nIf the timeline shifted, could you send the latest milestone breakdown as well so we stay aligned internally?\n\nThanks,\nPriya",
+    "timestamp": "2026-03-23T23:02:00-04:00"
   },
   {
     "id": "eml_006",
@@ -153,7 +153,6 @@
     },
     "subject": "March internal newsletter",
     "bodyPreview": "Highlights from the all-hands, new hires, and community events.",
-    "receivedAt": "2026-03-23T22:47:00-04:00",
     "category": "Newsletter",
     "urgency": {
       "label": "Low",
@@ -171,7 +170,8 @@
     "suggestedAction": "Archive",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi everyone,\n\nHere are this month's highlights from the all-hands: the product org shared the Q1 roadmap recap, we welcomed six new hires across engineering and customer success, and community events for next month are now open for sign-up.\n\nWe also included photos from the volunteer day and a short note from leadership on upcoming company priorities.\n\nBest,\nCompany News"
+    "body": "Hi everyone,\n\nHere are this month's highlights from the all-hands: the product org shared the Q1 roadmap recap, we welcomed six new hires across engineering and customer success, and community events for next month are now open for sign-up.\n\nWe also included photos from the volunteer day and a short note from leadership on upcoming company priorities.\n\nBest,\nCompany News",
+    "timestamp": "2026-03-23T22:47:00-04:00"
   },
   {
     "id": "eml_007",
@@ -182,7 +182,6 @@
     },
     "subject": "Can you cover the client onboarding call?",
     "bodyPreview": "I have a conflict at 3 PM and need someone to step in.",
-    "receivedAt": "2026-03-23T22:33:00-04:00",
     "category": "Internal",
     "urgency": {
       "label": "High",
@@ -200,7 +199,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hey Alex,\n\nI have a conflict at 3:00 PM and need someone to cover the client onboarding call for me. I already dropped the briefing notes, agenda, and implementation checklist into the shared folder.\n\nCan you let me know as soon as possible if you can step in? If not, I'll keep looking.\n\nThank you,\nSonia"
+    "body": "Hey Alex,\n\nI have a conflict at 3:00 PM and need someone to cover the client onboarding call for me. I already dropped the briefing notes, agenda, and implementation checklist into the shared folder.\n\nCan you let me know as soon as possible if you can step in? If not, I'll keep looking.\n\nThank you,\nSonia",
+    "timestamp": "2026-03-23T22:33:00-04:00"
   },
   {
     "id": "eml_008",
@@ -211,7 +211,6 @@
     },
     "subject": "VPN maintenance window tonight",
     "bodyPreview": "VPN access may be intermittent from 11 PM to 1 AM.",
-    "receivedAt": "2026-03-23T22:19:00-04:00",
     "category": "Logistics",
     "urgency": {
       "label": "Low",
@@ -229,7 +228,8 @@
     "suggestedAction": "Review Later",
     "isRead": false,
     "isActioned": false,
-    "body": "Hello,\n\nVPN maintenance is scheduled for tonight from 11:00 PM to 1:00 AM Eastern. During that window, remote access may be intermittent or temporarily unavailable.\n\nNo action is required unless you plan to work late and need stable VPN access during that time.\n\nIT Support"
+    "body": "Hello,\n\nVPN maintenance is scheduled for tonight from 11:00 PM to 1:00 AM Eastern. During that window, remote access may be intermittent or temporarily unavailable.\n\nNo action is required unless you plan to work late and need stable VPN access during that time.\n\nIT Support",
+    "timestamp": "2026-03-23T22:19:00-04:00"
   },
   {
     "id": "eml_009",
@@ -240,7 +240,6 @@
     },
     "subject": "Escalation: dashboard numbers do not match",
     "bodyPreview": "The numbers in yesterday's dashboard export appear inconsistent with the live environment.",
-    "receivedAt": "2026-03-23T22:04:00-04:00",
     "category": "Client",
     "urgency": {
       "label": "High",
@@ -258,7 +257,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Alex,\n\nThe numbers in yesterday's dashboard export do not match what we're seeing in the live environment. Revenue totals and active-user counts both look off on our side, and we need clarity before the 1:00 PM check-in.\n\nCan you investigate whether the export pulled from a stale snapshot or if there is a reporting issue in production?\n\nThanks,\nDerek"
+    "body": "Alex,\n\nThe numbers in yesterday's dashboard export do not match what we're seeing in the live environment. Revenue totals and active-user counts both look off on our side, and we need clarity before the 1:00 PM check-in.\n\nCan you investigate whether the export pulled from a stale snapshot or if there is a reporting issue in production?\n\nThanks,\nDerek",
+    "timestamp": "2026-03-23T22:04:00-04:00"
   },
   {
     "id": "eml_010",
@@ -269,7 +269,6 @@
     },
     "subject": "Open enrollment closes next week",
     "bodyPreview": "Reminder to review your health and dental selections.",
-    "receivedAt": "2026-03-23T21:50:00-04:00",
     "category": "Internal",
     "urgency": {
       "label": "Medium",
@@ -287,7 +286,8 @@
     "suggestedAction": "Review Later",
     "isRead": false,
     "isActioned": false,
-    "body": "Hello,\n\nThis is a reminder that open enrollment for health and dental benefits closes next Thursday. Please review your current selections and make any necessary changes before the deadline.\n\nIf you do not submit updates, your existing selections may roll over based on plan rules.\n\nBenefits Team"
+    "body": "Hello,\n\nThis is a reminder that open enrollment for health and dental benefits closes next Thursday. Please review your current selections and make any necessary changes before the deadline.\n\nIf you do not submit updates, your existing selections may roll over based on plan rules.\n\nBenefits Team",
+    "timestamp": "2026-03-23T21:50:00-04:00"
   },
   {
     "id": "eml_011",
@@ -298,7 +298,6 @@
     },
     "subject": "New event scheduled: Vendor sync",
     "bodyPreview": "A new event has been added to your calendar for Friday at 11 AM.",
-    "receivedAt": "2026-03-23T21:37:00-04:00",
     "category": "Logistics",
     "urgency": {
       "label": "Low",
@@ -316,7 +315,8 @@
     "suggestedAction": "Archive",
     "isRead": false,
     "isActioned": false,
-    "body": "A new Calendly event has been scheduled on your calendar.\n\nEvent: Vendor sync\nDate: Friday\nTime: 11:00 AM\n\nNo reply is required. Please check your calendar for the full invite details."
+    "body": "A new Calendly event has been scheduled on your calendar.\n\nEvent: Vendor sync\nDate: Friday\nTime: 11:00 AM\n\nNo reply is required. Please check your calendar for the full invite details.",
+    "timestamp": "2026-03-23T21:37:00-04:00"
   },
   {
     "id": "eml_012",
@@ -327,7 +327,6 @@
     },
     "subject": "Draft QBR narrative for review",
     "bodyPreview": "Could you review sections 2 and 3 before lunch?",
-    "receivedAt": "2026-03-23T21:21:00-04:00",
     "category": "Internal",
     "urgency": {
       "label": "High",
@@ -345,7 +344,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi Alex,\n\nCould you review sections 2 and 3 of the QBR narrative before lunch today? I'm mainly looking for comments on the adoption storyline and the implementation callouts.\n\nIf anything feels too vague for leadership review, please mark it directly in the doc.\n\nThanks,\nNina"
+    "body": "Hi Alex,\n\nCould you review sections 2 and 3 of the QBR narrative before lunch today? I'm mainly looking for comments on the adoption storyline and the implementation callouts.\n\nIf anything feels too vague for leadership review, please mark it directly in the doc.\n\nThanks,\nNina",
+    "timestamp": "2026-03-23T21:21:00-04:00"
   },
   {
     "id": "eml_013",
@@ -356,7 +356,6 @@
     },
     "subject": "Jobs you may be interested in",
     "bodyPreview": "New product and solutions roles matching your profile.",
-    "receivedAt": "2026-03-23T21:06:00-04:00",
     "category": "Newsletter",
     "urgency": {
       "label": "Low",
@@ -374,7 +373,8 @@
     "suggestedAction": "Archive",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi Alex,\n\nHere are new product and solutions roles that may match your profile based on your recent activity and saved preferences. This week's suggestions include Solutions Engineer, Product Operations Associate, and Implementation Consultant roles.\n\nOpen the digest if you'd like to review openings and save any that look relevant.\n\nLinkedIn Jobs"
+    "body": "Hi Alex,\n\nHere are new product and solutions roles that may match your profile based on your recent activity and saved preferences. This week's suggestions include Solutions Engineer, Product Operations Associate, and Implementation Consultant roles.\n\nOpen the digest if you'd like to review openings and save any that look relevant.\n\nLinkedIn Jobs",
+    "timestamp": "2026-03-23T21:06:00-04:00"
   },
   {
     "id": "eml_014",
@@ -385,7 +385,6 @@
     },
     "subject": "Can you delegate this bug triage to support?",
     "bodyPreview": "Customer support owns first response here, not implementation.",
-    "receivedAt": "2026-03-23T20:50:00-04:00",
     "category": "Internal",
     "urgency": {
       "label": "Medium",
@@ -403,7 +402,8 @@
     "suggestedAction": "Delegate",
     "isRead": false,
     "isActioned": false,
-    "body": "Alex,\n\nThis bug triage should be delegated to customer support rather than implementation. They own first response here, and the issue looks like an account-routing problem rather than a product defect.\n\nCan you reassign the ticket and tag Priyanka so her team can pick it up?\n\nThanks,\nMarcus"
+    "body": "Alex,\n\nThis bug triage should be delegated to customer support rather than implementation. They own first response here, and the issue looks like an account-routing problem rather than a product defect.\n\nCan you reassign the ticket and tag Priyanka so her team can pick it up?\n\nThanks,\nMarcus",
+    "timestamp": "2026-03-23T20:50:00-04:00"
   },
   {
     "id": "eml_015",
@@ -414,7 +414,6 @@
     },
     "subject": "Flight options for Chicago onsite",
     "bodyPreview": "Please choose one of the three approved flight options.",
-    "receivedAt": "2026-03-23T20:33:00-04:00",
     "category": "Logistics",
     "urgency": {
       "label": "Medium",
@@ -432,7 +431,8 @@
     "suggestedAction": "Review Later",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi Alex,\n\nWe found three approved flight options for the Chicago onsite and need your selection by tomorrow so we can finalize booking.\n\nPlease reply with your preferred itinerary and let us know if you need checked baggage or any seating accommodations.\n\nBest,\nTravel Desk"
+    "body": "Hi Alex,\n\nWe found three approved flight options for the Chicago onsite and need your selection by tomorrow so we can finalize booking.\n\nPlease reply with your preferred itinerary and let us know if you need checked baggage or any seating accommodations.\n\nBest,\nTravel Desk",
+    "timestamp": "2026-03-23T20:33:00-04:00"
   },
   {
     "id": "eml_016",
@@ -443,7 +443,6 @@
     },
     "subject": "High-priority usage drop detected for Acme Corp",
     "bodyPreview": "Usage is down 38% week over week for a strategic account.",
-    "receivedAt": "2026-03-23T20:17:00-04:00",
     "category": "Client",
     "urgency": {
       "label": "High",
@@ -461,7 +460,8 @@
     "suggestedAction": "Review Later",
     "isRead": false,
     "isActioned": false,
-    "body": "Automated Account Alert\n\nUsage for Acme Corp is down 38% week over week. Because this is a strategic account, we recommend reviewing adoption, login activity, and any unresolved support issues before tomorrow's account sync.\n\nIf needed, coordinate with the account team to determine whether outreach is required."
+    "body": "Automated Account Alert\n\nUsage for Acme Corp is down 38% week over week. Because this is a strategic account, we recommend reviewing adoption, login activity, and any unresolved support issues before tomorrow's account sync.\n\nIf needed, coordinate with the account team to determine whether outreach is required.",
+    "timestamp": "2026-03-23T20:17:00-04:00"
   },
   {
     "id": "eml_017",
@@ -472,7 +472,6 @@
     },
     "subject": "Optional lunch and learn invite",
     "bodyPreview": "Join us for a session on storytelling with dashboards.",
-    "receivedAt": "2026-03-23T19:58:00-04:00",
     "category": "Internal",
     "urgency": {
       "label": "Low",
@@ -490,7 +489,8 @@
     "suggestedAction": "Archive",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi team,\n\nYou're invited to an optional lunch and learn next Wednesday on storytelling with dashboards. We'll cover how to present trends clearly, frame metrics for executives, and avoid common reporting pitfalls.\n\nFeel free to join if it sounds useful. No RSVP required.\n\nRaj"
+    "body": "Hi team,\n\nYou're invited to an optional lunch and learn next Wednesday on storytelling with dashboards. We'll cover how to present trends clearly, frame metrics for executives, and avoid common reporting pitfalls.\n\nFeel free to join if it sounds useful. No RSVP required.\n\nRaj",
+    "timestamp": "2026-03-23T19:58:00-04:00"
   },
   {
     "id": "eml_018",
@@ -501,7 +501,6 @@
     },
     "subject": "A file was shared with you",
     "bodyPreview": "Q1_Implementation_Notes.pdf has been shared.",
-    "receivedAt": "2026-03-23T19:40:00-04:00",
     "category": "Logistics",
     "urgency": {
       "label": "Low",
@@ -519,7 +518,8 @@
     "suggestedAction": "Review Later",
     "isRead": false,
     "isActioned": false,
-    "body": "Dropbox notification\n\nQ1_Implementation_Notes.pdf has been shared with you. Open the shared file to review the document, comment, or download it.\n\nNo email response is required unless the sender asked for feedback separately."
+    "body": "Dropbox notification\n\nQ1_Implementation_Notes.pdf has been shared with you. Open the shared file to review the document, comment, or download it.\n\nNo email response is required unless the sender asked for feedback separately.",
+    "timestamp": "2026-03-23T19:40:00-04:00"
   },
   {
     "id": "eml_019",
@@ -530,7 +530,6 @@
     },
     "subject": "Please confirm attendee list for workshop",
     "bodyPreview": "We need the final attendee count by 4 PM.",
-    "receivedAt": "2026-03-23T19:21:00-04:00",
     "category": "Client",
     "urgency": {
       "label": "High",
@@ -548,7 +547,8 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi Alex,\n\nCan you confirm the final attendee list for next week's workshop by 4:00 PM today? Operations is closing the loop on catering and room setup, so we need the final headcount this afternoon.\n\nPlease send both the attendee count and any last-minute name changes.\n\nThanks,\nAvery"
+    "body": "Hi Alex,\n\nCan you confirm the final attendee list for next week's workshop by 4:00 PM today? Operations is closing the loop on catering and room setup, so we need the final headcount this afternoon.\n\nPlease send both the attendee count and any last-minute name changes.\n\nThanks,\nAvery",
+    "timestamp": "2026-03-23T19:21:00-04:00"
   },
   {
     "id": "eml_020",
@@ -559,7 +559,6 @@
     },
     "subject": "Action required: reset your password",
     "bodyPreview": "Your password expires in 2 days.",
-    "receivedAt": "2026-03-23T18:59:00-04:00",
     "category": "Internal",
     "urgency": {
       "label": "Medium",
@@ -577,6 +576,7 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hello Alex,\n\nYour corporate password will expire in 2 days. Please reset it before the deadline to avoid interruption to email, VPN, and internal tools.\n\nYou can update it through the security portal using the link below.\n\nSecurity Team"
+    "body": "Hello Alex,\n\nYour corporate password will expire in 2 days. Please reset it before the deadline to avoid interruption to email, VPN, and internal tools.\n\nYou can update it through the security portal using the link below.\n\nSecurity Team",
+    "timestamp": "2026-03-23T18:59:00-04:00"
   }
 ]

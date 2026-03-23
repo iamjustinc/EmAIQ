@@ -63,7 +63,7 @@ export default function InboxPage() {
       result = result.filter(email => 
         email.sender.name.toLowerCase().includes(query) ||
         email.subject.toLowerCase().includes(query) ||
-        email.bodyPreview.toLowerCase().includes(query)
+        email.body.toLowerCase().includes(query)
       );
     }
     return result;

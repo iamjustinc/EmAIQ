@@ -53,7 +53,7 @@ export function EmailRow({ email, onClick, onToggleFavorite, isSelected }: Email
           {email.subject}
         </p>
         <p className="truncate text-xs mt-0.5 opacity-60 group-hover:opacity-100">
-          {email.bodyPreview}
+          {email.body}
         </p>
       </div>
 
