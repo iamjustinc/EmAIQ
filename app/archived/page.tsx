@@ -10,16 +10,14 @@ export default function ArchivedPage() {
   const { allEmails, toggleFavorite, markAsRead } = useEmails();
   const [activeTab, setActiveTab] = useState('all');
 
-  // Logic: Only show emails that have been actioned/archived
+  // Logic: Show emails that are actioned
   const archivedEmails = (allEmails || []).filter(e => e.isActioned);
 
   return (
     <AppShell>
-      {/* Background set to Foam White #F4F7F7 */}
       <div className="flex h-full flex-col bg-[#F4F7F7]">
         <Header title="Archived" hideSearch />
         <main className="flex w-full flex-1 flex-col overflow-hidden p-8">
-          {/* Border set to Seafoam #A8D0D0 */}
           <div className="flex flex-1 flex-col overflow-hidden rounded-[2.5rem] border border-[#A8D0D0]/40 bg-white shadow-xl">
             <EmailList 
               emails={archivedEmails} 
