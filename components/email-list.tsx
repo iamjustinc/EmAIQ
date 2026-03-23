@@ -30,26 +30,27 @@ export function EmailList({
 }: EmailListProps) {
   const pathname = usePathname()
 
-  // FIXED: Logic to handle both "28 mins ago" strings AND actual Date objects
+  // SAFE FORMATTER: Shows calculated time OR the raw string if calculation fails
   const formatRelativeTime = (timestamp: any) => {
     if (!timestamp) return '';
     
     const date = new Date(timestamp);
     
-    // If the data is already a friendly string (like "28 mins ago"), just return it
-    if (isNaN(date.getTime())) {
-      return String(timestamp).toUpperCase();
+    // Check if it's a valid date object first
+    if (!isNaN(date.getTime())) {
+      const now = new Date();
+      const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+      
+      if (diffInSeconds < 60) return 'JUST NOW';
+      if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}M AGO`;
+      if (diffInSeconds < 86400) {
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
+      }
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' }).toUpperCase();
     }
 
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
-    if (diffInSeconds < 60) return 'JUST NOW';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}M AGO`;
-    if (diffInSeconds < 86400) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
-    }
-    return date.toLocaleDateString([], { month: 'short', day: 'numeric' }).toUpperCase();
+    // FAIL-SAFE: If it's not a standard date, just show the raw text (e.g., "28 mins ago")
+    return String(timestamp).toUpperCase();
   };
 
   const filteredEmails = useMemo(() => {
