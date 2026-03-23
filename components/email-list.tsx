@@ -24,11 +24,18 @@ export function EmailList({ emails, selectedEmail, onSelectEmail, onToggleFavori
     } else if (pathname === '/favorites') {
       list = list.filter(e => e.isFavorite)
     } else if (pathname === '/archived') {
-      // FIX: Check for isActioned instead of status
       list = list.filter(e => e.isActioned === true)
+    } else if (pathname === '/snoozed') {
+      // Show only emails that are currently snoozed
+      list = list.filter(e => e.snoozedUntil && Number(e.snoozedUntil) > Date.now())
     } else {
-      // Default Inbox: Hide archived (isActioned) and sent
-      list = list.filter(e => !e.isActioned && e.status !== 'sent' && !e.isSent)
+      // Default Inbox: Hide archived, sent, AND currently snoozed
+      list = list.filter(e => 
+        !e.isActioned && 
+        e.status !== 'sent' && 
+        !e.isSent && 
+        (!e.snoozedUntil || Number(e.snoozedUntil) <= Date.now())
+      )
     }
 
     // 2. Filter by Top Tabs (All, Action, Noise)

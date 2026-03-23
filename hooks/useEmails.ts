@@ -49,12 +49,9 @@ export function useEmails() {
       const updatedEmails = prev.map(e => 
         e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e
       );
-      
-      // FORCE SAVE: This ensures the Archived page sees the change immediately
       if (typeof window !== "undefined") {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEmails));
       }
-      
       return updatedEmails;
     });
   };
@@ -69,14 +66,17 @@ export function useEmails() {
 
   const snoozeEmail = (id: string, hours: number) => {
     const until = Date.now() + hours * 60 * 60 * 1000;
-    setEmails(prev => prev.map(e => e.id === id ? { ...e, snoozedUntil: until, isRead: true } : e))
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, snoozedUntil: until.toString(), isRead: true } : e))
+  }
+
+  const cancelSnooze = (id: string) => {
+    setEmails(prev => prev.map(e => e.id === id ? { ...e, snoozedUntil: null } : e))
   }
 
   const inboxEmails = loading ? [] : emails
     .filter(e => {
-      // Hide if actioned (archived) or sent
       if (e.isActioned || e.isSent) return false; 
-      if (e.snoozedUntil && e.snoozedUntil > Date.now()) return false;
+      if (e.snoozedUntil && Number(e.snoozedUntil) > Date.now()) return false;
       return true;
     })
     .sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime());
@@ -89,6 +89,7 @@ export function useEmails() {
     archiveEmail,
     markAsSent,
     snoozeEmail,
+    cancelSnooze,
     toggleFavorite,
     archiveAllNoise: () => setEmails(prev => prev.map(e => e.suggestedAction === "Archive" ? { ...e, isActioned: true } : e))
   }

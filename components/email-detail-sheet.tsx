@@ -15,21 +15,28 @@ import {
   ChevronUp,
   Check,
   Send,
+  Undo2,
 } from 'lucide-react'
 import { Email } from '@/lib/types'
 import { useUserStore } from '@/store/use-user-store'
 import { cn } from '@/lib/utils'
 
 interface EmailDetailSheetProps {
-  email: Email | null; open: boolean; onOpenChange: (open: boolean) => void;
-  onArchive: (id: string) => void; onSent: (id: string) => void;
-  onSnooze: (id: string, hours: number) => void; isDrafting: boolean; setIsDrafting: (val: boolean) => void;
+  email: Email | null; 
+  open: boolean; 
+  onOpenChange: (open: boolean) => void;
+  onArchive: (id: string) => void; 
+  onSent: (id: string) => void;
+  onSnooze: (id: string, hours: number) => void; 
+  onCancelSnooze?: (id: string) => void;
+  isDrafting: boolean; 
+  setIsDrafting: (val: boolean) => void;
 }
 
 type Mode = 'default' | 'reply'
 
 export function EmailDetailSheet({
-  email, open, onOpenChange, onArchive, onSent, onSnooze, isDrafting, setIsDrafting,
+  email, open, onOpenChange, onArchive, onSent, onSnooze, onCancelSnooze, isDrafting, setIsDrafting,
 }: EmailDetailSheetProps) {
   const [mode, setMode] = useState<Mode>('default')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -43,7 +50,6 @@ export function EmailDetailSheet({
   useEffect(() => {
     if (open && email) {
       setIsAnalyzing(true)
-      // If it's sent, we show the thread history by default. If not, we keep it collapsed.
       setShowFullEmail(email.status === 'sent' || email.isSent)
       setMode('default')
       setIsDrafting(false)
@@ -88,6 +94,7 @@ export function EmailDetailSheet({
   }
 
   const isSent = email.status === 'sent' || email.isSent
+  const isSnoozed = email.snoozedUntil && Number(email.snoozedUntil) > Date.now();
   const isHighUrgency = email.urgency?.label === 'High'
   const priorityLabel = isHighUrgency ? 'Critical' : 'Priority'
   const priorityClass = isHighUrgency
@@ -108,6 +115,10 @@ export function EmailDetailSheet({
                 <div className="rounded-full border-2 border-[#7FC6DA] bg-[#7FC6DA]/15 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#7FC6DA] flex items-center shadow-sm">
                   <Send className="mr-1.5 h-3.5 w-3.5" /> Sent Message
                 </div>
+              ) : isSnoozed ? (
+                <div className="rounded-full border-2 border-[#F6B3C4] bg-[#F6B3C4]/15 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#D95D5D] flex items-center shadow-sm">
+                  <Clock className="mr-1.5 h-3.5 w-3.5" /> Snoozed Until {new Date(Number(email.snoozedUntil)).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                </div>
               ) : (
                 <>
                   <div className={cn("rounded-full border-2 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] flex items-center shadow-sm", priorityClass)}>
@@ -125,7 +136,7 @@ export function EmailDetailSheet({
             </div>
           </div>
 
-          {/* Main Content Area - Scrollable */}
+          {/* Main Content Area */}
           <div className="scrollbar-hide flex-1 overflow-y-auto px-10 py-8">
             {isAnalyzing ? (
               <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#7FC6DA]" /></div>
@@ -194,7 +205,7 @@ export function EmailDetailSheet({
             )}
           </div>
 
-          {/* Footer Actions - Restored Original Layout */}
+          {/* Footer Actions */}
           {!isSent && (
             <div className="shrink-0 border-t-2 border-[#A8D0D0]/30 bg-white p-8">
               {mode === 'default' ? (
@@ -206,23 +217,32 @@ export function EmailDetailSheet({
                     </div>
                   </Button>
                   
-                  <Popover modal={false}>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="h-24 rounded-[2rem] border-2 border-[#A8D0D0] bg-[#F4F7F7] text-[#2D3436] hover:border-[#7FC6DA] shadow-sm">
-                        <div className="flex flex-col items-center gap-2">
-                          <Clock className="h-5 w-5" />
-                          <span className="text-[10px] font-black uppercase tracking-widest">Later</span>
-                        </div>
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[300]">
-                      {[1, 3, 24].map(h => (
-                        <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#2D3436] hover:bg-[#7FC6DA]/10 hover:text-[#7FC6DA]" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
-                          {h === 24 ? 'Tomorrow' : `${h} Hours`}
+                  {isSnoozed ? (
+                    <Button variant="outline" className="h-24 rounded-[2rem] border-2 border-[#7FC6DA] bg-[#7FC6DA]/5 text-[#7FC6DA] hover:bg-[#7FC6DA] hover:text-white transition-all shadow-sm" onClick={() => triggerSuccess('unsnooze', () => onCancelSnooze?.(email.id))}>
+                      <div className="flex flex-col items-center gap-2">
+                        <Undo2 className="h-5 w-5" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Move to Inbox</span>
+                      </div>
+                    </Button>
+                  ) : (
+                    <Popover modal={false}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="h-24 rounded-[2rem] border-2 border-[#A8D0D0] bg-[#F4F7F7] text-[#2D3436] hover:border-[#7FC6DA] shadow-sm">
+                          <div className="flex flex-col items-center gap-2">
+                            <Clock className="h-5 w-5" />
+                            <span className="text-[10px] font-black uppercase tracking-widest">Later</span>
+                          </div>
                         </Button>
-                      ))}
-                    </PopoverContent>
-                  </Popover>
+                      </PopoverTrigger>
+                      <PopoverContent side="top" align="center" className="w-48 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[300]">
+                        {[1, 3, 24].map(h => (
+                          <Button key={h} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#2D3436] hover:bg-[#7FC6DA]/10 hover:text-[#7FC6DA]" onClick={() => triggerSuccess('later', () => onSnooze(email.id, h))}>
+                            {h === 24 ? 'Tomorrow' : `${h} Hours`}
+                          </Button>
+                        ))}
+                      </PopoverContent>
+                    </Popover>
+                  )}
 
                   <Popover modal={false}>
                     <PopoverTrigger asChild>
@@ -233,7 +253,12 @@ export function EmailDetailSheet({
                     <PopoverContent side="top" className="w-56 rounded-2xl p-2 bg-white border-2 border-[#A8D0D0] shadow-2xl z-[300]">
                       <div className="px-3 py-2 text-[9px] font-black uppercase tracking-tighter text-[#8C867E] border-b-2 border-[#F4F7F7] mb-1 text-center">Assign To</div>
                       {['Operations Team', 'Priyanka (Sales)', 'Engineering'].map((team) => (
-                        <Button key={team} variant="ghost" className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA]/10" onClick={() => triggerSuccess('delegate', () => onSent(email.id))}>
+                        <Button 
+                          key={team} 
+                          variant="ghost" 
+                          className="w-full justify-start font-black uppercase text-[10px] tracking-widest text-[#7FC6DA] hover:bg-[#7FC6DA]/10" 
+                          onClick={() => triggerSuccess('delegate', () => onSent(email.id))}
+                        >
                           {team}
                         </Button>
                       ))}

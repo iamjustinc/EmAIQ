@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useUserStore } from '@/store/use-user-store';
-import { useEmails } from '@/hooks/useEmails'; // ADD THIS
+import { useEmails } from '@/hooks/useEmails';
 import {
   Inbox,
   BarChart3,
@@ -17,6 +17,7 @@ import {
   Send,
   Star,
   Archive,
+  Clock, // Added Clock icon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -25,15 +26,17 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
   const pathname = usePathname();
   const { firstName } = useUserStore();
   
-  // Get the actual email data to show the count
   const { allEmails } = useEmails(); 
   const archivedCount = allEmails.filter(e => e.isActioned).length;
+  // Calculate emails currently in snooze state
+  const snoozedCount = allEmails.filter(e => e.snoozedUntil && Number(e.snoozedUntil) > Date.now()).length;
 
   const mainNav = [
     { name: 'Inbox', href: '/', icon: Inbox },
     { name: 'Sent', href: '/sent', icon: Send },
     { name: 'Favorites', href: '/favorites', icon: Star },
-    { name: 'Archived', href: '/archived', icon: Archive, count: archivedCount }, // ADD COUNT HERE
+    { name: 'Snoozed', href: '/snoozed', icon: Clock }, // Added Snoozed
+    { name: 'Archived', href: '/archived', icon: Archive },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   ];
 
@@ -59,6 +62,9 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 pt-4 scrollbar-hide">
         {mainNav.map((item) => {
           const isActive = pathname === item.href;
+          // Determine which count to show
+          const displayCount = item.name === 'Archived' ? archivedCount : item.name === 'Snoozed' ? snoozedCount : 0;
+          
           return (
             <Link
               key={item.name}
@@ -74,12 +80,16 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
               {!isCollapsed && (
                 <div className="flex flex-1 items-center justify-between">
                   <span>{item.name}</span>
-                  {item.name === 'Archived' && archivedCount > 0 && (
+                  {displayCount > 0 && (
                     <span className={cn(
                       "rounded-full px-2 py-0.5 text-[10px] font-black",
-                      isActive ? "bg-white/20 text-white" : "bg-[#7FC6DA]/20 text-[#7FC6DA]"
+                      isActive 
+                        ? "bg-white/20 text-white" 
+                        : item.name === 'Snoozed' 
+                          ? "bg-[#F6B3C4]/20 text-[#D95D5D]" // Pinkish for snooze
+                          : "bg-[#7FC6DA]/20 text-[#7FC6DA]"
                     )}>
-                      {archivedCount}
+                      {displayCount}
                     </span>
                   )}
                 </div>
@@ -89,7 +99,6 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
         })}
       </nav>
 
-      {/* Rest of the sidebar remains exactly the same... */}
       <div className="mt-auto border-t border-sidebar-border p-3 space-y-1">
         <Link
           href="/settings"
