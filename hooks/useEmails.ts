@@ -44,17 +44,20 @@ export function useEmails() {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isRead: true } : e))
   }
 
-  // UPDATED: Standardized to ensure it hits your page filter correctly
   const archiveEmail = (id: string) => {
     setEmails(prev => {
-      const updated = prev.map(e => e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e);
-      // Force an immediate save to localStorage to prevent navigation race conditions
+      const updatedEmails = prev.map(e => 
+        e.id === id ? { ...e, isActioned: true, snoozedUntil: null } : e
+      );
+      
+      // FORCE SAVE: This ensures the Archived page sees the change immediately
       if (typeof window !== "undefined") {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEmails));
       }
-      return updated;
-    })
-  }
+      
+      return updatedEmails;
+    });
+  };
 
   const markAsSent = (id: string) => {
     setEmails(prev => prev.map(e => e.id === id ? { ...e, isSent: true, isRead: true, snoozedUntil: null } : e))
