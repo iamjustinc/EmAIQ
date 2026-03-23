@@ -45,7 +45,7 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
         </div>
         {!isCollapsed && (
           <div className="flex items-center gap-1">
-            <span className="text-lg font-black tracking-tight">EmAIQ</span>
+            <span className="text-lg font-black tracking-tight text-[#2D3436]">EmAIQ</span>
             <Sparkles className="h-4 w-4 fill-primary text-primary" />
           </div>
         )}

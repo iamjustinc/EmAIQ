@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useEmails } from '@/hooks/useEmails'; 
 import { useUser } from '@/lib/user-context'; 
 import { AppShell } from '@/components/app-shell';
@@ -14,6 +15,7 @@ import { Mail, Zap, AlertCircle, Trash2, Sparkles } from 'lucide-react';
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
   const { firstName } = useUser(); 
+  const pathname = usePathname();
   
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -35,6 +37,14 @@ export default function InboxPage() {
       return () => clearTimeout(timer);
     }
   }, []);
+
+  // Determine page title based on route
+  const pageTitle = useMemo(() => {
+    if (pathname === '/sent') return 'Sent';
+    if (pathname === '/favorites') return 'Favorites';
+    if (pathname === '/archived') return 'Archived';
+    return 'Inbox';
+  }, [pathname]);
 
   const currentSelectedEmail = useMemo(() => 
     emails?.find(e => e.id === selectedEmailId) || null, [emails, selectedEmailId]
@@ -62,8 +72,8 @@ export default function InboxPage() {
 
   const stats = useMemo(() => {
     const safeEmails = emails || [];
-    const unread = safeEmails.filter((e) => !e.isRead).length;
-    const urgentCount = safeEmails.filter((e) => e.urgency.label === 'High').length;
+    const unread = safeEmails.filter((e) => !e.isRead && e.status !== 'archived').length;
+    const urgentCount = safeEmails.filter((e) => e.urgency.label === 'High' && e.status !== 'archived').length;
     const focusHours = (urgentCount * 0.25).toFixed(1);
     return { unread, urgent: urgentCount, focusTime: `${focusHours}h` };
   }, [emails]);
@@ -81,7 +91,7 @@ export default function InboxPage() {
     <AppShell>
       <div className="flex h-full flex-col bg-background animate-in fade-in duration-500">
         <Header 
-          title="Inbox" 
+          title={pageTitle} 
           searchValue={searchQuery}
           onSearchChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -89,59 +99,23 @@ export default function InboxPage() {
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
           <div className="px-10 pb-8 pt-10">
             <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
-              <KPICard 
-                title="Unread" 
-                value={stats.unread} 
-                icon={Mail} 
-                subtitle="Messages" 
-                onClick={() => setActiveTab('all')} 
-              />
-              <KPICard 
-                title="Urgent" 
-                value={stats.urgent} 
-                icon={AlertCircle} 
-                subtitle="Actions" 
-                variant="danger" 
-                onClick={() => setActiveTab('action')} 
-              />
-              <KPICard 
-                title="Noise" 
-                value="21%" 
-                icon={Trash2} 
-                subtitle="Auto-filtered" 
-                variant="warning" 
-                onClick={() => setActiveTab('noise')} 
-              />
-              <KPICard 
-                title="Focus Time" 
-                value={stats.focusTime} 
-                icon={Zap} 
-                subtitle="Remaining" 
-                onClick={() => setActiveTab('all')} 
-              />
+              <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" onClick={() => setActiveTab('all')} />
+              <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
+              <KPICard title="Noise" value="21%" icon={Trash2} subtitle="Auto-filtered" variant="warning" onClick={() => setActiveTab('noise')} />
+              <KPICard title="Focus Time" value={stats.focusTime} icon={Zap} subtitle="Remaining" onClick={() => setActiveTab('all')} />
             </div>
           </div>
 
           <div className="flex-1 px-10 pb-10">
             <div className="flex min-h-[500px] flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
-              {filteredEmails.length === 0 ? (
-                <div className="flex flex-1 flex-col items-center justify-center p-20 text-center">
-                  <div className="mb-6 rounded-full bg-primary/5 p-6 animate-float">
-                    <Sparkles className="h-12 w-12 text-primary/40" />
-                  </div>
-                  <h3 className="text-xl font-black tracking-tight text-foreground">Inbox Zero</h3>
-                  <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest font-bold">You are all caught up for now.</p>
-                </div>
-              ) : (
-                <EmailList 
-                  emails={filteredEmails} 
-                  selectedEmail={currentSelectedEmail} 
-                  onSelectEmail={handleSelectEmail} 
-                  onToggleFavorite={toggleFavorite}
-                  activeTab={activeTab} 
-                  setActiveTab={setActiveTab} 
-                />
-              )}
+              <EmailList 
+                emails={filteredEmails} 
+                selectedEmail={currentSelectedEmail} 
+                onSelectEmail={handleSelectEmail} 
+                onToggleFavorite={toggleFavorite}
+                activeTab={activeTab} 
+                setActiveTab={setActiveTab} 
+              />
             </div>
           </div>
         </main>
@@ -152,7 +126,6 @@ export default function InboxPage() {
           onOpenChange={setIsDetailsOpen} 
           onArchive={archiveEmail} 
           onSent={markAsSent} 
-          // FIX: Ensure snoozeEmail and markAsSent (for delegate) are correctly linked
           onSnooze={(id, hours) => snoozeEmail(id, hours)} 
           isDrafting={isDrafting} 
           setIsDrafting={setIsDrafting} 
