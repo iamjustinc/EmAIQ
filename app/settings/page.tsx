@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
 import { useUserStore } from '@/store/use-user-store';
+import { useUser } from '@/lib/user-context';
 import { useAppearanceSettings } from '@/lib/appearance-context';
 import { AppearanceSettingsPanel } from '@/components/appearance/appearance-settings-panel';
 import { toast } from 'sonner';
@@ -44,16 +45,17 @@ type SettingsView =
 
   const AI_SETTINGS_STORAGE_KEY = 'emaiq-ai-settings';
   const PRIORITY_SETTINGS_STORAGE_KEY = 'emaiq-priority-settings';
-  const LOGGED_IN_EMAIL = 'jason@emaiq.app';
 
 export default function SettingsPage() {
-  const { firstName, signOff, setProfile } = useUserStore();
+  const { signOff } = useUserStore();
+  const { firstName, primaryEmail, setFirstName } = useUser();
   const { themePreset, density, fontScale } = useAppearanceSettings();
 
   const [view, setView] = useState<SettingsView>('menu');
 
   const [firstNameDraft, setFirstNameDraft] = useState(firstName);
   const [signOffDraft, setSignOffDraft] = useState(signOff);
+  const loggedInEmail = primaryEmail || 'justin.chang@mail.utoronto.ca';
 
   const [draftTone, setDraftTone] = useState([75]);
   const [autoSummarization, setAutoSummarization] = useState(true);
@@ -162,7 +164,7 @@ export default function SettingsPage() {
 
   const handleProfileSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setProfile(firstNameDraft, signOff);
+    setFirstName(firstNameDraft);
     toast.success('Profile updated!');
     setView('menu');
   };
@@ -275,7 +277,7 @@ export default function SettingsPage() {
                         {firstName}
                       </h3>
                       <p className="truncate text-sm text-muted-foreground">
-                        Logged in as {LOGGED_IN_EMAIL}
+                        Logged in as {loggedInEmail}
                       </p>
                     </div>
                     <Button
@@ -404,7 +406,7 @@ export default function SettingsPage() {
       Logged-In Email
     </Label>
     <div className="h-12 rounded-xl border border-border/80 bg-[#E7ECEC] px-4 flex items-center text-sm font-medium text-[#5F6B6B]">
-      {LOGGED_IN_EMAIL}
+      {loggedInEmail}
     </div>
     <p className="ml-1 text-[10px] text-muted-foreground">
       This email is currently connected to your account.
@@ -687,7 +689,7 @@ export default function SettingsPage() {
                         Current Session
                       </Label>
                       <div className="rounded-xl border border-border bg-muted/20 p-4">
-                        <p className="text-sm font-bold text-foreground">{LOGGED_IN_EMAIL}</p>
+                        <p className="text-sm font-bold text-foreground">{loggedInEmail}</p>
                         <p className="mt-1 text-xs text-muted-foreground">
                           This session is currently active on this device.
                         </p>
@@ -823,8 +825,6 @@ export default function SettingsPage() {
                 </div>
               </div>
             )}
-
-            {view === 'appearance' && <AppearanceSettingsPanel />}
 
 {view === 'appearance' && <AppearanceSettingsPanel />}
           </div>

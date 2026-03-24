@@ -16,7 +16,7 @@ const MOCK_LOGIN_EMAIL = 'justin.chang@mail.utoronto.ca';
 const MOCK_LOGIN_NAME = 'Justin';
 const LOGIN_STORAGE_KEY = 'emaiq_mock_logged_in';
 
-type BootStage = 'boot' | 'signin' | 'signing-in' | 'ready';
+type BootStage = 'boot' | 'welcome' | 'signin' | 'signing-in' | 'ready';
 
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
@@ -48,7 +48,13 @@ export default function InboxPage() {
 
     setLoginFirstName(firstName || MOCK_LOGIN_NAME);
     setLoginEmail(primaryEmail || MOCK_LOGIN_EMAIL);
-    setBootStage('signin');
+    setBootStage('welcome');
+
+    const timer = setTimeout(() => {
+      setBootStage('signin');
+    }, 1400);
+
+    return () => clearTimeout(timer);
   }, [firstName, primaryEmail]);
 
   const handleMockSignIn = useCallback(() => {
@@ -118,8 +124,17 @@ export default function InboxPage() {
   }, [emails]);
 
   if (!isMounted || bootStage === 'boot') {
+    return <div className="fixed inset-0 z-[100] bg-background" />;
+  }
+
+  if (bootStage === 'welcome') {
     return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background" />
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
+        <Mail className="h-12 w-12 text-primary animate-pulse" />
+        <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-foreground">
+          Welcome to EmAIQ
+        </p>
+      </div>
     );
   }
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useUserStore } from '@/store/use-user-store';
+import { useUser } from '@/lib/user-context';
 import { useEmails } from '@/hooks/useEmails';
 import {
   Inbox,
@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boolean }) {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const pathname = usePathname();
-  const { firstName } = useUserStore();
+  const { firstName, primaryEmail } = useUser();
   
   const { allEmails } = useEmails(); 
   // Tracks both manually archived and "Instant Cleaned" noise
@@ -99,7 +99,7 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
       </nav>
 
       <div className="mt-auto border-t border-sidebar-border p-3 space-y-1">
-        <Link
+      <Link
           href="/settings"
           className={cn(
             'flex items-center gap-3 rounded-xl py-3 px-4 transition-all hover:bg-sidebar-accent group',
@@ -111,8 +111,12 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
           </div>
           {!isCollapsed && (
             <div className="flex min-w-0 flex-col">
-              <span className="truncate text-[12px] font-black leading-tight text-foreground">{firstName}</span>
-              <span className="truncate text-[10px] font-bold text-muted-foreground/60">View Profile</span>
+              <span className="truncate text-[12px] font-black leading-tight text-foreground">
+                {firstName || 'Justin'}
+              </span>
+              <span className="truncate text-[10px] font-bold text-muted-foreground/60">
+                {primaryEmail || 'justin.chang@mail.utoronto.ca'}
+              </span>
             </div>
           )}
         </Link>
