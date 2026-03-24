@@ -343,7 +343,7 @@ const [rememberMe, setRememberMe] = useState(true);
         />
 
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8 xl:gap-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 lg:gap-8 xl:gap-10">
             <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
               <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" onClick={() => setActiveTab('all')} />
               <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />

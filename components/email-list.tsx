@@ -89,14 +89,14 @@ export function EmailList({
   return (
     <div className="relative flex-1 overflow-y-auto bg-[#F4F7F7] scrollbar-hide">
       {!hideTabs && (
-        <div className="sticky top-0 z-30 flex items-center justify-between border-b-2 border-[#A8D0D0] bg-white px-6">
-          <div className="flex">
+        <div className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#A8D0D0] bg-white px-3 sm:px-4 md:px-6">
+          <div className="flex min-w-0 flex-wrap">
             {['ALL', 'ACTION', 'TODAY', 'NOISE'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab.toLowerCase())}
                 className={cn(
-                  'border-b-4 px-8 py-5 text-[10px] font-black tracking-[0.25em] transition-all',
+                  'border-b-4 px-3 py-4 text-[10px] font-black tracking-[0.18em] transition-all sm:px-5 md:px-8 md:py-5 md:tracking-[0.25em]',
                   activeTab.toUpperCase() === tab 
                     ? 'border-[#7FC6DA] text-[#7FC6DA]' 
                     : 'border-transparent text-[#8C867E] hover:text-[#7FC6DA]'
@@ -123,7 +123,7 @@ export function EmailList({
 
       <div 
         className={cn(
-          "grid grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-6 py-4 sticky z-40",
+          "hidden md:grid md:grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-4 md:px-6 py-4 sticky z-40",
           hideTabs ? "top-0" : "top-[62px]"
         )}
       >
@@ -146,7 +146,7 @@ export function EmailList({
               key={email.id}
               onClick={() => onSelectEmail(email)}
               className={cn(
-                'grid grid-cols-[60px_40px_160px_1fr_140px_100px] items-center px-4 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2',
+                'grid grid-cols-1 gap-3 px-3 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2 md:grid-cols-[60px_40px_160px_1fr_140px_100px] md:items-center md:gap-0 md:px-4',
                 selectedEmail?.id === email.id 
                   ? 'bg-white border-[#7FC6DA] ring-4 ring-[#7FC6DA]/10 shadow-lg scale-[1.01] z-30' 
                   : email.isRead 
@@ -154,27 +154,35 @@ export function EmailList({
                     : 'bg-white border-[#A8D0D0]/50 shadow-sm hover:border-[#7FC6DA]/50'
               )}
             >
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={(e) => { 
-                    e.stopPropagation(); 
-                    onToggleFavorite(email.id); 
-                  }} 
-                  className="p-2 hover:scale-110 transition-transform"
-                >
-                  <Star className={cn('h-4 w-4', email.isFavorite ? 'fill-[#7FC6DA] text-[#7FC6DA]' : 'text-[#A8A29A]/40')} />
-                </button>
-              </div>
-              <div className="flex justify-center">
-                {email.urgency.label === 'High' && <AlertCircle className="h-4 w-4 text-[#F6B3C4]" />}
-              </div>
-              <div className={cn("text-[13px] font-black", email.isRead ? "text-[#8C867E]" : "text-[#2D3436]")}>
+              <div className="flex items-center justify-between md:contents">
+  <div className="flex items-center gap-2">
+    <button 
+      onClick={(e) => { 
+        e.stopPropagation(); 
+        onToggleFavorite(email.id); 
+      }} 
+      className="p-2 hover:scale-110 transition-transform"
+    >
+      <Star className={cn('h-4 w-4', email.isFavorite ? 'fill-[#7FC6DA] text-[#7FC6DA]' : 'text-[#A8A29A]/40')} />
+    </button>
+
+    {email.urgency.label === 'High' && (
+      <AlertCircle className="h-4 w-4 text-[#F6B3C4]" />
+    )}
+  </div>
+
+  {/* timestamp on mobile */}
+  <div className="text-[10px] font-black text-[#8C867E] uppercase md:hidden">
+    {formatRelativeTime(email, index)}
+  </div>
+</div>
+              <div className={cn("text-[13px] font-black leading-tight", email.isRead ? "text-[#8C867E]" : "text-[#2D3436]")}>
                 {email.sender.name}
               </div>
-              <div className={cn("text-[13px] truncate pr-8 font-medium", email.isRead ? "text-[#8C867E]/70" : "text-[#2D3436]/90")}>
+              <div className={cn("text-[13px] truncate pr-2 md:pr-8 font-medium", email.isRead ? "text-[#8C867E]/70" : "text-[#2D3436]/90")}>
                 {email.subject}
               </div>
-              <div className="flex">
+              <div className="flex flex-wrap">
                 <span className={cn(
                   "px-3 py-1 rounded-full text-[9px] font-black tracking-widest border-2 shadow-sm",
                   email.suggestedAction?.toUpperCase() === 'RESPOND' 
@@ -184,7 +192,7 @@ export function EmailList({
                   {email.suggestedAction}
                 </span>
               </div>
-              <div className="text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
+              <div className="hidden md:block text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
                 {formatRelativeTime(email, index)}
               </div>
             </div>
