@@ -69,7 +69,7 @@ export default function InboxPage() {
 
     setTimeout(() => {
       setBootStage('ready');
-    }, 2000);
+    }, 3500);
   }, [loginFirstName, loginEmail, setFirstName, setPrimaryEmail]);
 
   const handleInstantCleanUp = useCallback(() => {
