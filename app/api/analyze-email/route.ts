@@ -27,6 +27,9 @@ Body: ${email.body}
 
 Instructions:
 - Do NOT assume actions are already completed
+- Never use placeholders like [your name], [name], or [company]
+- Sign the reply as the loggedin First name
+- Return a complete usable draftReply
 - Do NOT invent specific deliverables unless explicitly mentioned
 - Use cautious, professional language
 - Prefer phrases like "I will prepare", "I’ll confirm", "I’ll follow up"
