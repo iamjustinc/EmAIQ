@@ -232,16 +232,23 @@ export default function SettingsPage() {
 
   const handleConfirmLogout = async () => {
     setIsLoggingOut(true);
-
+  
     setTimeout(() => {
       try {
         if (typeof window !== 'undefined') {
+          window.localStorage.removeItem('emaiq_mock_logged_in');
           window.localStorage.removeItem(AI_SETTINGS_STORAGE_KEY);
           window.localStorage.removeItem(PRIORITY_SETTINGS_STORAGE_KEY);
+  
+          // Clear persisted user info too
+          window.localStorage.removeItem('user-storage');
+          window.localStorage.removeItem('user-context');
         }
+  
         toast.success('Logged out successfully.');
         setShowLogoutConfirm(false);
-        window.location.reload();
+  
+        window.location.href = '/';
       } finally {
         setIsLoggingOut(false);
       }
