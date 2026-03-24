@@ -47,7 +47,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 function defaultEmailFromName(name: string) {
   const slug = name.trim().toLowerCase().replace(/\s+/g, '.') || 'examle';
-  return `${slug}.johnson@company.com`;
+  return `${slug}.name@example.com`;
 }
 
 function isValidEmail(email: string) {
