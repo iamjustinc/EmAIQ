@@ -143,59 +143,116 @@ export function EmailList({
         ) : (
           filteredEmails.map((email, index) => (
             <div
-              key={email.id}
-              onClick={() => onSelectEmail(email)}
-              className={cn(
-                'grid grid-cols-1 gap-3 px-3 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2 xl:grid-cols-[60px_40px_160px_1fr_140px_100px] xl:items-center xl:gap-0 xl:px-4',
-                selectedEmail?.id === email.id 
-                  ? 'bg-white border-[#7FC6DA] ring-4 ring-[#7FC6DA]/10 shadow-lg scale-[1.01] z-30' 
-                  : email.isRead 
-                    ? 'bg-[#F4F7F7] border-transparent opacity-80' 
-                    : 'bg-white border-[#A8D0D0]/50 shadow-sm hover:border-[#7FC6DA]/50'
-              )}
-            >
-              <div className="text-[10px] font-black text-[#8C867E] uppercase xl:hidden">
-  <div className="flex items-center gap-2">
-    <button 
-      onClick={(e) => { 
-        e.stopPropagation(); 
-        onToggleFavorite(email.id); 
-      }} 
+  key={email.id}
+  onClick={() => onSelectEmail(email)}
+  className={cn(
+    'grid grid-cols-1 gap-3 px-3 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2 xl:grid-cols-[60px_40px_160px_1fr_140px_100px] xl:items-center xl:gap-0 xl:px-4',
+    selectedEmail?.id === email.id
+      ? 'bg-white border-[#7FC6DA] ring-4 ring-[#7FC6DA]/10 shadow-lg scale-[1.01] z-30'
+      : email.isRead
+      ? 'bg-[#F4F7F7] border-transparent opacity-80'
+      : 'bg-white border-[#A8D0D0]/50 shadow-sm hover:border-[#7FC6DA]/50'
+  )}
+>
+
+  {/* ===== MOBILE HEADER (unchanged behavior) ===== */}
+  <div className="flex items-center justify-between xl:hidden">
+    <div className="flex items-center gap-2">
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          onToggleFavorite(email.id)
+        }}
+        className="p-2 hover:scale-110 transition-transform"
+      >
+        <Star
+          className={cn(
+            'h-4 w-4',
+            email.isFavorite
+              ? 'fill-[#7FC6DA] text-[#7FC6DA]'
+              : 'text-[#A8A29A]/40'
+          )}
+        />
+      </button>
+
+      {email.urgency.label === 'High' && (
+        <AlertCircle className="h-4 w-4 text-[#F6B3C4]" />
+      )}
+    </div>
+
+    <div className="text-[10px] font-black text-[#8C867E] uppercase">
+      {formatRelativeTime(email, index)}
+    </div>
+  </div>
+
+  {/* ===== DESKTOP COL 1: FAVORITE ===== */}
+  <div className="hidden xl:flex items-center justify-center">
+    <button
+      onClick={(e) => {
+        e.stopPropagation()
+        onToggleFavorite(email.id)
+      }}
       className="p-2 hover:scale-110 transition-transform"
     >
-      <Star className={cn('h-4 w-4', email.isFavorite ? 'fill-[#7FC6DA] text-[#7FC6DA]' : 'text-[#A8A29A]/40')} />
+      <Star
+        className={cn(
+          'h-4 w-4',
+          email.isFavorite
+            ? 'fill-[#7FC6DA] text-[#7FC6DA]'
+            : 'text-[#A8A29A]/40'
+        )}
+      />
     </button>
+  </div>
 
+  {/* ===== DESKTOP COL 2: URGENCY ===== */}
+  <div className="hidden xl:flex items-center justify-center">
     {email.urgency.label === 'High' && (
       <AlertCircle className="h-4 w-4 text-[#F6B3C4]" />
     )}
   </div>
 
-  {/* timestamp on mobile */}
-  <div className="text-[10px] font-black text-[#8C867E] uppercase md:hidden">
+  {/* ===== COL 3: SENDER ===== */}
+  <div
+    className={cn(
+      'text-[13px] font-black leading-tight',
+      email.isRead ? 'text-[#8C867E]' : 'text-[#2D3436]'
+    )}
+  >
+    {email.sender.name}
+  </div>
+
+  {/* ===== COL 4: SUBJECT ===== */}
+  <div
+    className={cn(
+      'text-[13px] truncate pr-2 xl:pr-8 font-medium',
+      email.isRead
+        ? 'text-[#8C867E]/70'
+        : 'text-[#2D3436]/90'
+    )}
+  >
+    {email.subject}
+  </div>
+
+  {/* ===== COL 5: ACTION ===== */}
+  <div className="flex justify-start xl:justify-center">
+    <span
+      className={cn(
+        'px-3 py-1 rounded-full text-[9px] font-black tracking-widest border-2 shadow-sm',
+        email.suggestedAction?.toUpperCase() === 'RESPOND'
+          ? 'bg-[#F6B3C4] border-[#F6B3C4] text-white'
+          : 'bg-[#7FC6DA] border-[#7FC6DA] text-white'
+      )}
+    >
+      {email.suggestedAction}
+    </span>
+  </div>
+
+  {/* ===== COL 6: TIMESTAMP ===== */}
+  <div className="hidden xl:block text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
     {formatRelativeTime(email, index)}
   </div>
 </div>
-              <div className={cn("text-[13px] font-black leading-tight", email.isRead ? "text-[#8C867E]" : "text-[#2D3436]")}>
-                {email.sender.name}
-              </div>
-              <div className={cn("text-[13px] truncate pr-2 md:pr-8 font-medium", email.isRead ? "text-[#8C867E]/70" : "text-[#2D3436]/90")}>
-                {email.subject}
-              </div>
-              <div className="flex flex-wrap">
-                <span className={cn(
-                  "px-3 py-1 rounded-full text-[9px] font-black tracking-widest border-2 shadow-sm",
-                  email.suggestedAction?.toUpperCase() === 'RESPOND' 
-                    ? "bg-[#F6B3C4] border-[#F6B3C4] text-white" 
-                    : "bg-[#7FC6DA] border-[#7FC6DA] text-white" 
-                )}>
-                  {email.suggestedAction}
-                </span>
-              </div>
-              <div className="hidden xl:block text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
-                {formatRelativeTime(email, index)}
-              </div>
-            </div>
           ))
         )}
       </div>
