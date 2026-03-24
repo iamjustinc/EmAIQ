@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(req: NextRequest) {
   try {
+    const apiKey = process.env.RESEND_API_KEY
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'Missing RESEND_API_KEY' },
+        { status: 500 }
+      )
+    }
+
+    const resend = new Resend(apiKey)
+
     const { to, subject, body } = await req.json()
 
     if (!to || !subject || !body) {
@@ -31,22 +40,15 @@ export async function POST(req: NextRequest) {
     })
 
     if (error) {
-      console.error('Resend error:', error)
       return NextResponse.json(
         { error: 'Failed to send email', details: error },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({
-      success: true,
-      id: data?.id,
-    })
+    return NextResponse.json({ success: true, id: data?.id })
   } catch (err) {
     console.error('send-email route error:', err)
-    return NextResponse.json(
-      { error: 'Server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
