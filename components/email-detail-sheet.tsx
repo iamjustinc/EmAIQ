@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { Email } from '@/lib/types'
 import { useUserStore } from '@/store/use-user-store'
+import { useUser } from '@/lib/user-context'
 import { cn } from '@/lib/utils'
 
 interface EmailDetailSheetProps {
@@ -45,7 +46,8 @@ export function EmailDetailSheet({
   const [replyText, setReplyText] = useState('')
   const [successAction, setSuccessAction] = useState<string | null>(null)
 
-  const { firstName: globalFirstName, signOff: globalSignOff } = useUserStore()
+  const { signOff: globalSignOff } = useUserStore()
+  const { firstName: globalFirstName } = useUser()  
 
   useEffect(() => {
     if (open && email) {
@@ -64,36 +66,40 @@ export function EmailDetailSheet({
     if (!email) return ''
     const body = typeof email.body === 'string' ? email.body.trim() : ''
     const preview = typeof email.bodyPreview === 'string' ? email.bodyPreview.trim() : ''
-    return body || preview
-  }, [email])
+    const source = body || preview
+    return source.replace(/\bAlex\b/g, globalFirstName || 'Example')
+  }, [email, globalFirstName])
 
   const intelligenceSummary = useMemo(() => {
     if (!email) return []
-
-    const existingSummary = email.analysis?.summary ?? []
+  
+    const existingSummary = (email.analysis?.summary ?? []).map((line) =>
+      line.replace(/\bAlex\b/g, globalFirstName || 'Example')
+    )
+  
     const cleanedSource = originalMessageText
       .replace(/\s+/g, ' ')
       .trim()
-
+  
     const sourceSentences = cleanedSource
       .split(/(?<=[.!?])\s+/)
       .map((sentence) => sentence.trim())
       .filter(Boolean)
       .slice(0, 3)
-
+  
     if (!cleanedSource) return existingSummary
-
+  
     const sourceWordCount = cleanedSource.split(/\s+/).filter(Boolean).length
     const summaryWordCount = existingSummary
       .join(' ')
       .split(/\s+/)
       .filter(Boolean).length
-
+  
     if (existingSummary.length === 0) return sourceSentences
     if (sourceWordCount > 0 && summaryWordCount > sourceWordCount) return sourceSentences
-
+  
     return existingSummary
-  }, [email, originalMessageText])
+  }, [email, originalMessageText, globalFirstName])
 
   const generatedDraft = useMemo(() => {
     if (!email) return ''
