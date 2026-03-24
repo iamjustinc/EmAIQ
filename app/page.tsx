@@ -16,7 +16,7 @@ const MOCK_LOGIN_EMAIL = 'example@example.com';
 const MOCK_LOGIN_NAME = 'Example';
 const LOGIN_STORAGE_KEY = 'emaiq_mock_logged_in';
 
-type BootStage = 'boot' | 'welcome' | 'signin' | 'signing-in' | 'ready';
+type BootStage = 'boot' | 'welcome' | 'signin' | 'password' | 'signing-in' | 'ready';
 
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
@@ -33,6 +33,8 @@ export default function InboxPage() {
   const [bootStage, setBootStage] = useState<BootStage>('boot');
   const [loginFirstName, setLoginFirstName] = useState('');
   const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -55,19 +57,23 @@ export default function InboxPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleMockSignIn = useCallback(() => {
+  const handleIdentityConfirm = useCallback(() => {
+    setBootStage('password');
+  }, []);
+  
+  const handlePasswordConfirm = useCallback(() => {
     const safeName = loginFirstName.trim() || MOCK_LOGIN_NAME;
     const safeEmail = loginEmail.trim() || MOCK_LOGIN_EMAIL;
-
+  
     setFirstName(safeName);
     setPrimaryEmail(safeEmail);
-
+  
     localStorage.setItem(LOGIN_STORAGE_KEY, 'true');
     setBootStage('signing-in');
-
+  
     setTimeout(() => {
       setBootStage('ready');
-    }, 3500);
+    }, 3000);
   }, [loginFirstName, loginEmail, setFirstName, setPrimaryEmail]);
 
   const handleInstantCleanUp = useCallback(() => {
@@ -147,6 +153,74 @@ export default function InboxPage() {
     );
   }
 
+  if (bootStage === 'password') {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background px-6">
+        <div className="w-full max-w-md rounded-[2.5rem] border border-border bg-card p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-500">
+          <div className="mb-8 flex flex-col items-center text-center">
+            <Mail className="h-12 w-12 text-primary" />
+            <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-foreground">
+              Welcome to EmAIQ
+            </p>
+            <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground">
+              Enter password
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Signing in as {loginEmail || 'example@example.com'}
+            </p>
+          </div>
+  
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="h-12 w-full rounded-xl border border-border bg-background px-4 pr-20 text-sm font-medium text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black uppercase tracking-widest text-[#7FC6DA] hover:opacity-80"
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+            </div>
+  
+            <button
+              type="button"
+              onClick={handlePasswordConfirm}
+              disabled={loginPassword.trim().length === 0}
+              className={`mt-2 flex h-14 w-full items-center justify-center rounded-xl text-sm font-black text-white transition-all
+                ${
+                  loginPassword.trim().length === 0
+                    ? 'bg-[#7FC6DA]/30 cursor-not-allowed opacity-60'
+                    : 'bg-[#7FC6DA] hover:opacity-90'
+                }
+              `}
+            >
+              Confirm
+            </button>
+  
+            <button
+              type="button"
+              onClick={() => setBootStage('signin')}
+              className="flex h-12 w-full items-center justify-center rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
+            >
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (bootStage === 'signin') {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background px-6">
@@ -188,7 +262,7 @@ export default function InboxPage() {
 
             <button
   type="button"
-  onClick={handleMockSignIn}
+  onClick={handleIdentityConfirm}
   disabled={
     loginFirstName.trim().length === 0 ||
     loginEmail.trim().length === 0 ||
@@ -221,7 +295,7 @@ export default function InboxPage() {
           <div className="space-y-3">
             <button
               type="button"
-              onClick={handleMockSignIn}
+              onClick={handleIdentityConfirm}
               className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
             >
               <Chrome className="h-5 w-5" />
@@ -230,7 +304,7 @@ export default function InboxPage() {
 
             <button
               type="button"
-              onClick={handleMockSignIn}
+              onClick={handleIdentityConfirm}
               className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
             >
               <Mail className="h-5 w-5" />
