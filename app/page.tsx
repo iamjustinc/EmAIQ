@@ -10,13 +10,13 @@ import { KPICard } from '@/components/kpi-card';
 import { EmailList } from '@/components/email-list';
 import { EmailDetailSheet } from '@/components/email-detail-sheet';
 import { Email } from '@/lib/types';
-import { Mail, Zap, AlertCircle, Trash2, Chrome, KeyRound } from 'lucide-react';
+import { Mail, Zap, AlertCircle, Trash2, Chrome, Loader2 } from 'lucide-react';
 
 const MOCK_LOGIN_EMAIL = 'justin.chang@mail.utoronto.ca';
 const MOCK_LOGIN_NAME = 'Justin';
 const LOGIN_STORAGE_KEY = 'emaiq_mock_logged_in';
 
-type BootStage = 'boot' | 'signin' | 'welcome' | 'ready';
+type BootStage = 'boot' | 'signin' | 'signing-in' | 'ready';
 
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
@@ -31,8 +31,6 @@ export default function InboxPage() {
   const [isMounted, setIsMounted] = useState(false);
 
   const [bootStage, setBootStage] = useState<BootStage>('boot');
-  const [welcomeLabel, setWelcomeLabel] = useState('Welcome');
-
   const [loginFirstName, setLoginFirstName] = useState(MOCK_LOGIN_NAME);
   const [loginEmail, setLoginEmail] = useState(MOCK_LOGIN_EMAIL);
 
@@ -44,26 +42,13 @@ export default function InboxPage() {
     if (isLoggedIn) {
       setLoginFirstName(firstName || MOCK_LOGIN_NAME);
       setLoginEmail(primaryEmail || MOCK_LOGIN_EMAIL);
-      setWelcomeLabel(`Welcome back, ${firstName || MOCK_LOGIN_NAME}`);
-      setBootStage('welcome');
-
-      const timer = setTimeout(() => {
-        setBootStage('ready');
-      }, 1600);
-
-      return () => clearTimeout(timer);
+      setBootStage('ready');
+      return;
     }
 
     setLoginFirstName(firstName || MOCK_LOGIN_NAME);
     setLoginEmail(primaryEmail || MOCK_LOGIN_EMAIL);
-    setWelcomeLabel('Welcome to EmAIQ');
-    setBootStage('boot');
-
-    const timer = setTimeout(() => {
-      setBootStage('signin');
-    }, 1400);
-
-    return () => clearTimeout(timer);
+    setBootStage('signin');
   }, [firstName, primaryEmail]);
 
   const handleMockSignIn = useCallback(() => {
@@ -74,13 +59,11 @@ export default function InboxPage() {
     setPrimaryEmail(safeEmail);
 
     localStorage.setItem(LOGIN_STORAGE_KEY, 'true');
-
-    setWelcomeLabel(`Welcome, ${safeName}`);
-    setBootStage('welcome');
+    setBootStage('signing-in');
 
     setTimeout(() => {
       setBootStage('ready');
-    }, 1500);
+    }, 2000);
   }, [loginFirstName, loginEmail, setFirstName, setPrimaryEmail]);
 
   const handleInstantCleanUp = useCallback(() => {
@@ -134,12 +117,18 @@ export default function InboxPage() {
     return { unread, urgent: urgentCount, focusTime: `${focusHours}h` };
   }, [emails]);
 
-  if (!isMounted || bootStage === 'boot' || bootStage === 'welcome') {
+  if (!isMounted || bootStage === 'boot') {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background" />
+    );
+  }
+
+  if (bootStage === 'signing-in') {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
-        <Mail className="h-12 w-12 text-primary animate-pulse" />
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
         <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-foreground">
-          {welcomeLabel}
+          Signing In...
         </p>
       </div>
     );
@@ -157,7 +146,7 @@ export default function InboxPage() {
             <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground">Sign in as:</h1>
           </div>
 
-          <div className="space-y-4 mb-6">
+          <div className="space-y-4">
             <div className="space-y-2">
               <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                 First Name
@@ -183,6 +172,22 @@ export default function InboxPage() {
                 className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary"
               />
             </div>
+
+            <button
+              type="button"
+              onClick={handleMockSignIn}
+              className="mt-2 flex h-14 w-full items-center justify-center rounded-xl bg-[#7FC6DA] text-sm font-black text-white transition-colors hover:opacity-90"
+            >
+              Confirm
+            </button>
+          </div>
+
+          <div className="my-6 flex items-center gap-4">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground">
+              Or log in with
+            </span>
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           <div className="space-y-3">
@@ -202,15 +207,6 @@ export default function InboxPage() {
             >
               <Mail className="h-5 w-5" />
               Continue with Outlook
-            </button>
-
-            <button
-              type="button"
-              onClick={handleMockSignIn}
-              className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
-            >
-              <KeyRound className="h-5 w-5" />
-              Continue with Email
             </button>
           </div>
         </div>
