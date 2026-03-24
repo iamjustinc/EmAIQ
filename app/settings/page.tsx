@@ -837,6 +837,52 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {showLogoutConfirm && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/45 px-4 backdrop-blur-sm">
+    <div className="relative w-full max-w-md rounded-[2rem] border border-[#D7E6E6] bg-white p-8 shadow-[0_25px_80px_rgba(0,0,0,0.18)]">
+      <div className="mb-6 flex items-center gap-4">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F6B3C4]/15 text-[#D95D5D]">
+          <LogOut className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="text-lg font-black tracking-tight text-[#2D3436]">Log Out?</h3>
+          <p className="text-sm text-[#6B7280]">
+            Are you sure you want to log out of this account?
+          </p>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setShowLogoutConfirm(false)}
+          className="h-12 flex-1 rounded-xl bg-white"
+          disabled={isLoggingOut}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          type="button"
+          onClick={handleConfirmLogout}
+          className="h-12 flex-1 rounded-xl bg-[#D95D5D] text-white hover:bg-[#c94d4d]"
+          disabled={isLoggingOut}
+        >
+          {isLoggingOut ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Logging Out
+            </>
+          ) : (
+            'Yes, Log Out'
+          )}
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
 {showSwitchAccount && (
   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/45 px-4 backdrop-blur-sm">
     <div className="relative w-full max-w-md rounded-[2rem] border border-[#D7E6E6] bg-white p-8 shadow-[0_25px_80px_rgba(0,0,0,0.18)]">

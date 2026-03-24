@@ -34,7 +34,9 @@ export default function InboxPage() {
   const [loginFirstName, setLoginFirstName] = useState('');
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+const [showPassword, setShowPassword] = useState(false);
+const [rememberMe, setRememberMe] = useState(true);
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -68,7 +70,11 @@ export default function InboxPage() {
     setFirstName(safeName);
     setPrimaryEmail(safeEmail);
   
-    localStorage.setItem(LOGIN_STORAGE_KEY, 'true');
+    if (rememberMe) {
+      localStorage.setItem(LOGIN_STORAGE_KEY, 'true');
+    } else {
+      localStorage.removeItem(LOGIN_STORAGE_KEY);
+    }
     setBootStage('signing-in');
   
     setTimeout(() => {
@@ -282,6 +288,17 @@ export default function InboxPage() {
 >
   Confirm
 </button>
+
+<label className="mt-3 flex items-center gap-3 text-sm font-medium text-foreground cursor-pointer">
+  <input
+    type="checkbox"
+    checked={rememberMe}
+    onChange={(e) => setRememberMe(e.target.checked)}
+    className="h-4 w-4 rounded border border-border accent-[#7FC6DA]"
+  />
+  <span>Remember me</span>
+</label>
+
           </div>
 
           <div className="my-6 flex items-center gap-4">
