@@ -12,8 +12,8 @@ import { EmailDetailSheet } from '@/components/email-detail-sheet';
 import { Email } from '@/lib/types';
 import { Mail, Zap, AlertCircle, Trash2, Chrome, Loader2 } from 'lucide-react';
 
-const MOCK_LOGIN_EMAIL = 'justin.chang@mail.utoronto.ca';
-const MOCK_LOGIN_NAME = 'Justin';
+const MOCK_LOGIN_EMAIL = 'example@example.com';
+const MOCK_LOGIN_NAME = 'Example';
 const LOGIN_STORAGE_KEY = 'emaiq_mock_logged_in';
 
 type BootStage = 'boot' | 'welcome' | 'signin' | 'signing-in' | 'ready';
@@ -31,8 +31,8 @@ export default function InboxPage() {
   const [isMounted, setIsMounted] = useState(false);
 
   const [bootStage, setBootStage] = useState<BootStage>('boot');
-  const [loginFirstName, setLoginFirstName] = useState(MOCK_LOGIN_NAME);
-  const [loginEmail, setLoginEmail] = useState(MOCK_LOGIN_EMAIL);
+  const [loginFirstName, setLoginFirstName] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
 
   useEffect(() => {
     setIsMounted(true);
@@ -170,7 +170,7 @@ export default function InboxPage() {
                 type="text"
                 value={loginFirstName}
                 onChange={(e) => setLoginFirstName(e.target.value)}
-                placeholder="Enter your first name"
+                placeholder="Example"
                 className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary"
               />
             </div>
@@ -189,12 +189,19 @@ export default function InboxPage() {
             </div>
 
             <button
-              type="button"
-              onClick={handleMockSignIn}
-              className="mt-2 flex h-14 w-full items-center justify-center rounded-xl bg-[#7FC6DA] text-sm font-black text-white transition-colors hover:opacity-90"
-            >
-              Confirm
-            </button>
+  type="button"
+  onClick={handleMockSignIn}
+  disabled={!loginFirstName.trim() || !loginEmail.includes('@')}
+  className={`mt-2 flex h-14 w-full items-center justify-center rounded-xl text-sm font-black text-white transition-colors
+    ${
+      !loginFirstName.trim() || !loginEmail.includes('@')
+        ? 'bg-[#7FC6DA]/40 cursor-not-allowed'
+        : 'bg-[#7FC6DA] hover:opacity-90'
+    }
+  `}
+>
+  Confirm
+</button>
           </div>
 
           <div className="my-6 flex items-center gap-4">
