@@ -23,14 +23,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const from = process.env.RESEND_FROM_EMAIL
-
-    if (!from) {
-      return NextResponse.json(
-        { error: 'Missing RESEND_FROM_EMAIL' },
-        { status: 500 }
-      )
-    }
+    // ✅ THIS is the correct way
+    const from = 'Alex <onboarding@resend.dev>'
 
     const { data, error } = await resend.emails.send({
       from,
