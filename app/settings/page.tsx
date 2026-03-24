@@ -830,54 +830,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {showSwitchAccount && (
-  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4 animate-in fade-in duration-200">
-    <div className="w-full max-w-md rounded-[2rem] border border-border bg-card p-8 shadow-2xl animate-in zoom-in-95 duration-200">
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <h3 className="text-lg font-black tracking-tight text-foreground">Switch Account</h3>
-          <p className="text-sm text-muted-foreground">
-            Choose a sign-in method for another account.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowSwitchAccount(false)}
-          className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        >
-          <X className="h-5 w-5" />
-        </button>
-      </div>
-
-      <div className="space-y-3">
-        <button
-          type="button"
-          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
-        >
-          <Chrome className="h-5 w-5" />
-          Continue with Google
-        </button>
-
-        <button
-          type="button"
-          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
-        >
-          <Mail className="h-5 w-5" />
-          Continue with Outlook
-        </button>
-
-        <button
-          type="button"
-          className="flex h-14 w-full items-center justify-center gap-3 rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
-        >
-          <KeyRound className="h-5 w-5" />
-          Continue with Email
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
 {showSwitchAccount && (
   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/45 px-4 backdrop-blur-sm">
     <div className="relative w-full max-w-md rounded-[2rem] border border-[#D7E6E6] bg-white p-8 shadow-[0_25px_80px_rgba(0,0,0,0.18)]">
