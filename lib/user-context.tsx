@@ -46,7 +46,7 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 function defaultEmailFromName(name: string) {
-  const slug = name.trim().toLowerCase().replace(/\s+/g, '.') || 'alex';
+  const slug = name.trim().toLowerCase().replace(/\s+/g, '.') || 'examle';
   return `${slug}.johnson@company.com`;
 }
 
@@ -55,8 +55,8 @@ function isValidEmail(email: string) {
 }
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [firstName, setFirstNameState] = useState('Alex');
-  const [primaryEmail, setPrimaryEmailState] = useState('alex.johnson@company.com');
+  const [firstName, setFirstNameState] = useState('Example');
+  const [primaryEmail, setPrimaryEmailState] = useState('name@example.com');
   const [connectedAccounts, setConnectedAccounts] = useState<ConnectedAccount[]>([]);
 
   const [passcodeEnabled, setPasscodeEnabledState] = useState(false);
@@ -72,7 +72,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const savedName = localStorage.getItem('user-first-name');
       if (savedName) setFirstNameState(savedName);
 
-      const nameForEmail = savedName || 'Alex';
+      const nameForEmail = savedName || 'Example';
       const savedEmail = localStorage.getItem(ACCOUNT_LS.primaryEmail);
       if (savedEmail) setPrimaryEmailState(savedEmail);
       else {
