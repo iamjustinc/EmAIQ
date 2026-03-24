@@ -343,7 +343,7 @@ const [rememberMe, setRememberMe] = useState(true);
         />
 
         <main className="flex-1 overflow-y-auto flex flex-col w-full scrollbar-hide">
-          <div className="px-10 pb-8 pt-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8 xl:gap-10">
             <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
               <KPICard title="Unread" value={stats.unread} icon={Mail} subtitle="Messages" onClick={() => setActiveTab('all')} />
               <KPICard title="Urgent" value={stats.urgent} icon={AlertCircle} subtitle="Actions" variant="danger" onClick={() => setActiveTab('action')} />
@@ -352,8 +352,8 @@ const [rememberMe, setRememberMe] = useState(true);
             </div>
           </div>
 
-          <div className="flex-1 px-10 pb-10">
-            <div className="relative flex min-h-[500px] flex-col overflow-hidden rounded-[2.5rem] border border-border bg-card shadow-2xl">
+          <div className="flex-1 px-4 pb-6 sm:px-6 sm:pb-8 md:px-8 lg:px-10 lg:pb-10">
+          <div className="relative flex min-h-[420px] flex-col overflow-hidden rounded-[1.5rem] border border-border bg-card shadow-2xl sm:min-h-[460px] sm:rounded-[2rem] lg:min-h-[500px] lg:rounded-[2.5rem]">
               <EmailList
                 emails={filteredEmails}
                 selectedEmail={currentSelectedEmail}

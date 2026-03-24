@@ -146,11 +146,11 @@ export function EmailDetailSheet({
     <Sheet open={open} onOpenChange={(val) => { if (!val) { setMode('default'); onOpenChange(false) } }}>
       <SheetContent
         side="right"
-        className="w-[520px] max-w-[95vw] border-l-2 border-[#A8D0D0] bg-[#F4F7F7] p-0 shadow-2xl outline-none"
+        className="w-full max-w-full border-l-2 border-[#A8D0D0] bg-[#F4F7F7] p-0 shadow-2xl outline-none sm:max-w-[92vw] md:w-[520px] md:max-w-[95vw]"
       >
         <div className="flex h-full flex-col overflow-hidden">
           {/* Header Section */}
-          <div className="shrink-0 border-b-2 border-[#A8D0D0]/20 px-10 pb-8 pt-10 bg-white">
+          <div className="shrink-0 border-b-2 border-[#A8D0D0]/20 bg-white px-4 pb-6 pt-6 sm:px-6 sm:pb-7 sm:pt-7 md:px-10 md:pb-8 md:pt-10">
             <div className="mb-6 flex gap-3">
               {isSent ? (
                 <div className="rounded-full border-2 border-[#7FC6DA] bg-[#7FC6DA]/15 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#7FC6DA] flex items-center shadow-sm">
@@ -178,7 +178,7 @@ export function EmailDetailSheet({
           </div>
 
           {/* Main Content Area */}
-          <div className="scrollbar-hide flex-1 overflow-y-auto px-10 py-8">
+          <div className="scrollbar-hide flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 md:px-10 md:py-8">
             {isAnalyzing ? (
               <div className="flex h-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#7FC6DA]" /></div>
             ) : mode === 'reply' ? (
@@ -256,7 +256,7 @@ export function EmailDetailSheet({
 
           {/* Footer Actions */}
           {!isSent && (
-            <div className="shrink-0 border-t-2 border-[#A8D0D0]/30 bg-white p-8">
+            <div className="shrink-0 border-t-2 border-[#A8D0D0]/30 bg-white p-4 sm:p-6 md:p-8">
               {mode === 'default' ? (
                 <div className="grid grid-cols-2 gap-4">
                   <Button className="h-24 rounded-[2rem] bg-[#2D3436] text-white shadow-xl hover:bg-[#7FC6DA] transition-all" onClick={() => { setReplyText(''); setMode('reply'); setIsDrafting(true) }}>

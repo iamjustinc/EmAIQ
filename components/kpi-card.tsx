@@ -20,15 +20,15 @@ export function KPICard({ title, value, subtitle, icon: Icon, variant = 'default
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full flex-col gap-4 rounded-[2.5rem] border-2 p-6 text-left transition-all duration-300 group',
+        'group flex w-full min-w-0 flex-col gap-3 rounded-[1.75rem] border-2 p-4 text-left transition-all duration-300 sm:rounded-[2rem] sm:p-5 lg:rounded-[2.5rem] lg:p-6',
         'bg-[#ECD7D1]/40 border-[#A8D0D0]', 
         onClick && 'hover:bg-white hover:border-[#7FC6DA] hover:shadow-xl active:scale-[0.98] cursor-pointer',
         active && 'ring-2 ring-[#7FC6DA] border-[#7FC6DA] bg-white shadow-lg scale-[1.02]'
       )}
     >
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between gap-3">
         <div className={cn(
-          'rounded-2xl border-2 p-2.5 transition-colors',
+          'rounded-xl border-2 p-2 transition-colors sm:rounded-2xl sm:p-2.5',
           variant === 'danger' 
             ? 'border-[#F6B3C4] bg-[#F6B3C4]/20 text-[#D95D5D]' 
             : variant === 'warning'
@@ -37,11 +37,11 @@ export function KPICard({ title, value, subtitle, icon: Icon, variant = 'default
         )}>
           {title === 'Noise' ? <Sparkles className="h-5 w-5" /> : Icon ? <Icon className="h-5 w-5" /> : null}
         </div>
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#8C867E]">{title}</span>
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#8C867E] sm:text-[10px] sm:tracking-[0.3em]">{title}</span>
       </div>
 
       <div className="flex flex-col">
-        <span className="text-4xl font-black tracking-tighter text-[#2D3436]">{value}</span>
+      <span className="text-3xl font-black tracking-tighter text-[#2D3436] sm:text-4xl">{value}</span>
         <span className="mt-1 text-[10px] font-black uppercase tracking-[0.15em] text-[#8C867E]">{subtitle}</span>
       </div>
     </button>

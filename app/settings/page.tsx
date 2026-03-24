@@ -260,8 +260,8 @@ export default function SettingsPage() {
       <div className="flex h-full flex-col bg-background">
         <Header title={headerTitle} hideSearch />
 
-        <div className="flex-1 overflow-auto p-6 md:p-10">
-          <div className="mx-auto max-w-2xl space-y-6">
+        <div className="flex-1 overflow-auto p-4 sm:p-6 md:p-8 lg:p-10">
+        <div className="mx-auto max-w-2xl space-y-4 sm:space-y-6">
             {view !== 'menu' && (
               <button
                 onClick={() => setView('menu')}
@@ -348,7 +348,7 @@ export default function SettingsPage() {
                   ))}
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <button
                     type="button"
                     onClick={() => setShowSwitchAccount(true)}
@@ -386,7 +386,7 @@ export default function SettingsPage() {
 
 {view === 'profile' && (
               <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
-                <div className="rounded-[2rem] border border-border bg-card p-8 shadow-xl">
+                <div className="rounded-[1.5rem] border border-border bg-card p-4 shadow-xl sm:rounded-[1.75rem] sm:p-6 md:rounded-[2rem] md:p-8">
                   <div className="mb-8 flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                       <User className="h-5 w-5" />

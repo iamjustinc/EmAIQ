@@ -42,10 +42,10 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
 
   return (
     <aside
-      className={cn(
-        'flex h-screen flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all duration-300',
-        isCollapsed ? 'w-16' : 'w-60',
-      )}
+    className={cn(
+      'hidden h-dvh shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all duration-300 md:flex',
+      isCollapsed ? 'md:w-16' : 'md:w-56 lg:w-60',
+    )}
     >
       <div className="flex h-16 shrink-0 items-center gap-3 border-b border-sidebar-border px-4">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/20">
