@@ -40,14 +40,12 @@ export default function InboxPage() {
     const isLoggedIn = localStorage.getItem(LOGIN_STORAGE_KEY) === 'true';
 
     if (isLoggedIn) {
-      setLoginFirstName('');
-      setLoginEmail('');
-      setBootStage('welcome');
+      setBootStage('ready');
       return;
     }
 
-    setLoginFirstName(firstName || MOCK_LOGIN_NAME);
-    setLoginEmail(primaryEmail || MOCK_LOGIN_EMAIL);
+    setLoginFirstName('');
+    setLoginEmail('');
     setBootStage('welcome');
 
     const timer = setTimeout(() => {
@@ -55,7 +53,7 @@ export default function InboxPage() {
     }, 1400);
 
     return () => clearTimeout(timer);
-  }, [firstName, primaryEmail]);
+  }, []);
 
   const handleMockSignIn = useCallback(() => {
     const safeName = loginFirstName.trim() || MOCK_LOGIN_NAME;
