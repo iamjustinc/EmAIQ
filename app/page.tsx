@@ -13,14 +13,14 @@ import { Email } from '@/lib/types';
 import { Mail, Zap, AlertCircle, Trash2, Chrome, KeyRound } from 'lucide-react';
 
 const MOCK_LOGIN_EMAIL = 'justin.chang@mail.utoronto.ca';
+const MOCK_LOGIN_NAME = 'Justin';
 const LOGIN_STORAGE_KEY = 'emaiq_mock_logged_in';
-const LOGIN_EMAIL_STORAGE_KEY = 'emaiq_mock_email';
 
 type BootStage = 'boot' | 'signin' | 'welcome' | 'ready';
 
 export default function InboxPage() {
   const { emails, archiveEmail, markAsSent, markAsRead, snoozeEmail, toggleFavorite } = useEmails();
-  const { firstName } = useUser();
+  const { firstName, primaryEmail, setFirstName, setPrimaryEmail } = useUser();
   const pathname = usePathname();
 
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
@@ -32,18 +32,19 @@ export default function InboxPage() {
 
   const [bootStage, setBootStage] = useState<BootStage>('boot');
   const [welcomeLabel, setWelcomeLabel] = useState('Welcome');
+
+  const [loginFirstName, setLoginFirstName] = useState(MOCK_LOGIN_NAME);
   const [loginEmail, setLoginEmail] = useState(MOCK_LOGIN_EMAIL);
 
   useEffect(() => {
     setIsMounted(true);
 
-    const storedEmail = localStorage.getItem(LOGIN_EMAIL_STORAGE_KEY) || MOCK_LOGIN_EMAIL;
     const isLoggedIn = localStorage.getItem(LOGIN_STORAGE_KEY) === 'true';
 
-    setLoginEmail(storedEmail);
-
     if (isLoggedIn) {
-      setWelcomeLabel(`Welcome back, ${firstName}`);
+      setLoginFirstName(firstName || MOCK_LOGIN_NAME);
+      setLoginEmail(primaryEmail || MOCK_LOGIN_EMAIL);
+      setWelcomeLabel(`Welcome back, ${firstName || MOCK_LOGIN_NAME}`);
       setBootStage('welcome');
 
       const timer = setTimeout(() => {
@@ -53,6 +54,8 @@ export default function InboxPage() {
       return () => clearTimeout(timer);
     }
 
+    setLoginFirstName(firstName || MOCK_LOGIN_NAME);
+    setLoginEmail(primaryEmail || MOCK_LOGIN_EMAIL);
     setWelcomeLabel('Welcome to EmAIQ');
     setBootStage('boot');
 
@@ -61,19 +64,24 @@ export default function InboxPage() {
     }, 1400);
 
     return () => clearTimeout(timer);
-  }, [firstName]);
+  }, [firstName, primaryEmail]);
 
   const handleMockSignIn = useCallback(() => {
-    localStorage.setItem(LOGIN_STORAGE_KEY, 'true');
-    localStorage.setItem(LOGIN_EMAIL_STORAGE_KEY, loginEmail || MOCK_LOGIN_EMAIL);
+    const safeName = loginFirstName.trim() || MOCK_LOGIN_NAME;
+    const safeEmail = loginEmail.trim() || MOCK_LOGIN_EMAIL;
 
-    setWelcomeLabel(`Welcome, ${firstName}`);
+    setFirstName(safeName);
+    setPrimaryEmail(safeEmail);
+
+    localStorage.setItem(LOGIN_STORAGE_KEY, 'true');
+
+    setWelcomeLabel(`Welcome, ${safeName}`);
     setBootStage('welcome');
 
     setTimeout(() => {
       setBootStage('ready');
     }, 1500);
-  }, [firstName, loginEmail]);
+  }, [loginFirstName, loginEmail, setFirstName, setPrimaryEmail]);
 
   const handleInstantCleanUp = useCallback(() => {
     const noiseEmails = emails?.filter(
@@ -147,7 +155,34 @@ export default function InboxPage() {
               Welcome to EmAIQ
             </p>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground">Sign in as:</h1>
-            <p className="mt-2 text-sm text-muted-foreground">{loginEmail}</p>
+          </div>
+
+          <div className="space-y-4 mb-6">
+            <div className="space-y-2">
+              <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                First Name
+              </label>
+              <input
+                type="text"
+                value={loginFirstName}
+                onChange={(e) => setLoginFirstName(e.target.value)}
+                placeholder="Enter your first name"
+                className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                placeholder="name@example.com"
+                className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary"
+              />
+            </div>
           </div>
 
           <div className="space-y-3">
