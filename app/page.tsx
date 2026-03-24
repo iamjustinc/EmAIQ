@@ -40,9 +40,9 @@ export default function InboxPage() {
     const isLoggedIn = localStorage.getItem(LOGIN_STORAGE_KEY) === 'true';
 
     if (isLoggedIn) {
-      setLoginFirstName(firstName || MOCK_LOGIN_NAME);
-      setLoginEmail(primaryEmail || MOCK_LOGIN_EMAIL);
-      setBootStage('ready');
+      setLoginFirstName('');
+      setLoginEmail('');
+      setBootStage('welcome');
       return;
     }
 
@@ -191,11 +191,19 @@ export default function InboxPage() {
             <button
   type="button"
   onClick={handleMockSignIn}
-  disabled={!loginFirstName.trim() || !loginEmail.includes('@')}
-  className={`mt-2 flex h-14 w-full items-center justify-center rounded-xl text-sm font-black text-white transition-colors
+  disabled={
+    loginFirstName.trim().length === 0 ||
+    loginEmail.trim().length === 0 ||
+    !loginEmail.includes('@') ||
+    !loginEmail.includes('.')
+  }
+  className={`mt-2 flex h-14 w-full items-center justify-center rounded-xl text-sm font-black text-white transition-all
     ${
-      !loginFirstName.trim() || !loginEmail.includes('@')
-        ? 'bg-[#7FC6DA]/40 cursor-not-allowed'
+      loginFirstName.trim().length === 0 ||
+      loginEmail.trim().length === 0 ||
+      !loginEmail.includes('@') ||
+      !loginEmail.includes('.')
+        ? 'bg-[#7FC6DA]/30 cursor-not-allowed opacity-60'
         : 'bg-[#7FC6DA] hover:opacity-90'
     }
   `}
