@@ -123,7 +123,7 @@ export function EmailList({
 
       <div 
         className={cn(
-          "hidden md:grid md:grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-4 md:px-6 py-4 sticky z-40",
+          "hidden xl:grid xl:grid-cols-[60px_40px_160px_1fr_140px_100px] border-b-2 border-[#A8D0D0]/40 bg-[#F4F7F7] px-4 xl:px-6 py-4 sticky z-40",
           hideTabs ? "top-0" : "top-[62px]"
         )}
       >
@@ -146,7 +146,7 @@ export function EmailList({
               key={email.id}
               onClick={() => onSelectEmail(email)}
               className={cn(
-                'grid grid-cols-1 gap-3 px-3 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2 md:grid-cols-[60px_40px_160px_1fr_140px_100px] md:items-center md:gap-0 md:px-4',
+                'grid grid-cols-1 gap-3 px-3 py-4 cursor-pointer transition-all my-1 rounded-2xl border-2 xl:grid-cols-[60px_40px_160px_1fr_140px_100px] xl:items-center xl:gap-0 xl:px-4',
                 selectedEmail?.id === email.id 
                   ? 'bg-white border-[#7FC6DA] ring-4 ring-[#7FC6DA]/10 shadow-lg scale-[1.01] z-30' 
                   : email.isRead 
@@ -154,7 +154,7 @@ export function EmailList({
                     : 'bg-white border-[#A8D0D0]/50 shadow-sm hover:border-[#7FC6DA]/50'
               )}
             >
-              <div className="flex items-center justify-between md:contents">
+              <div className="text-[10px] font-black text-[#8C867E] uppercase xl:hidden">
   <div className="flex items-center gap-2">
     <button 
       onClick={(e) => { 
@@ -192,7 +192,7 @@ export function EmailList({
                   {email.suggestedAction}
                 </span>
               </div>
-              <div className="hidden md:block text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
+              <div className="hidden xl:block text-[10px] font-black text-[#8C867E] text-right uppercase pr-4">
                 {formatRelativeTime(email, index)}
               </div>
             </div>
