@@ -2,9 +2,9 @@
   {
     "id": "eml_001",
     "sender": {
-      "name": "Maya Patel",
-      "email": "maya.patel@northstarclient.com",
-      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Maya"
+      "name": "Justin Chang",
+      "email": "justin886847@gmail.com",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Justin"
     },
     "subject": "Need final deck before 2 PM client review",
     "bodyPreview": "Can you send the revised deck with the updated pricing slide before 2 PM today?",
@@ -25,14 +25,14 @@
     "suggestedAction": "Respond",
     "isRead": false,
     "isActioned": false,
-    "body": "Hi Alex,\n\nThe client review was moved up and we need the final version of the deck before 2:00 PM today. Please make sure the updated pricing slide is included and double-check the Q2 figures on slide 8 before you send it over.\n\nIf possible, send me the final PDF and editable deck so I can forward both versions to leadership.\n\nThanks,\nMaya",
+    "body": "Hi Alex,\n\nThe client review was moved up and we need the final version of the deck before 2:00 PM today. Please make sure the updated pricing slide is included and double-check the Q2 figures on slide 8 before you send it over.\n\nIf possible, send me the final PDF and editable deck so I can forward both versions to leadership.\n\nThanks,\nJustin",
     "timestamp": "2026-03-23T23:38:00-04:00"
   },
   {
     "id": "eml_002",
     "sender": {
       "name": "Jordan Lee",
-      "email": "jordan.lee@yourcompany.com",
+      "email": "justin886847@gmail.com",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan"
     },
     "subject": "Tomorrow's standup agenda",
@@ -61,7 +61,7 @@
     "id": "eml_003",
     "sender": {
       "name": "Talent Team",
-      "email": "careers@brightpath.io",
+      "email": "justin886847@gmail.com",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Talent"
     },
     "subject": "Interview confirmation for Monday",
@@ -90,7 +90,7 @@
     "id": "eml_004",
     "sender": {
       "name": "Finance Ops",
-      "email": "expenses@yourcompany.com",
+      "email": "justin886847@gmail.com",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Finance"
     },
     "subject": "Expense report missing receipt",
@@ -119,7 +119,7 @@
     "id": "eml_005",
     "sender": {
       "name": "Priya Nair",
-      "email": "priya.nair@northstarclient.com",
+      "email": "justin886847@gmail.com",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya"
     },
     "subject": "Quick clarification on implementation timeline",
@@ -148,7 +148,7 @@
     "id": "eml_006",
     "sender": {
       "name": "Company News",
-      "email": "newsletter@yourcompany.com",
+      "email": "justin886847@gmail.com",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=News"
     },
     "subject": "March internal newsletter",
