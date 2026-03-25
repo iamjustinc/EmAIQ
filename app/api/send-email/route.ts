@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ✅ THIS is the correct way
-    const from = 'Alex <onboarding@resend.dev>'
+  const from = 'Alex <alex@send.justinchang.me>'
 
     const { data, error } = await resend.emails.send({
       from,

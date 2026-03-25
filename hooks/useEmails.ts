@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import rawEmails from "@/email.json" 
 import { Email } from "@/lib/types" 
 
-const STORAGE_KEY = "emaiq_emails_v3" 
+const STORAGE_KEY = "Quail_emails_v3" 
 
 export function useEmails() {
   const [emails, setEmails] = useState<Email[]>([])

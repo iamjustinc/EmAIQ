@@ -43,8 +43,8 @@ type SettingsView =
   | 'aiConfig'
   | 'priorityPreferences';
 
-  const AI_SETTINGS_STORAGE_KEY = 'emaiq-ai-settings';
-  const PRIORITY_SETTINGS_STORAGE_KEY = 'emaiq-priority-settings';
+  const AI_SETTINGS_STORAGE_KEY = 'quail-ai-settings';
+  const PRIORITY_SETTINGS_STORAGE_KEY = 'quail-priority-settings';
 
 export default function SettingsPage() {
   const { signOff } = useUserStore();
@@ -236,7 +236,7 @@ export default function SettingsPage() {
     setTimeout(() => {
       try {
         if (typeof window !== 'undefined') {
-          window.localStorage.removeItem('emaiq_mock_logged_in');
+          window.localStorage.removeItem('quail_mock_logged_in');
           window.localStorage.removeItem(AI_SETTINGS_STORAGE_KEY);
           window.localStorage.removeItem(PRIORITY_SETTINGS_STORAGE_KEY);
   
@@ -754,7 +754,7 @@ export default function SettingsPage() {
                     <div>
                       <h3 className="text-lg font-black tracking-tight">Privacy & Data</h3>
                       <p className="text-xs text-muted-foreground">
-                        Review how EmAIQ uses personalization and inbox data.
+                        Review how Quail uses personalization and inbox data.
                       </p>
                     </div>
                   </div>
@@ -769,7 +769,7 @@ export default function SettingsPage() {
                           <div>
                             <p className="text-sm font-bold text-foreground">Email-based prioritization</p>
                             <p className="text-xs text-muted-foreground">
-                              EmAIQ may use inbox context to personalize urgency and ranking.
+                              Quail may use inbox context to personalize urgency and ranking.
                             </p>
                           </div>
                           <Switch checked />
@@ -781,7 +781,7 @@ export default function SettingsPage() {
                           <div>
                             <p className="text-sm font-bold text-foreground">AI summaries and drafts</p>
                             <p className="text-xs text-muted-foreground">
-                              EmAIQ may use email content to generate summaries and draft responses.
+                              Quail may use email content to generate summaries and draft responses.
                             </p>
                           </div>
                           <Switch checked />

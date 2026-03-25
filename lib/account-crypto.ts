@@ -10,11 +10,11 @@ export async function sha256Hex(message: string): Promise<string> {
 }
 
 export const ACCOUNT_LS = {
-  primaryEmail: 'emaiq-primary-email',
-  connectedAccounts: 'emaiq-connected-accounts',
-  passcodeHash: 'emaiq-passcode-hash',
-  passcodeEnabled: 'emaiq-passcode-enabled',
-  twoFactor: 'emaiq-2fa',
-  passwordHash: 'emaiq-password-hash',
-  passwordChangedAt: 'emaiq-password-changed-at',
+  primaryEmail: 'quail-primary-email',
+  connectedAccounts: 'quail-connected-accounts',
+  passcodeHash: 'quail-passcode-hash',
+  passcodeEnabled: 'quail-passcode-enabled',
+  twoFactor: 'quail-2fa',
+  passwordHash: 'quail-password-hash',
+  passwordChangedAt: 'quail-password-changed-at',
 } as const;

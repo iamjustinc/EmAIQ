@@ -14,7 +14,7 @@ import { Mail, Zap, AlertCircle, Trash2, Chrome, Loader2 } from 'lucide-react';
 
 const MOCK_LOGIN_EMAIL = 'example@example.com';
 const MOCK_LOGIN_NAME = 'Example';
-const LOGIN_STORAGE_KEY = 'emaiq_mock_logged_in';
+const LOGIN_STORAGE_KEY = 'quail_mock_logged_in';
 
 type BootStage = 'boot' | 'welcome' | 'signin' | 'password' | 'signing-in' | 'ready';
 
@@ -142,7 +142,7 @@ const [rememberMe, setRememberMe] = useState(true);
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
         <Mail className="h-12 w-12 text-primary animate-pulse" />
         <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-foreground">
-          Welcome to EmAIQ
+          Welcome to Quail
         </p>
       </div>
     );
@@ -166,7 +166,7 @@ const [rememberMe, setRememberMe] = useState(true);
           <div className="mb-8 flex flex-col items-center text-center">
             <Mail className="h-12 w-12 text-primary" />
             <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-foreground">
-              Welcome to EmAIQ
+              Welcome to Quail
             </p>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground">
               Enter password
@@ -234,7 +234,7 @@ const [rememberMe, setRememberMe] = useState(true);
           <div className="mb-8 flex flex-col items-center text-center">
             <Mail className="h-12 w-12 text-primary" />
             <p className="mt-6 text-[11px] font-black uppercase tracking-[0.4em] text-foreground">
-              Welcome to EmAIQ
+              Welcome to Quail
             </p>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground">Sign in as:</h1>
           </div>

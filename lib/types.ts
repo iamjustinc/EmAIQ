@@ -28,7 +28,7 @@ export const DEFAULT_APPEARANCE: AppearanceState = {
   fontScale: 'medium',
 };
 
-export const STORAGE_KEY = 'emaiq-appearance';
+export const STORAGE_KEY = 'quail-appearance';
 
 export function isThemePresetId(v: string): v is ThemePresetId {
   return (

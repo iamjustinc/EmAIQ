@@ -96,7 +96,7 @@ export function AppearanceSettingsPanel() {
         <div className="min-w-0 flex-1 space-y-1">
           <h2 className="text-title-scale font-bold tracking-tight text-foreground">Appearance</h2>
           <p className="text-sm text-muted-foreground">
-            Tune the visual language of EmailIQ. Changes apply instantly and persist on this device.
+            Tune the visual language of Quail. Changes apply instantly and persist on this device.
           </p>
         </div>
       </div>
