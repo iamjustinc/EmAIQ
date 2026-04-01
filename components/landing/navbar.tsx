@@ -37,7 +37,7 @@ export function LandingNavbar() {
             </Button>
           </Link>
           <Link href="/dashboard">
-            <Button className="rounded-full px-6">Get Started!</Button>
+            <Button className="rounded-full px-6">Launch Quail</Button>
           </Link>
         </div>
 
