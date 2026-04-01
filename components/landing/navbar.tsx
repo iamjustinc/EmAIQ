@@ -37,7 +37,7 @@ export function LandingNavbar() {
             </Button>
           </Link>
           <Link href="/dashboard">
-            <Button className="rounded-full px-6">Open demo</Button>
+            <Button className="rounded-full px-6">Get Started!</Button>
           </Link>
         </div>
 
@@ -69,7 +69,7 @@ export function LandingNavbar() {
                 </Button>
               </Link>
               <Link href="/dashboard" className="flex-1">
-                <Button className="w-full rounded-full">Open demo</Button>
+                <Button className="w-full rounded-full">Launch Quail</Button>
               </Link>
             </div>
           </div>
