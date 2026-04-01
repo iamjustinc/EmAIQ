@@ -66,7 +66,7 @@ export function LandingHero() {
                 size="lg"
                 className="h-12 rounded-full bg-[#7FC6DA] px-8 text-base text-white hover:opacity-90"
               >
-                Open Quail demo
+                Get started!
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
