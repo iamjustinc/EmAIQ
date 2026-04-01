@@ -32,7 +32,7 @@ export function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boole
   const snoozedCount = allEmails.filter(e => e.snoozedUntil && Number(e.snoozedUntil) > Date.now()).length;
 
   const mainNav = [
-    { name: 'Inbox', href: '/', icon: Inbox },
+    { name: 'Inbox', href: '/dashboard', icon: Inbox },
     { name: 'Sent', href: '/sent', icon: Send },
     { name: 'Favorites', href: '/favorites', icon: Star },
     { name: 'Snoozed', href: '/snoozed', icon: Clock },
